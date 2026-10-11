@@ -1,0 +1,81 @@
+# 08 — Data model
+
+> Domain spec. Source: original spec §10, amended by ADR-0004, 0005, 0006, 0007, 0010, 0011, 0013, 0014, 0016, 0018, 0023, 0025. ADRs win on conflict.
+> The **SQL migrations in `supabase/migrations/` are the source of truth** (ADR-0003). This document describes intent; keep it in sync in the same commit.
+
+## Conventions (ADR-0004)
+- Plural snake_case tables; `id uuid primary key default public.uuid_v7()` (ADR-0023).
+- `created_at`, `updated_at` (trigger) everywhere; `deleted_at` on business data; partial unique indexes `where deleted_at is null`.
+- **`restaurant_id not null` on every tenant table, including children**, with composite FKs `(restaurant_id, parent_id) → parent(restaurant_id, id)`.
+- **RLS enabled on 100 % of tables** (CI-checked) with tests per table.
+- Money: `integer` millimes with `check >= 0`; aggregates use `bigint`.
+- Multilingual text: `jsonb` `{"fr": "...", "ar": "...", "en": "..."}`, check constraint on keys.
+- Statuses: Postgres enums. Transitions enforced in TS services + DB triggers.
+- `version integer` on rows that are broadcast in real time (ADR-0013).
+
+## Platform
+
+| Table | Main columns | Notes |
+|---|---|---|
+| organizations | name | Owner account; 1..n restaurants (ADR-0004) |
+| profiles | id = auth.users.id, full_name, phone, locale, platform_role (none/super_admin/support) | Replaces `users` |
+| plans | code, name (jsonb), price_monthly, price_yearly, features[], limits (jsonb), ai_monthly_cap_millimes, ai_limits (jsonb) | Seeded |
+| subscriptions | restaurant_id, plan_id, status (trial/active/past_due/suspended/cancelled), trial_ends_at, current_period_end | Per restaurant |
+| feature_overrides | restaurant_id, feature_key, enabled, expires_at, reason, created_by | |
+| payments, invoices | restaurant_id, amount, method, reference, paid_at / number (gapless yearly), pdf_path | Phase 3 |
+| audit_logs | restaurant_id (nullable), actor_id, impersonated_by, action, entity, entity_id, diff (jsonb), ip, request_id | Append-only |
+| reserved_slugs | slug | ADR-0012 |
+| ai_usage | restaurant_id, feature, model, input_tokens, output_tokens, cost_millimes, request_id | ADR-0025 |
+
+## Tenant core
+
+| Table | Main columns | Notes |
+|---|---|---|
+| restaurants | organization_id, slug, public_id, name, type, logo/cover media refs, theme (jsonb), timezone (Africa/Tunis), currency (TND), default_locale, locales[], opening_schedule (jsonb Schedule), manual_status, manual_status_until, day_cutoff (interval), settings (jsonb: routing, validation, thresholds, rate limits, session timeout, rounding step, links, Wi-Fi), status (active/read_only/suspended) | The tenant |
+| slug_redirects | restaurant_id, old_slug | 301s |
+| memberships | user_id, restaurant_id, role, display_name, avatar_color, pin_hmac, is_active | Role per restaurant (ADR-0005, 0010) |
+| staff_devices | restaurant_id, label, mode (fixed/mobile), token_hash, created_by, last_seen_at, revoked_at | ADR-0010 |
+| staff_sessions | restaurant_id, membership_id, device_id, started_at, expires_at, revoked_at | ADR-0010 |
+| device_pairing_codes | restaurant_id, code_hash, expires_at, used_at | 10 min TTL |
+| zones | restaurant_id, name (jsonb), sort_order | |
+| staff_zone_assignments | restaurant_id, membership_id, zone_id, business_date | Phase 2 |
+| tables | restaurant_id, zone_id, number, label, qr_token (unique), qr_token_rotated_at, is_active | Index (qr_token) |
+| media | restaurant_id, kind (product/cover/logo/category), base_path, width, height, thumbhash, dominant_color, renditions (jsonb) | ADR-0018 |
+
+## Menu (ADR-0014)
+
+| Table | Main columns |
+|---|---|
+| categories | restaurant_id, name (jsonb), media_id, icon, sort_order, is_visible, availability (jsonb Schedule, nullable) |
+| products | restaurant_id, category_id, slug, name (jsonb), description (jsonb), price, media_id, station_id (nullable), badges[], allergens[], dietary[] (vegetarian, gluten_free, spicy), is_available, is_visible, sort_order |
+| option_groups | restaurant_id, name (jsonb), min_select, max_select |
+| options | restaurant_id, option_group_id, name (jsonb), price_delta, is_available, sort_order |
+| product_option_groups | restaurant_id, product_id, option_group_id, sort_order, min_select?, max_select?, price_overrides (jsonb) |
+| price_history | restaurant_id, product_id, old_price, new_price, changed_by |
+| stations | restaurant_id, name (jsonb), sort_order (Phase 3) |
+| translation_glossary | restaurant_id (nullable = platform default), term, translations (jsonb) |
+
+## Service and orders
+
+| Table | Main columns |
+|---|---|
+| table_sessions | restaurant_id, table_id, public_id, status (open/bill_requested/closed), opened_at, last_activity_at, closed_at, closed_by, payment_method, total_snapshot, version. **Partial unique: one non-closed per table** |
+| client_sessions | restaurant_id, table_session_id, device_id, created_at, last_seen_at, blocked_until |
+| order_counters | restaurant_id, business_date, last_number (PK both) |
+| orders | restaurant_id, table_session_id, table_id, client_session_id, business_date, number, status, source (client/staff), note, subtotal, total, idempotency_key, is_test, accepted_by, accepted_at, preparing_at, ready_at, served_at, rejected_at, cancelled_at, reject_reason, version. **Unique (restaurant_id, business_date, number)** |
+| order_items | restaurant_id, order_id, product_id, product_snapshot (jsonb: name, price), quantity, unit_price, options_snapshot (jsonb), note, station_id, status, version |
+| order_events | restaurant_id, order_id, from_status, to_status, actor_membership_id, actor_client_session_id, reason |
+| service_requests | restaurant_id, table_session_id, table_id, type (call_waiter/bill), payment_method, status (open/claimed/done), claimed_by, claimed_at, done_at, version |
+| idempotency_keys | restaurant_id, scope, key, response (jsonb), created_at |
+| feedbacks | restaurant_id, table_session_id, client_session_id, rating 1–5, comment |
+| menu_views / menu_view_daily | restaurant_id, table_id, locale, device_id, viewed_at → daily aggregates |
+| push_subscriptions | restaurant_id, membership_id, device_id, endpoint (unique), keys (jsonb), device_label |
+| notification_receipts | restaurant_id, event_id, membership_id, device_id, received_at |
+| notification_incidents | restaurant_id, event_id, kind (unacked/escalated), created_at, resolved_at |
+
+## Integrity rules
+- `order_items` copies name, price and options at purchase time. Editing or deleting a product never changes a past order.
+- **Order totals are always recomputed server-side** from DB prices (pure pricing service + server check), never taken from the browser.
+- Order numbers are sequential per restaurant per **business day** (ADR-0013).
+- Indexes: `orders (restaurant_id, status, created_at)`, `tables (qr_token)`, `service_requests (restaurant_id, status, created_at)`, and FK indexes everywhere.
+- Price changes write `price_history` (trigger) and an audit log.

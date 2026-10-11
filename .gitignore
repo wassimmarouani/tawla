@@ -1,0 +1,43 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# next / build
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# generated service workers
+public/sw-*.js
+public/sw-*.js.map
+
+# env (only .env.example is committed)
+.env
+.env.*
+!.env.example
+
+# supabase local
+supabase/.branches/
+supabase/.temp/
+
+# tests and reports
+coverage/
+playwright-report/
+test-results/
+blob-report/
+e2e/__screenshots__/review/
+.lighthouseci/
+
+# os / editors
+.DS_Store
+Thumbs.db
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# office lock files
+~$*

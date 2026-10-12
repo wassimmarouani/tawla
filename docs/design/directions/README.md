@@ -1,6 +1,8 @@
 # P0-06 — Three visual directions for the customer menu
 
-> Decision needed from the product owner (ADR-0027). The chosen direction (or a mix) becomes **ADR-0029**, and its values move into `src/styles/tokens.css` in P0-07.
+> **Decided 2026-10-12: mix "M" — see [ADR-0029](../../adr/0029-visual-direction-tawla-mix.md).** Captures of the mix are in `m/`. A, B and C below are kept as references.
+>
+> Original brief (ADR-0027). The chosen direction (or a mix) becomes **ADR-0029**, and its values move into `src/styles/tokens.css` in P0-07.
 
 **What you are looking at:** the same customer menu screen (demo café "Café El Bahja", table 9, Basic plan) rendered in three directions. Captured at **390 px** in light and dark, French and Arabic (RTL), **with and without photos**, and with two deliberately difficult tenant colours:
 
@@ -14,6 +16,14 @@
 Photos: real Tunisian dishes from Wikimedia Commons (see `supabase/seed-media/ATTRIBUTION.md`). Bambalouni and strawberry juice deliberately have no photo, to show the fallback inside photo categories.
 
 ---
+
+## M — Tawla (chosen mix)
+
+| Light · photos · FR                | Dark · no photos · AR               | Light · no photos · FR             |
+| ---------------------------------- | ----------------------------------- | ---------------------------------- |
+| ![](m/fr-light-photos-saffron.jpg) | ![](m/ar-dark-nophotos-saffron.jpg) | ![](m/fr-light-nophotos-olive.jpg) |
+
+Full pages: `m/*-full.jpg`. Specification: ADR-0029.
 
 ## A — Jasmin · calm Mediterranean editorial
 

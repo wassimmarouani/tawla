@@ -8,7 +8,12 @@ import { expect, test } from '@playwright/test';
  */
 test.skip(!process.env.DIRECTIONS, 'Set DIRECTIONS=1 (and build with ENABLE_DEV_ROUTES=true).');
 
-const DIRECTIONS = ['a', 'b', 'c'] as const;
+const ALL_DIRECTIONS = ['a', 'b', 'c', 'm'];
+// DIRECTIONS=1 captures everything; DIRECTIONS=m (or a,m…) captures a subset.
+const DIRECTIONS =
+  process.env.DIRECTIONS && process.env.DIRECTIONS !== '1'
+    ? process.env.DIRECTIONS.split(',').filter((id) => ALL_DIRECTIONS.includes(id))
+    : ALL_DIRECTIONS;
 const LOCALES = ['fr', 'ar'] as const;
 const VARIANTS = (['light', 'dark'] as const).flatMap((theme) =>
   ['photos', 'nophotos'].flatMap((photos) =>

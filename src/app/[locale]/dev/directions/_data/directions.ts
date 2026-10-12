@@ -1,6 +1,6 @@
 import { brandCssVariables, resolveBrandTheme } from '@/lib/theme/brand';
 
-export const DIRECTION_IDS = ['a', 'b', 'c'] as const;
+export const DIRECTION_IDS = ['a', 'b', 'c', 'm'] as const;
 export type DirectionId = (typeof DIRECTION_IDS)[number];
 export type ThemeMode = 'light' | 'dark';
 
@@ -20,7 +20,7 @@ export interface Direction {
   palettes: Record<ThemeMode, Palette>;
 }
 
-/** Three distinct platform directions for P0-06 (ADR-0027). */
+/** Three explored directions (P0-06) and the owner-approved mix M (ADR-0029). */
 export const DIRECTIONS: Record<DirectionId, Direction> = {
   a: {
     id: 'a',
@@ -88,6 +88,29 @@ export const DIRECTIONS: Record<DirectionId, Direction> = {
         ink: '#f4ede1',
         muted: '#b0a392',
         line: '#3a3128',
+      },
+    },
+  },
+  m: {
+    id: 'm',
+    name: 'Tawla — A calm + B menu-card lists + C food grid',
+    fonts: { latin: 'geist', arabic: 'plex' },
+    palettes: {
+      light: {
+        paper: '#f8f5ef',
+        surface: '#ffffff',
+        surface2: '#f1ece3',
+        ink: '#1f1a14',
+        muted: '#655d53',
+        line: '#e6dfd3',
+      },
+      dark: {
+        paper: '#14110e',
+        surface: '#1d1915',
+        surface2: '#28231d',
+        ink: '#f5f0e8',
+        muted: '#ada497',
+        line: '#342e27',
       },
     },
   },

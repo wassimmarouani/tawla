@@ -14,10 +14,11 @@ import '../../_styles/base.css';
 import '../../_styles/a-jasmin.css';
 import '../../_styles/b-medina.css';
 import '../../_styles/c-souk.css';
+import '../../_styles/m-tawla.css';
 
 /**
  * P0-06 design exploration (dev-only, ENABLE_DEV_ROUTES=true at build time).
- * /dev/directions/{a|b|c}/{light|dark}-{photos|nophotos}-{saffron|olive}
+ * /dev/directions/{a|b|c|m}/{light|dark}-{photos|nophotos}-{saffron|olive}
  */
 export function generateStaticParams() {
   return DIRECTION_IDS.flatMap((direction) =>

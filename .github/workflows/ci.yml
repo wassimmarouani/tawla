@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Non-secret build-time values (validated by src/lib/env.ts).
+  APP_DOMAIN: localhost:3100
+  NEXT_PUBLIC_APP_URL: http://localhost:3100
+  NEXT_PUBLIC_APP_NAME: Tawla
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  quality:
+    name: Typecheck, lint, unit tests, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Unit tests with coverage
+        run: pnpm test:coverage
+
+      - name: Build
+        run: pnpm build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: .next
+          include-hidden-files: true
+          retention-days: 1
+
+  e2e:
+    name: E2E (7 widths + WebKit iPhone)
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium webkit
+
+      - name: Playwright
+        run: pnpm test:e2e
+        env:
+          CI: 'true'
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

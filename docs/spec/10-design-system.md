@@ -42,7 +42,7 @@ Target: native-app quality. Calm, fast, animated with restraint, customisable wi
 ## Tenant brand theming (ADR-0027)
 
 - `generateBrandScale(hex)` → OKLCH 50–950.
-- `pickAccessible(scale, surface)` → shades that meet **WCAG AA** (4.5:1 text, 3:1 UI components), in light and dark.
+- `resolveBrandTheme(colour, surface)` resolves the roles used on each surface (light and dark): `solid` keeps the owner's exact colour as the button fill whenever a label reaches 4.5:1 on it (ink or paper text); `text` ≥ 4.5:1 and `accent` (active tabs, borders) ≥ 3:1 against the surface; `subtle` tint with `onSubtle` text ≥ 4.5:1. Implemented in `src/lib/theme/brand.ts`.
 - If the chosen colour is too light or too dark, the text and solid variants are shifted automatically. The owner sees a preview and a note.
 - Property-based tests: random colours × surfaces always meet AA.
 

@@ -1,0 +1,24 @@
+{
+  "table": "طاولة {number}",
+  "status": {
+    "openUntil": "مفتوح · حتى {time}",
+    "closed": "مغلق"
+  },
+  "search": {
+    "placeholder": "ابحث عن طبق أو مشروب…"
+  },
+  "info": "معلومات",
+  "wifi": "واي فاي",
+  "language": "اللغة",
+  "categories": "الأقسام",
+  "badges": {
+    "new": "جديد",
+    "popular": "الأكثر طلبًا",
+    "spicy": "حار"
+  },
+  "unavailable": "غير متوفر",
+  "service": {
+    "callWaiter": "نداء النادل",
+    "bill": "الحساب"
+  }
+}

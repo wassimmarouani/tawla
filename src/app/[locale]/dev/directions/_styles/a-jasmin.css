@@ -1,0 +1,209 @@
+/* Direction A — Jasmin: calm Mediterranean editorial. Airy, soft cards, photo at the end. */
+
+[data-direction='a'] {
+  --shadow: 0 1px 2px rgb(28 27 23 / 0.04), 0 6px 20px rgb(28 27 23 / 0.06);
+}
+
+[data-direction='a'][data-theme='dark'] {
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+}
+
+[data-direction='a'] .hero-img {
+  block-size: 15rem;
+}
+
+[data-direction='a'] .hero[data-has-image='true'] .hero-top {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+}
+
+[data-direction='a'] .hero[data-has-image='true'] :is(.table-badge, .lang) {
+  border-radius: 999px;
+  background: rgb(17 17 16 / 0.62);
+  color: #fff;
+}
+
+[data-direction='a'] .hero[data-has-image='false'] {
+  padding-block-end: 0.25rem;
+  background: linear-gradient(var(--brand-subtle) 0 8.5rem, transparent 8.5rem);
+}
+
+[data-direction='a'] .hero[data-has-image='false'] :is(.table-badge, .lang) {
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+[data-direction='a'] .lang span[aria-current] {
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* On the photo the pill sits on a fixed dark overlay, so the active state is fixed white. */
+[data-direction='a'] .hero[data-has-image='true'] .lang span[aria-current] {
+  background: #fff;
+  color: #111110;
+}
+
+[data-direction='a'] .hero-body {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  margin: -2.75rem var(--gutter) 0;
+  padding: 2.75rem 1.25rem 1.25rem;
+  border-radius: 1.5rem;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+[data-direction='a'] .hero[data-has-image='false'] .hero-body {
+  margin-block-start: 2rem;
+}
+
+[data-direction='a'] .logo {
+  position: absolute;
+  inset-block-start: -2rem;
+  display: grid;
+  place-items: center;
+  inline-size: 4rem;
+  block-size: 4rem;
+  border: 4px solid var(--surface);
+  border-radius: 999px;
+  background: var(--brand-solid);
+  color: var(--brand-on-solid);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+[data-direction='a'] .venue {
+  font-size: 1.5rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+[data-direction='a'] .venue-meta {
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+[data-direction='a'] .venue-facts {
+  justify-content: center;
+  color: var(--muted);
+}
+
+[data-direction='a'] .search {
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+[data-direction='a'] .chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+[data-direction='a'] .chip[aria-current] {
+  border-color: var(--brand-solid);
+  background: var(--brand-solid);
+  color: var(--brand-on-solid);
+}
+
+[data-direction='a'] .cat {
+  margin-block-start: 2rem;
+}
+
+[data-direction='a'] .cat-index {
+  display: none;
+}
+
+[data-direction='a'] .cat-title {
+  margin-block-end: 0.875rem;
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+[data-direction='a'] .rows {
+  padding-inline: 1rem;
+  border-radius: 1.25rem;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+[data-direction='a'] .row {
+  padding-block: 0.875rem;
+}
+
+[data-direction='a'] .row + .row {
+  border-block-start: 1px solid var(--line);
+}
+
+[data-direction='a'] .row-price {
+  font-weight: 600;
+}
+
+[data-direction='a'] .cards {
+  display: grid;
+  gap: 0.75rem;
+}
+
+[data-direction='a'] .card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6.5rem;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  padding-inline-start: 1rem;
+  border-radius: 1.25rem;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+[data-direction='a'] .card-media {
+  order: 2;
+  aspect-ratio: 1;
+  border-radius: 0.875rem;
+}
+
+[data-direction='a'] .card-body {
+  order: 1;
+}
+
+[data-direction='a'] .card-price {
+  font-weight: 600;
+}
+
+[data-direction='a'] .badge {
+  border-radius: 999px;
+}
+
+[data-direction='a'] .service-bar {
+  inset-block-end: 0.75rem;
+  inset-inline: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  [data-direction='a'] .service-bar {
+    inset-block-end: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+[data-direction='a'] .btn {
+  border-radius: 999px;
+}
+
+[data-direction='a'] .btn-ghost {
+  background: var(--surface-2);
+  color: var(--ink);
+}

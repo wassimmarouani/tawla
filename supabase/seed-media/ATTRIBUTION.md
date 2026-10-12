@@ -1,0 +1,13 @@
+# Seed media attribution
+
+Photos used by the demo café seed and the design prototypes. Downloaded from Wikimedia Commons on 2026-10-12, resized for the web. **Attribution is required** for CC BY / CC BY-SA files: any public page showing them (landing demo) must display these credits. Derivatives of CC BY-SA files are shared under the same licence.
+
+| File                         | Original                                                                                                                                                                                 | Author                    | Licence      |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- | ------------ |
+| croissant.jpg                | [Croissants au beurre (18953292873).jpg](<https://commons.wikimedia.org/wiki/File:Croissants_au_beurre_(18953292873).jpg>)                                                               | Herry Wibisono (herryway) | CC0          |
+| fricasse.jpg                 | [Fricassé, Tunisie, 19 mars 2020.jpg](https://commons.wikimedia.org/wiki/File:Fricass%C3%A9,_Tunisie,_19_mars_2020.jpg)                                                                  | Habib M'henni             | CC BY-SA 4.0 |
+| makroud.jpg                  | [Makroudh Pâtisserie tunisienne 01.jpg](https://commons.wikimedia.org/wiki/File:Makroudh_P%C3%A2tisserie_tunisienne_01.jpg)                                                              | Zeinebtakouti             | CC BY-SA 4.0 |
+| citronnade.jpg               | [Lemonade 2.jpg](https://commons.wikimedia.org/wiki/File:Lemonade_2.jpg)                                                                                                                 | Shisma                    | CC BY 4.0    |
+| crepe-chocolat.jpg           | [Crêpe chocolat-caramel 01.jpg](https://commons.wikimedia.org/wiki/File:Cr%C3%AApe_chocolat-caramel_01.jpg)                                                                              | Kev22                     | CC BY 4.0    |
+| ojja.jpg                     | [Tunisian Ojja.jpg](https://commons.wikimedia.org/wiki/File:Tunisian_Ojja.jpg)                                                                                                           | Una723                    | CC BY 4.0    |
+| cover-cafe-sidi-bou-said.jpg | [Café SIDI CHABAANE Ou café des Terrasses sidi bousaid tunisie.JPG](https://commons.wikimedia.org/wiki/File:Caf%C3%A9_SIDI_CHABAANE_Ou_caf%C3%A9_des_Terrasses_sidi_bousaid_tunisie.JPG) | Rania.tamboura            | CC BY-SA 3.0 |

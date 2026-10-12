@@ -11,6 +11,11 @@ export const env = createEnv({
   },
   server: {
     APP_DOMAIN: z.string().min(1),
+    /** Enables /dev/* design prototypes. Never set in staging or production. */
+    ENABLE_DEV_ROUTES: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
@@ -19,6 +24,7 @@ export const env = createEnv({
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     APP_DOMAIN: process.env.APP_DOMAIN,
+    ENABLE_DEV_ROUTES: process.env.ENABLE_DEV_ROUTES,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
   },

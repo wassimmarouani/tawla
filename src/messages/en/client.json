@@ -1,0 +1,24 @@
+{
+  "table": "Table {number}",
+  "status": {
+    "openUntil": "Open · until {time}",
+    "closed": "Closed"
+  },
+  "search": {
+    "placeholder": "Search dishes and drinks…"
+  },
+  "info": "Info",
+  "wifi": "Wi-Fi",
+  "language": "Language",
+  "categories": "Categories",
+  "badges": {
+    "new": "New",
+    "popular": "Popular",
+    "spicy": "Spicy"
+  },
+  "unavailable": "Unavailable",
+  "service": {
+    "callWaiter": "Call waiter",
+    "bill": "Bill, please"
+  }
+}

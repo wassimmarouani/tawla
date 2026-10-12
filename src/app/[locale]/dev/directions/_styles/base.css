@@ -1,0 +1,365 @@
+/*
+ * P0-06 prototype styles (dev-only exploration). Raw values are allowed here because these files
+ * act as per-direction token sheets; the chosen direction moves into src/styles/tokens.css (P0-07).
+ * Logical properties only, so RTL needs no overrides.
+ */
+
+.proto {
+  --gutter: 1rem;
+  --target: 2.75rem; /* 44px customer touch target */
+  --success-text: #17663a;
+  --spicy-bg: #fde8e3;
+  --spicy-text: #8f2510;
+
+  min-block-size: 100dvh;
+  padding-block-end: calc(7.5rem + env(safe-area-inset-bottom));
+  overflow-x: clip;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-latin), var(--font-arabic), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.proto[data-theme='dark'] {
+  --success-text: #7fdca6;
+  --spicy-bg: #3d1912;
+  --spicy-text: #ffb3a1;
+  color-scheme: dark;
+}
+
+.proto :is(h1, h2, p, ul) {
+  margin: 0;
+}
+
+.proto ul {
+  padding: 0;
+  list-style: none;
+}
+
+.proto svg {
+  inline-size: 1.125em;
+  block-size: 1.125em;
+  flex: none;
+}
+
+.proto .price {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Hero ------------------------------------------------------------------ */
+.proto .hero {
+  position: relative;
+}
+
+.proto .hero-img {
+  display: block;
+  inline-size: 100%;
+  object-fit: cover;
+}
+
+.proto .hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem var(--gutter);
+}
+
+.proto .table-badge {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.25rem;
+  padding-inline: 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.proto .lang {
+  display: inline-flex;
+  align-items: center;
+}
+
+.proto .lang span {
+  display: grid;
+  place-items: center;
+  min-inline-size: var(--target);
+  min-block-size: var(--target);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.proto .venue-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.proto .status,
+.proto .fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  white-space: nowrap;
+}
+
+.proto .status {
+  color: var(--success-text);
+  font-weight: 600;
+}
+
+.proto .status-dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+/* Search + chips --------------------------------------------------------- */
+.proto .search {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-block-size: 3rem;
+  margin: 1.25rem var(--gutter) 0.75rem;
+  padding-inline: 1rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.proto .chips {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 5;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem var(--gutter);
+  background: var(--paper);
+  scrollbar-width: none;
+}
+
+.proto .chip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-block-size: var(--target);
+  padding-inline: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.proto .cat {
+  scroll-margin-block-start: 4rem;
+}
+
+/* Sections --------------------------------------------------------------- */
+.proto .sections {
+  padding-inline: var(--gutter);
+}
+
+.proto .cat-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+}
+
+.proto .row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.proto .row-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-inline-size: 0;
+}
+
+.proto .row-name,
+.proto .card-name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.proto .row-desc,
+.proto .card-desc {
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.proto .leader {
+  display: none;
+}
+
+.proto .badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-block-start: 0.25rem;
+}
+
+.proto .badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.proto .badge[data-kind='popular'] {
+  background: var(--brand-subtle);
+  color: var(--brand-on-subtle);
+}
+
+.proto .badge[data-kind='new'] {
+  background: var(--brand-solid);
+  color: var(--brand-on-solid);
+}
+
+.proto .badge[data-kind='spicy'] {
+  background: var(--spicy-bg);
+  color: var(--spicy-text);
+}
+
+.proto .card {
+  position: relative;
+}
+
+.proto .card-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.proto .card-img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.proto .monogram {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  background: var(--brand-subtle);
+  color: var(--brand-on-subtle);
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+.proto .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-inline-size: 0;
+}
+
+.proto .card-desc {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.proto .card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.proto .card-foot .badges {
+  margin: 0;
+}
+
+/* Unavailable: greyed, never hidden (spec 02). Text keeps AA contrast via --muted. */
+.proto [data-available='false'] :is(.row-name, .card-name, .row-price, .card-price) {
+  color: var(--muted);
+}
+
+.proto [data-available='false'] .card-media > :is(img, .monogram) {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.proto .card-flag {
+  position: absolute;
+  inset-block-end: 0.5rem;
+  inset-inline-start: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Service bar ------------------------------------------------------------ */
+.proto .service-bar {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 10;
+  display: flex;
+  gap: 0.75rem;
+  margin-inline: auto;
+  max-inline-size: 40rem;
+  padding: 0.75rem var(--gutter) calc(0.75rem + env(safe-area-inset-bottom));
+}
+
+.proto .btn {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 3rem;
+  padding-inline: 1rem;
+  border: 0;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.proto .btn-solid {
+  background: var(--brand-solid);
+  color: var(--brand-on-solid);
+}
+
+.proto .btn:focus-visible,
+.proto .chip:focus-visible {
+  outline: 3px solid var(--brand-text);
+  outline-offset: 2px;
+}
+
+/* Wider screens: keep a comfortable reading column. */
+@media (min-width: 48rem) {
+  .proto {
+    --gutter: 1.5rem;
+  }
+
+  .proto .sections,
+  .proto .search,
+  .proto .chips,
+  .proto .hero-body {
+    max-inline-size: 48rem;
+    margin-inline: auto;
+  }
+}

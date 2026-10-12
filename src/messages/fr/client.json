@@ -1,0 +1,24 @@
+{
+  "table": "Table {number}",
+  "status": {
+    "openUntil": "Ouvert · jusqu’à {time}",
+    "closed": "Fermé"
+  },
+  "search": {
+    "placeholder": "Rechercher un plat, une boisson…"
+  },
+  "info": "Infos",
+  "wifi": "Wi-Fi",
+  "language": "Langue",
+  "categories": "Catégories",
+  "badges": {
+    "new": "Nouveau",
+    "popular": "Populaire",
+    "spicy": "Épicé"
+  },
+  "unavailable": "Indisponible",
+  "service": {
+    "callWaiter": "Appeler le serveur",
+    "bill": "L’addition"
+  }
+}

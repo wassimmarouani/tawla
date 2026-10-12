@@ -36,7 +36,7 @@
 
 3. **Tenant brand theming:**
    - `generateBrandScale(hex)` in `src/lib/theme/brand.ts` builds an OKLCH 50–950 scale with culori;
-   - `pickAccessible(scale, surface)` picks the shade that reaches **WCAG AA** contrast (4.5:1 text, 3:1 UI) on each surface, light and dark;
+   - `resolveBrandTheme(colour, surface)` resolves the roles used on each surface (light and dark): `solid` keeps the owner's exact colour as the button fill whenever a label reaches 4.5:1 on it (ink or paper text); `text` ≥ 4.5:1 and `accent` (active tabs, borders) ≥ 3:1 against the surface; `subtle` tint with `onSubtle` text ≥ 4.5:1;
    - the result is injected as CSS variables on the menu root (`--brand-*`, `--brand-on`, `--brand-text`);
    - property-based tests over random colours check that AA always holds.
 4. **Photo-less design (F4):** the menu layout adapts per category:
@@ -56,3 +56,7 @@
 ## Consequences
 
 - Design quality is gated by evidence (screenshots and automated checks) and by a brand system that can't produce an inaccessible menu.
+
+## Amendment — 2026-10-12 (P0-06)
+
+The first prototype darkened pale brand colours (saffron turned mustard) because the button fill itself had to reach 3:1 against the page. WCAG 1.4.11 does not require that for a component identified by its text label. The fill now keeps the owner's colour and a separate `accent` shade carries the 3:1 non-text contrast. A light/dark surface inversion bug was fixed at the same time. Both are covered by tests in `src/lib/theme/brand.test.ts`, including a 2,000-colour property test.

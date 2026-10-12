@@ -19,6 +19,7 @@ The customer menu must ship < 150 KB of compressed initial JS, LCP < 2 s on 4G, 
    - fuzzy search dynamically imported on search focus.
 
    **No TanStack Query and no Supabase client** in the initial customer bundle.
+
 2. **Budgets enforced in CI** with `size-limit` against the production build:
    - customer menu route ≤ **150 KB** gz total initial JS;
    - staff app ≤ 250 KB;
@@ -26,6 +27,7 @@ The customer menu must ship < 150 KB of compressed initial JS, LCP < 2 s on 4G, 
    - CSS ≤ 30 KB.
 
    Lighthouse CI (mobile, simulated 4G) runs on preview deploys for `/t/[token]` with the demo café and on the landing page, and fails under 90.
+
 3. **Errors:**
    - server-side Sentry everywhere;
    - client-side, the customer menu loads a **minimal Sentry setup lazily after `requestIdleCallback`** (errors only, no tracing or replay);

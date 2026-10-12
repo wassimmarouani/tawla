@@ -26,6 +26,7 @@ Basic sells "call waiter / bill / one-click out-of-stock", which needs a staff r
    - 1 staff account (excluding owner).
 
    Basic does **not** include "View my bill" (no orders exist). Feedback is offered once the bill request is marked handled.
+
 4. **Minimal staff screen moves to Phase 1** (Q1):
    - device pairing;
    - email login (manager or the single Basic staff account);
@@ -35,6 +36,7 @@ Basic sells "call waiter / bill / one-click out-of-stock", which needs a staff r
    - Web Push (Android, and iOS when installed to the home screen).
 
    PIN, zones and the kanban board stay in Phase 2.
+
 5. **Data collected from Phase 1** even where the UI comes later: `menu_views` (aggregated nightly), `feedbacks`, service request timings.
 6. **Pilots and trial:** pilots get a plan assigned by Super Admin (Phase 1 uses a minimal admin page or a seed script, ADR-0024). The self-serve 14-day Pro trial starts with Phase 2, when Pro exists.
 7. **Excel/CSV import** moves to Phase 2.

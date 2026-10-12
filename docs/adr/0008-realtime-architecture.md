@@ -6,7 +6,7 @@
 
 ## Context
 
-- **Public** Realtime channels let any client *send* messages. A public `restaurant:{id}:menu` channel would let anyone broadcast a fake "product unavailable" to every customer of a café.
+- **Public** Realtime channels let any client _send_ messages. A public `restaurant:{id}:menu` channel would let anyone broadcast a fake "product unavailable" to every customer of a café.
 - Supabase recommends Broadcast for scale and security. Postgres Changes is meant for "quick testing" and a "low amount of connected users".
 - Customers are anonymous. Supabase anonymous sign-in is limited to 30 per hour per IP by default, and a whole café shares one Wi-Fi IP.
 - Supabase Pro includes 500 concurrent Realtime connections with the spend cap on, 10,000 with it off, then $10 per 1,000 peak connections.
@@ -18,14 +18,14 @@
 2. **No `postgres_changes`.** Events are published by `after insert/update` triggers calling `realtime.send(payload, event, topic, private => true)`. Payloads are minimal: ids, status, version, table number. Clients refetch details over HTTP when needed.
 3. **Topics:**
 
-| Topic | Who can receive (SELECT policy) | Events |
-|---|---|---|
-| `r:{restaurantId}:orders` | counter / manager / owner of that restaurant | `order.created`, `order.updated` |
-| `r:{restaurantId}:zone:{zoneId}` | waiters assigned to the zone today, plus all waiters when the zone is unassigned (ADR-0007) | `order.created`, `order.ready`, `request.created`, `request.claimed` |
-| `r:{restaurantId}:station:{stationId}` | station role on that station (Phase 3) | `items.to_prepare`, `item.updated` |
-| `r:{restaurantId}:requests` | all active staff of the restaurant (Phase 1, Basic) | `request.created`, `request.claimed`, `request.done` |
-| `s:{tableSessionPublicId}` | **anon**, where the topic holds a 128-bit random public id (capability) | `order.status_changed`, `request.handled`, `session.closed` |
-| `m:{restaurantPublicId}` | **anon** | `product.availability_changed`, `menu.updated` |
+| Topic                                  | Who can receive (SELECT policy)                                                             | Events                                                               |
+| -------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `r:{restaurantId}:orders`              | counter / manager / owner of that restaurant                                                | `order.created`, `order.updated`                                     |
+| `r:{restaurantId}:zone:{zoneId}`       | waiters assigned to the zone today, plus all waiters when the zone is unassigned (ADR-0007) | `order.created`, `order.ready`, `request.created`, `request.claimed` |
+| `r:{restaurantId}:station:{stationId}` | station role on that station (Phase 3)                                                      | `items.to_prepare`, `item.updated`                                   |
+| `r:{restaurantId}:requests`            | all active staff of the restaurant (Phase 1, Basic)                                         | `request.created`, `request.claimed`, `request.done`                 |
+| `s:{tableSessionPublicId}`             | **anon**, where the topic holds a 128-bit random public id (capability)                     | `order.status_changed`, `request.handled`, `session.closed`          |
+| `m:{restaurantPublicId}`               | **anon**                                                                                    | `product.availability_changed`, `menu.updated`                       |
 
 4. **No INSERT policy on `realtime.messages`** for anon or authenticated. Clients can never send. Only DB triggers publish (via `realtime.send`, security definer).
 5. **Customer connection strategy (D4):** the customer menu doesn't open a WebSocket on load.

@@ -5,6 +5,7 @@
 Route `/admin`. Platform staff only (Super Admin, Support), TOTP 2FA mandatory (`aal2` enforced by RLS).
 
 ## Venues
+
 - List with search and filters: plan, status (trial, active, past due, suspended), city, sign-up date.
 - Venue page: info, subscription, active flags and overrides, users and devices, activity volume, payment history, AI cost.
 - Create a venue on behalf of a customer (field sales) and send the owner invitation.
@@ -12,6 +13,7 @@ Route `/admin`. Platform staff only (Super Admin, Support), TOTP 2FA mandatory (
 - **Impersonation (Support/Super Admin):** reason required, max 60 min, visible banner, every action audited with `impersonated_by`.
 
 ## Plans and billing (Phase 3)
+
 - Plan catalogue: monthly and yearly price, included flags, limits (tables, staff, products), AI monthly cap.
 - 14-day Pro trial without a card (from Phase 2).
 - Manual payments at launch (cash, bank transfer, D17), then a Tunisian gateway (Konnect or Flouci, to be evaluated).
@@ -19,6 +21,7 @@ Route `/admin`. Platform staff only (Super Admin, Support), TOTP 2FA mandatory (
 - Automatic reminders before due date (J-7, J-1) and after non-payment (J+3, J+7) via cron (ADR-0009).
 
 ## Platform steering
+
 - KPIs: MRR, active venues, trial → paid conversion, churn, orders per day, **notification p95 latency and incidents** (ADR-0007), **AI cost per venue** (ADR-0025).
 - Global audit log, searchable and filterable.
 - Announcements: message shown in every manager's back-office (feature, maintenance).

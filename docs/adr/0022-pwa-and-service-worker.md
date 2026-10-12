@@ -18,6 +18,7 @@
    - `/t/` and slug menus (stale-while-revalidate for menu HTML, cache-first for `media/` images and fonts).
 
    **Ordering is never served from cache.** Offline, the cart is kept locally and sending is disabled with a clear message.
+
 3. **Web Push:**
    - VAPID keys in env;
    - `push_subscriptions (restaurant_id, membership_id, device_id, endpoint, keys, created_at)`;

@@ -5,6 +5,7 @@
 Route `/dashboard`. Desktop and tablet first, fully usable on phones. Measurable goal: **a new venue publishes its full menu in < 30 minutes.**
 
 ## Guided onboarding
+
 1. **Venue info:** name, type (café, restaurant, tea room, pastry, fast food), address, phone, hours (schedule editor with overnight ranges).
 2. **Visual identity:** logo, main colour (suggested from the logo, ADR-0018; adjusted for AA contrast, ADR-0027), cover image.
 3. **Menu import:** manual entry, or **photo of the paper menu analysed by AI** (ADR-0025). The result is an editable draft table, never auto-published. CSV/Excel import arrives in Phase 2.
@@ -15,6 +16,7 @@ Route `/dashboard`. Desktop and tablet first, fully usable on phones. Measurable
 A progress checklist stays on the dashboard until onboarding is complete.
 
 ## Menu management
+
 - **Categories:** multilingual name, icon or image, drag-and-drop order, visibility, time window (ADR-0014 schedule, e.g. "Breakfast" 07:00–11:00, Mon–Sat).
 - **Products:** multilingual name and description, price (millimes, entered as `3,5` or `3.500`), photo, category, station (Phase 3), badges, allergens, order, visibility.
 - **Option groups:** reusable (e.g. "Sugar" shared by hot drinks), `min/max`, with per-product overrides of rules and option prices.
@@ -29,6 +31,7 @@ A progress checklist stays on the dashboard until onboarding is complete.
 - Destructive actions can be undone for 5 seconds (toast "Undo") instead of a confirmation dialog.
 
 ## Tables and QR codes
+
 - Create one at a time or in bulk (e.g. tables 1–30), assign to zones.
 - One unique QR per table with a random token (never the number).
 - **"Regenerate QR"**: the old token stops working immediately (audited).
@@ -36,11 +39,13 @@ A progress checklist stays on the dashboard until onboarding is complete.
 - General QR without a table (shop window, social media) → `/{slug}` read-only menu.
 
 ## Staff and devices
+
 - Invite by email (owner, manager, any role), or create a shadow staff member with name + PIN (Phase 2).
 - Assign role, deactivate immediately.
 - **Devices:** pair (code or QR), name, mode (fixed / mobile), revoke. Active sessions with remote logout.
 
 ## Settings
+
 - **Orders (Pro+):** enabled or not, staff validation required (default on; auto-accept only after the first accepted order of a session), routing mode, escalation thresholds, rate limits.
 - **Languages:** enabled locales and default.
 - **Hours:** schedule + exceptions + "close now" switch. Ordering is blocked outside hours; the menu stays viewable.
@@ -51,19 +56,20 @@ A progress checklist stays on the dashboard until onboarding is complete.
 
 ## Dashboard and statistics
 
-| Indicator | Plan | Detail | Phase |
-|---|---|---|---|
-| Scans and menu views | All | Per day, per table, per language | 1 (counter), 3 (charts) |
-| Satisfaction | All | Average rating and comments | 1 |
-| Order revenue | Pro, Premium | Day / week / month, vs previous period | 3 |
-| Orders and average ticket | Pro, Premium | Per day and hour | 3 |
-| Top and flop products | Pro, Premium | Quantities and revenue | 3 |
-| Peak hours | Pro, Premium | Heat map day × hour | 3 |
-| Service time | Pro, Premium | Received → accepted → served | 3 |
-| Per-waiter performance | Premium | Orders handled, average delay | 3 |
-| AI insights | Premium | Weekly natural-language summary | 3 |
+| Indicator                 | Plan         | Detail                                 | Phase                   |
+| ------------------------- | ------------ | -------------------------------------- | ----------------------- |
+| Scans and menu views      | All          | Per day, per table, per language       | 1 (counter), 3 (charts) |
+| Satisfaction              | All          | Average rating and comments            | 1                       |
+| Order revenue             | Pro, Premium | Day / week / month, vs previous period | 3                       |
+| Orders and average ticket | Pro, Premium | Per day and hour                       | 3                       |
+| Top and flop products     | Pro, Premium | Quantities and revenue                 | 3                       |
+| Peak hours                | Pro, Premium | Heat map day × hour                    | 3                       |
+| Service time              | Pro, Premium | Received → accepted → served           | 3                       |
+| Per-waiter performance    | Premium      | Orders handled, average delay          | 3                       |
+| AI insights               | Premium      | Weekly natural-language summary        | 3                       |
 
 CSV and PDF export of all statistics (Phase 3).
 
 ## Design intent
+
 "Calm productivity" (Linear-like): bento dashboard grid, inline editing, Cmd/Ctrl + K command palette, helpful empty states ("Add your first category"), keyboard-navigable throughout.

@@ -21,6 +21,7 @@
    - `/{slug}`: public read-only menu (general QR, social links, SEO canonical).
 
    Locale resolution: cookie `NEXT_LOCALE` (explicit choice) → restaurant-enabled locales matched against `Accept-Language` → restaurant default locale. `<html lang dir>` follows it.
+
 3. **Marketing routes** use next-intl routing with `localePrefix: 'as-needed'` and default `fr`: `/`, `/pricing`, `/legal/*`, `/ar/…`, `/en/…`. Internally they live under `src/app/[locale]/(marketing)/` with `dynamicParams = false`.
 4. **App routes have no locale prefix:** `/login`, `/signup`, `/dashboard`, `/staff`, `/admin`. UI locale = `profiles.locale`, mirrored to the `NEXT_LOCALE` cookie.
 5. **Routing in `proxy.ts`, no DB access** (ADR-0017). The first path segment decides:
@@ -29,12 +30,14 @@
    - **anything else is a restaurant slug** → internal rewrite `/{slug}` → `/r/{slug}`. Unknown slugs render 404 from the page.
 
    Two dynamic root segments (`[locale]` and `[slug]`) would conflict in the App Router. This rewrite avoids it, and reserved slugs (below) guarantee no collision.
+
 6. Customer pages (`/t/[token]`, `/r/[slug]`) resolve the locale themselves (cookie → restaurant locales × `Accept-Language` → default) and call `setRequestLocale`.
 7. **Reserved slugs:** a list in `src/lib/tenancy/reserved-slugs.ts` covering:
    - every top-level route, plus `admin, api, app, staff, dashboard, t, p, pricing, login, signup, legal, help, support, status, www, mail, static, assets`;
    - locale codes and brand names.
 
    Enforced by Zod and by a DB check against `reserved_slugs`. Slug pattern: `^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$`.
+
 8. Slug renames keep `slug_redirects (old_slug → restaurant_id)` for 301s. QR codes are unaffected.
 9. Subdomains and custom domains (Premium, Phase 4) are resolved in `proxy.ts` by mapping host to restaurant id. That's an additive change.
 

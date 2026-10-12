@@ -19,15 +19,16 @@
 2. **Money:** one formatter, `formatMoney(millimes, locale)`, in `src/lib/money/`. Always 3 decimals, Latin digits.
 
 | Locale | Output for 3500 | Output for 12500 |
-|---|---|---|
-| fr | `3,500 DT` | `12,500 DT` |
-| ar | `3.500 د.ت` | `12.500 د.ت` |
-| en | `TND 3.500` | `TND 12.500` |
+| ------ | --------------- | ---------------- |
+| fr     | `3,500 DT`      | `12,500 DT`      |
+| ar     | `3.500 د.ت`     | `12.500 د.ت`     |
+| en     | `TND 3.500`     | `TND 12.500`     |
 
-   - Grouping from 1,000 DT upwards: fr uses a narrow no-break space (U+202F), e.g. `1 250,000 DT`; en and ar use `,`, e.g. `TND 1,250.000` / `1,250.000 د.ت`.
-   - Number and currency are joined with a no-break space, and the RTL isolate `⁨…⁩` wraps amounts in Arabic text.
-   - All arithmetic happens on integers. `parseMoneyInput("3,5") → 3500` handles comma or dot input.
-   - Snapshot tests cover the table above and edge cases (0, 50, 999999999).
+- Grouping from 1,000 DT upwards: fr uses a narrow no-break space (U+202F), e.g. `1 250,000 DT`; en and ar use `,`, e.g. `TND 1,250.000` / `1,250.000 د.ت`.
+- Number and currency are joined with a no-break space, and the RTL isolate `⁨…⁩` wraps amounts in Arabic text.
+- All arithmetic happens on integers. `parseMoneyInput("3,5") → 3500` handles comma or dot input.
+- Snapshot tests cover the table above and edge cases (0, 50, 999999999).
+
 3. **Menu content translation fallback:** requested locale → restaurant default locale → first available. A missing translation renders the fallback with `lang` set on that element (correct font and direction).
 4. **Dates and times:** `Intl.DateTimeFormat` with time zone `Africa/Tunis` (from `restaurants.timezone`), 24-hour clock, Latin digits in every locale.
 5. **Search:** client-side, over the already-loaded menu, lazy-loaded on focus.

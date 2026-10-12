@@ -16,18 +16,18 @@
 1. **`order_status` enum (7 values):** `pending, accepted, preparing, ready, served, rejected, cancelled`. Terminal states: `served`, `rejected`, `cancelled`. Bill closure belongs to `table_sessions.status` (`open | bill_requested | closed`) and is never an order status.
 2. **Transition table.** Implemented once as a pure function `transition(order, action, actor, ctx)` in `src/features/orders/services/state-machine.ts` (100 % covered), and mirrored by a `before update` trigger on `orders` that rejects illegal transitions:
 
-| From → To | Allowed actors | Condition |
-|---|---|---|
-| ∅ → pending | client session, counter, waiter, manager, owner | valid session, restaurant open, `ordering` flag, products available |
-| pending → accepted | counter, waiter (own zones; any zone when the zone has no waiter, ADR-0007), manager, owner | — |
-| pending → rejected | same as accepted | reason required |
-| pending → cancelled | the client who placed it; counter, manager, owner | — |
-| accepted → preparing | counter, station, manager, owner | — |
-| accepted → ready | counter, manager, owner | no active prep station (no `kitchen_display` flag) |
-| preparing → ready | automatic when all items are ready; counter, manager, owner | — |
-| accepted/preparing → cancelled | counter, manager, owner | reason required, audited |
-| ready → served | waiter, counter, manager, owner | — |
-| **accepted → served** | waiter, counter, manager, owner | **only in routing mode `waiters_only`, or when no counter device has started a service today** (resolves A3) |
+| From → To                      | Allowed actors                                                                              | Condition                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| ∅ → pending                    | client session, counter, waiter, manager, owner                                             | valid session, restaurant open, `ordering` flag, products available                                          |
+| pending → accepted             | counter, waiter (own zones; any zone when the zone has no waiter, ADR-0007), manager, owner | —                                                                                                            |
+| pending → rejected             | same as accepted                                                                            | reason required                                                                                              |
+| pending → cancelled            | the client who placed it; counter, manager, owner                                           | —                                                                                                            |
+| accepted → preparing           | counter, station, manager, owner                                                            | —                                                                                                            |
+| accepted → ready               | counter, manager, owner                                                                     | no active prep station (no `kitchen_display` flag)                                                           |
+| preparing → ready              | automatic when all items are ready; counter, manager, owner                                 | —                                                                                                            |
+| accepted/preparing → cancelled | counter, manager, owner                                                                     | reason required, audited                                                                                     |
+| ready → served                 | waiter, counter, manager, owner                                                             | —                                                                                                            |
+| **accepted → served**          | waiter, counter, manager, owner                                                             | **only in routing mode `waiters_only`, or when no counter device has started a service today** (resolves A3) |
 
 3. **Atomicity:** each transition is a conditional update: `update orders set status=$to, version=version+1, … where id=$id and status=$from returning *`. Zero rows returned means the stable error `ORDER_STATE_CONFLICT`, and the UI shows "already handled by X". The same pattern applies to claiming service requests (`open → claimed`).
 4. Every transition writes `order_events (from_status, to_status, actor_membership_id | client_session_id, reason)` in the same transaction.

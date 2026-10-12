@@ -9,6 +9,7 @@
 AI powers the onboarding selling point (photo of the paper menu → structured menu) and AR/FR/EN translation, which the owner decided to include in **Basic** with a monthly quota. Costs must be capped per establishment and logged. The provider must stay swappable.
 
 Model IDs and prices were checked against the Claude API reference on 2026-10-11:
+
 - `claude-sonnet-5-5`: $2 / $10 per MTok input/output;
 - `claude-haiku-5-5`: $0.10 / $0.50 per MTok for prompts ≤ 100K tokens.
 
@@ -20,6 +21,7 @@ Model IDs and prices were checked against the Claude API reference on 2026-10-11
    - `writeDescription(item, tone, locale)` (Phase 2).
 
    Only `src/features/ai/providers/anthropic.ts` imports `@anthropic-ai/sdk`. Swapping the provider means writing another adapter.
+
 2. **Models:**
    - **menu photo extraction:** `claude-sonnet-5-5`, vision, structured output validated by a Zod schema (`MenuDraft`: categories, products, prices in millimes, option hints, confidence per field);
    - **translations and descriptions:** `claude-haiku-5-5` with structured output and the business glossary (terms like « direct », « capucin », « citronnade » kept as is).

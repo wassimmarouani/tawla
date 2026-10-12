@@ -7,6 +7,7 @@
 ## Context
 
 Each table tent needs the logo, table number, QR code and "Scan to order" in **FR, AR and EN**. @react-pdf/renderer 4.9.0 has open Arabic shaping bugs:
+
 - #3576: GPOS mark offsets ignored, so dots and marks are misplaced;
 - #3555: lost letterforms when slicing;
 - #3533: wrong codepoints in the text layer.

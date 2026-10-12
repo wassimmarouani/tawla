@@ -5,6 +5,7 @@
 The main risk is fraudulent ordering: from outside the venue, or for another table. The defence combines random tokens, signed sessions, rate limits and human validation.
 
 ## QR codes and sessions (ADR-0011, 0012)
+
 - QR = `/t/{token}`: 128-bit random token, never the table number or any guessable id.
 - GET never creates state. The first meaningful action opens the table session and sets a signed `__Host-` client cookie (HttpOnly, Secure, SameSite=Lax) bound to table session and device.
 - Table session closes after 90 min of inactivity (configurable) or on bill closure. The client cookie lasts at most 3 h. Ordering requires a valid client session.
@@ -12,18 +13,19 @@ The main risk is fraudulent ordering: from outside the venue, or for another tab
 
 ## Anti-abuse
 
-| Threat | Countermeasure |
-|---|---|
-| Ordering from outside | Time-bound sessions; staff validation **on by default**; auto-accept only after the session's first order was accepted by staff; opening hours |
-| Order spam | Per client session 1 / 15 s and 20 / h; per table session 40 / h; max 30 lines × qty 20 |
-| Waiter-call spam | 1 / 60 s per table session (same for bill requests) |
-| Price tampering | Server recomputes totals from DB prices; client values ignored |
-| Bots | Per-IP limits (Upstash, generous because cafés share IPs); invisible Cloudflare Turnstile only when the anomaly heuristic fires; GET is side-effect free |
-| Ghost order accepted | Staff sees the device's history; block device for 24 h |
-| Realtime spoofing | Private channels, no client INSERT policy; only DB triggers publish (ADR-0008) |
-| IDOR on orders | Order must belong to the cookie's table session |
+| Threat                | Countermeasure                                                                                                                                           |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ordering from outside | Time-bound sessions; staff validation **on by default**; auto-accept only after the session's first order was accepted by staff; opening hours           |
+| Order spam            | Per client session 1 / 15 s and 20 / h; per table session 40 / h; max 30 lines × qty 20                                                                  |
+| Waiter-call spam      | 1 / 60 s per table session (same for bill requests)                                                                                                      |
+| Price tampering       | Server recomputes totals from DB prices; client values ignored                                                                                           |
+| Bots                  | Per-IP limits (Upstash, generous because cafés share IPs); invisible Cloudflare Turnstile only when the anomaly heuristic fires; GET is side-effect free |
+| Ghost order accepted  | Staff sees the device's history; block device for 24 h                                                                                                   |
+| Realtime spoofing     | Private channels, no client INSERT policy; only DB triggers publish (ADR-0008)                                                                           |
+| IDOR on orders        | Order must belong to the cookie's table session                                                                                                          |
 
 ## Authentication (ADR-0010)
+
 - Supabase Auth: email + password (≥ 10 characters, leaked-password protection on Pro), magic link, optional Google sign-in for owners.
 - TOTP 2FA: **mandatory for Super Admin and Support** (restrictive RLS on `aal2`), offered to owners.
 - Staff:
@@ -34,6 +36,7 @@ The main risk is fraudulent ordering: from outside the venue, or for another tab
 - Sessions: fixed devices until end of business day; mobile 12 h. Remote revocation.
 
 ## Application security
+
 - **RLS on 100 % of tables**, checked in CI. Isolation tests per table and role (pgTAP + Vitest).
 - Supabase **secret key server-only**, imported only in `src/server/admin/`. New publishable/secret keys; legacy keys disabled (ADR-0024).
 - **Headers:**
@@ -49,6 +52,7 @@ The main risk is fraudulent ordering: from outside the venue, or for another tab
 - Idempotency keys on every public and staff mutation.
 
 ## Personal data and compliance (ADR-0028)
+
 - Customers are never asked for name, phone or email. No customer data is sent to AI providers.
 - Staff and owner data falls under Tunisian law 2004-63. **INPDP declaration and transfer-abroad authorisation to be checked with a lawyer** (EU hosting).
 - Public pages: legal notice, terms of use and sale, privacy policy (placeholders until legal review).

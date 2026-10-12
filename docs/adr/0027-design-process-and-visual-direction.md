@@ -22,6 +22,7 @@
    - with two different restaurant brand colours.
 
    The owner picks one, and it becomes ADR-0029.
+
 2. **Token-first design system** (`src/styles/tokens.css`, Tailwind v4 `@theme`):
    - spacing on a 4 px grid;
    - radii 8 / 16 / 24 + full;
@@ -32,6 +33,7 @@
    - z-index scale; touch target minimums (44 px customer, 48 px staff).
 
    Components use tokens only. A lint rule bans arbitrary Tailwind values (`[#…]`, `[13px]`) outside `tokens.css`.
+
 3. **Tenant brand theming:**
    - `generateBrandScale(hex)` in `src/lib/theme/brand.ts` builds an OKLCH 50–950 scale with culori;
    - `pickAccessible(scale, surface)` picks the shade that reaches **WCAG AA** contrast (4.5:1 text, 3:1 UI) on each surface, light and dark;
@@ -42,6 +44,7 @@
    - **< 50 %** → elegant typographic list (name, description, dotted leader or aligned price, badges).
 
    A photo-less product inside a photo category shows a branded monogram tile, not a grey placeholder. The demo seed includes both kinds of categories.
+
 5. **Theme:** the restaurant sets light / dark / auto for its menu (§6.5). "Auto" follows the phone. The back-office and staff app follow the user's preference via next-themes.
 6. **Screenshot validation** in the Definition of Done:
    - Playwright projects at 360, 390, 430, 768, 1024, 1280, 1440;

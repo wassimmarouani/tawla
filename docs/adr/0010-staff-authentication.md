@@ -21,6 +21,7 @@
    - no password is set.
 
    A staff member with an existing account can link it instead.
+
 3. **Paired devices.** Table `staff_devices`:
    - columns: `id, restaurant_id, label, mode ('fixed'|'mobile'), token_hash, created_by, last_seen_at, revoked_at`;
    - an owner or manager pairs a device from the back-office with a QR or 8-character code, valid 10 min;

@@ -7,6 +7,7 @@
 ## Context
 
 Vercel functions are serverless, so nothing in the app tier runs timers. Features that need scheduled work:
+
 - order escalation (2 min);
 - missing-ack detection (15 s);
 - auto-closing inactive table sessions;
@@ -29,6 +30,7 @@ Supabase Cron accepts schedules of 1–59 seconds. pg_net sends asynchronous HTT
    - the secret is stored in Supabase Vault and compared in constant time.
 
    Route handlers live in `src/app/api/cron/` and call `src/server/admin/`.
+
 3. **Escalation and missing-ack checks** run every **15 seconds** and are idempotent: `notification_incidents` has a unique key on `(event_id, kind)`.
 4. Each job is a pure TS decision service (unit-tested) plus an integration test that triggers the route.
 5. **Local development:** the `cron.schedule` calls live in migrations. The callback base URL comes from a DB setting (`app.settings.cron_base_url`), set to `http://host.docker.internal:3000` locally.

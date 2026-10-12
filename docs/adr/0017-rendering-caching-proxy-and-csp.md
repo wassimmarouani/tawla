@@ -19,6 +19,7 @@
    - security headers.
 
    **No DB queries in the proxy.** The tenant is resolved in RSC via a `cache()`-wrapped loader (`getRestaurantBySlug`, `getTableByToken`) and passed explicitly to services.
+
 2. **Customer menu caching:**
    - `cacheComponents: true`;
    - the menu data loader is `'use cache'` + `cacheTag('menu:' + restaurantId)` + `cacheLife('max')`;

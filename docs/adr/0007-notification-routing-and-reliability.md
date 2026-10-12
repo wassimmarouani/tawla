@@ -19,12 +19,14 @@
    - shows a connectivity self-test (Realtime connected, push test received).
 
    The staff app refuses to show the live screen until this is done. A persistent indicator shows green/orange/red connection state.
+
 3. **Receipt acks.** Each staff client sends an ack for every order or request event it renders: `POST /api/staff/acks` (batched, idempotent). The server stores `notification_receipts (event_id, membership_id, device_id, received_at)`.
 4. **Escalation.** An order still `pending` after the threshold (default 2 min, configurable), or with **no ack from any recipient within 15 s**, triggers escalation:
    - second sound plus push to the manager or owner;
    - a `notification_incidents` row (used for the Milestone 2 metrics).
 
    Run by the cron mechanism in ADR-0009, plus a client-side timer on the counter screen when it's open.
+
 5. **Source of truth:** the counter tablet (fixed, Wake Lock, foreground WebSocket). Push is the secondary channel for waiters' phones.
 6. **Latency metric:** `notification_receipts.received_at - orders.created_at`, with p95 shown on the Super Admin dashboard (Milestone 2: < 2 s p95).
 

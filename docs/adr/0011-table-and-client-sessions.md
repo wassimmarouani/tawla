@@ -26,14 +26,14 @@
 6. **Leaked QR protection (E5):** staff validation is on by default. When a restaurant enables auto-accept, it applies only after staff accepted the first order of that table session.
 7. **Rate limits** (Upstash sliding window; defaults below, overridable in `restaurants.settings`):
 
-| Scope | Default |
-|---|---|
-| Orders per client session | 1 per 15 s, 20 per hour |
-| Orders per table session | 40 per hour |
-| Lines per order / quantity per line | 30 / 20 |
-| Waiter calls per table session | 1 per 60 s |
-| Bill requests per table session | 1 per 60 s |
-| Public endpoints per IP | 120 per minute (a café shares one IP) |
+| Scope                               | Default                               |
+| ----------------------------------- | ------------------------------------- |
+| Orders per client session           | 1 per 15 s, 20 per hour               |
+| Orders per table session            | 40 per hour                           |
+| Lines per order / quantity per line | 30 / 20                               |
+| Waiter calls per table session      | 1 per 60 s                            |
+| Bill requests per table session     | 1 per 60 s                            |
+| Public endpoints per IP             | 120 per minute (a café shares one IP) |
 
 8. **Device blocking:** staff can block a client session's device for 24 h (`client_sessions.blocked_until` + device-id cookie). Weak against cookie clearing, which is acceptable because staff validation remains the main defence.
 9. Order endpoints check the client cookie and that the order belongs to the cookie's table session (no IDOR on `/api/public/orders/{id}`).

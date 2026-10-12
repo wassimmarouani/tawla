@@ -27,6 +27,7 @@
    - writes an `audit_logs` row when the action is sensitive.
 
    It is the path for public writes (orders, service requests, feedback), shadow-user session minting, cron callbacks and Super Admin actions. Changes to this folder get extra review (a `CODEOWNERS` entry once the repo has collaborators).
+
 6. **Public menu reads** go through a `SECURITY DEFINER` SQL function `public.get_public_menu(slug text, locale text)`. It returns the full menu as JSON in one round trip, with an explicit column whitelist. It only returns visible, non-deleted rows of active or read-only-suspended restaurants.
 7. **Connection:** `postgres` (postgres.js) through the Supavisor **transaction pooler** with `prepare: false`, as required by Supabase. Direct connection only for migrations.
 8. **Tenant isolation is proven by tests:** pgTAP tests in `supabase/tests/` and Vitest integration tests through `withRls`. Every table gets: tenant A cannot read or write tenant B; each role sees only what the permission matrix allows; anon sees only the public surface. A CI check fails if a table has RLS disabled or has no test file referencing it.

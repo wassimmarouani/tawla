@@ -11,6 +11,8 @@ export const env = createEnv({
   },
   server: {
     APP_DOMAIN: z.string().min(1),
+    /** Postgres URL (Supavisor transaction pooler in hosted envs). Used by src/lib/db only. */
+    DATABASE_URL: z.url(),
     /** Enables /dev/* design prototypes. Never set in staging or production. */
     ENABLE_DEV_ROUTES: z
       .enum(['true', 'false'])
@@ -24,6 +26,7 @@ export const env = createEnv({
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     APP_DOMAIN: process.env.APP_DOMAIN,
+    DATABASE_URL: process.env.DATABASE_URL,
     ENABLE_DEV_ROUTES: process.env.ENABLE_DEV_ROUTES,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,

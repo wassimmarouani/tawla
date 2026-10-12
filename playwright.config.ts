@@ -42,6 +42,7 @@ export default defineConfig({
       APP_DOMAIN: 'localhost',
       NEXT_PUBLIC_APP_URL: baseURL,
       NEXT_PUBLIC_APP_NAME: 'Tawla',
+      DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
     },
   },
 });

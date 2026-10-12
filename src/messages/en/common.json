@@ -1,0 +1,12 @@
+{
+  "languages": {
+    "fr": "Français",
+    "ar": "العربية",
+    "en": "English"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "This link doesn’t lead anywhere. Check the address or scan the QR code again.",
+    "home": "Back to home"
+  }
+}

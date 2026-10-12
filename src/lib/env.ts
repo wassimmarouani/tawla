@@ -6,6 +6,9 @@ import { z } from 'zod';
  * src/server/admin/env.ts, never here (ADR-0003).
  */
 export const env = createEnv({
+  shared: {
+    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  },
   server: {
     APP_DOMAIN: z.string().min(1),
   },
@@ -14,6 +17,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_NAME: z.string().min(1),
   },
   runtimeEnv: {
+    NODE_ENV: process.env.NODE_ENV,
     APP_DOMAIN: process.env.APP_DOMAIN,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,

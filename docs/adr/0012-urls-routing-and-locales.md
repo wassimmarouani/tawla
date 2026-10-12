@@ -44,3 +44,15 @@
 ## Consequences
 
 - Printed material is permanent. URLs are short, and SEO lives on `/{slug}`.
+
+## Amendment — 2026-10-12 (P0-10): internal locale rewrite for every surface
+
+**Why:** with Cache Components, a root layout that reads the locale from a cookie or header becomes request-dynamic, which would prevent caching of customer pages. next-intl also deprecated `requestLocale` / `setRequestLocale` in favour of Next.js root params.
+
+**Decision:**
+
+- `app/[locale]/layout.tsx` is the **single root layout** for every page. `locale` is a Next.js root param (`next/root-params`), read by `src/i18n/request.ts`.
+- `src/proxy.ts` negotiates the locale (cookie `NEXT_LOCALE` → `Accept-Language` → `fr`) and **rewrites internally** to `/{locale}{path}` for app and customer surfaces. Visible URLs are unchanged: `/t/{token}`, `/{slug}`, `/dashboard` carry no prefix.
+- Restaurant slugs are rewritten to `/{locale}/r/{slug}`. Marketing paths keep next-intl `as-needed` prefixes.
+- The routing decision is a pure function (`src/lib/routing/resolve-route.ts`). `RESERVED_SLUGS` is derived from the routed segments, so a new top-level route is reserved automatically.
+- Pages are static or partially prerendered per locale. A customer page whose resolved locale isn't enabled by the restaurant redirects once through a locale-setting route (implemented in P1-07a).

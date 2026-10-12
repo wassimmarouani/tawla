@@ -65,14 +65,17 @@ One Next.js 16 application (TypeScript strict) on Vercel (`cdg1`) serves four su
 └── src/
     ├── proxy.ts                  # locale routing, slug rewrite, auth refresh, security headers
     ├── app/
-    │   ├── [locale]/(marketing)/ # landing, pricing, legal/* (fr default, ar, en)
-    │   ├── (auth)/login|signup|reset/
-    │   ├── t/[token]/            # customer table menu (no locale prefix)
-    │   ├── r/[slug]/             # customer public menu (reached by rewrite from /{slug})
-    │   ├── staff/                # staff PWA: pair, start, live, (phase 2: login, counter, waiter)
-    │   ├── dashboard/            # back-office: onboarding, menu, tables, staff, devices, settings, stats
-    │   ├── admin/                # Super Admin console
-    │   └── api/
+    │   ├── [locale]/             # SINGLE root layout (html lang/dir); locale = root param (ADR-0012)
+    │   │   ├── (marketing)/      # landing, pricing, legal/* — visible prefixes /ar, /en
+    │   │   ├── (auth)/login|signup|reset/
+    │   │   ├── t/[token]/        # customer table menu   (visible URL /t/{token})
+    │   │   ├── r/[slug]/         # customer public menu  (visible URL /{slug}, proxy rewrite)
+    │   │   ├── staff/            # staff PWA             (visible URL /staff/…)
+    │   │   ├── dashboard/        # back-office           (visible URL /dashboard/…)
+    │   │   ├── admin/            # Super Admin console
+    │   │   ├── not-found.tsx     # localized 404
+    │   │   └── [...rest]/        # unmatched paths → localized 404
+    │   └── api/                  # route handlers (no locale)
     │       ├── public/           # sessions, service-requests, feedbacks, menu-views, orders (P2)
     │       ├── staff/            # requests, availability, acks, push-subscriptions, orders (P2)
     │       ├── devices/          # pairing

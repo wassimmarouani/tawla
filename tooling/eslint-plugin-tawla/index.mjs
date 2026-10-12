@@ -1,5 +1,6 @@
 // @ts-check
 import {
+  isArbitraryColorClass,
   isArbitraryValueClass,
   isPhysicalDirectionClass,
   splitClassTokens,
@@ -29,24 +30,34 @@ function isInClassContext(node) {
 }
 
 /**
- * Builds a rule that reports class tokens matching `predicate`.
- * @param {{ description: string; message: string; predicate: (token: string) => boolean }} options
+ * Builds a rule that reports class tokens matching `predicate`. `options` is the rule's first
+ * configuration object (e.g. { allowGeometry: true }).
+ * @param {{
+ *   description: string;
+ *   message: string;
+ *   predicate: (token: string, options: Record<string, unknown>) => boolean;
+ *   schema?: import('json-schema').JSONSchema4[];
+ * }} definition
  * @returns {import('eslint').Rule.RuleModule}
  */
-function classTokenRule({ description, message, predicate }) {
+function classTokenRule({ description, message, predicate, schema = [] }) {
   return {
     meta: {
       type: 'problem',
       docs: { description },
       messages: { invalid: message },
-      schema: [],
+      schema,
     },
     create(context) {
+      /** @type {Record<string, unknown>} */
+      const options = context.options[0] ?? {};
       /** @param {any} node @param {string} text */
       const check = (node, text) => {
         if (!isInClassContext(node)) return;
         for (const token of splitClassTokens(text)) {
-          if (predicate(token)) context.report({ node, messageId: 'invalid', data: { token } });
+          if (predicate(token, options)) {
+            context.report({ node, messageId: 'invalid', data: { token } });
+          }
         }
       };
       return {
@@ -149,8 +160,20 @@ const plugin = {
     'no-arbitrary-tailwind-values': classTokenRule({
       description: 'Use design tokens instead of arbitrary Tailwind values.',
       message:
-        '"{{token}}" uses an arbitrary value. Add a token in src/styles/tokens.css or use the (--token) shorthand.',
-      predicate: isArbitraryValueClass,
+        '"{{token}}" uses an arbitrary value. Add a token in src/styles/tokens.ts or use the (--token) shorthand.',
+      // { allowGeometry: true } (vendored primitives): calc()/min() geometry is tolerated, but a
+      // hard-coded colour is still an error.
+      predicate: (token, options) =>
+        options.allowGeometry === true
+          ? isArbitraryColorClass(token)
+          : isArbitraryValueClass(token),
+      schema: [
+        {
+          type: 'object',
+          properties: { allowGeometry: { type: 'boolean' } },
+          additionalProperties: false,
+        },
+      ],
     }),
     'todo-requires-issue': todoRequiresIssue,
     'no-invisible-characters': noInvisibleCharacters,

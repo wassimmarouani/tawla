@@ -63,6 +63,32 @@ ruleTester.run('no-invisible-characters', rules['no-invisible-characters'], {
   ],
 });
 
+ruleTester.run(
+  'no-arbitrary-tailwind-values (allowGeometry)',
+  rules['no-arbitrary-tailwind-values'],
+  {
+    valid: [
+      {
+        code: 'cn("rounded-[calc(var(--radius)-3px)] max-w-[calc(100%-2rem)]")',
+        options: [{ allowGeometry: true }],
+      },
+      { code: '<div className="p-[3px] min-w-[96px]" />', options: [{ allowGeometry: true }] },
+    ],
+    invalid: [
+      {
+        code: 'cn("bg-[#f8f5ef]")',
+        options: [{ allowGeometry: true }],
+        errors: [{ messageId: 'invalid' }],
+      },
+      {
+        code: '<div className="text-[rgb(0_0_0)] border-[oklch(0.6_0.1_40)]" />',
+        options: [{ allowGeometry: true }],
+        errors: [{ messageId: 'invalid' }, { messageId: 'invalid' }],
+      },
+    ],
+  },
+);
+
 ruleTester.run('todo-requires-issue', rules['todo-requires-issue'], {
   valid: [
     { code: '// TODO(#12): handle offline queue\nconst a = 1;' },

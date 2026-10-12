@@ -50,7 +50,14 @@ const PHYSICAL_UTILITY =
  */
 export function isPhysicalDirectionClass(token) {
   const { variants, utility } = parseClassToken(token);
-  if (variants.some((variant) => variant === 'rtl' || variant === 'ltr')) return false;
+  // rtl:/ltr: and Base UI's physical placement variants ([side=left]) are explicitly physical.
+  if (
+    variants.some(
+      (variant) => variant === 'rtl' || variant === 'ltr' || /side=(left|right)/.test(variant),
+    )
+  ) {
+    return false;
+  }
   return PHYSICAL_UTILITY.test(utility);
 }
 
@@ -61,4 +68,18 @@ export function isPhysicalDirectionClass(token) {
  */
 export function isArbitraryValueClass(token) {
   return parseClassToken(token).utility.includes('[');
+}
+
+// No backslashes on purpose ([(] is a literal parenthesis): keeps the pattern copy-paste safe.
+const COLOR_LITERAL = /#[0-9a-f]{3,8}|(?:rgba?|hsla?|hwb|oklch|oklab|lab|lch|color)[(]/i;
+
+/**
+ * True when the utility part hard-codes a colour (bg-[#fff], text-[rgb(0_0_0)]).
+ * Used for vendored primitives, where geometry calc() values are tolerated but colours must
+ * always come from tokens.
+ * @param {string} token
+ */
+export function isArbitraryColorClass(token) {
+  const { utility } = parseClassToken(token);
+  return utility.includes('[') && COLOR_LITERAL.test(utility);
 }

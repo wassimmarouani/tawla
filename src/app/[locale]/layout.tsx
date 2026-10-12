@@ -4,6 +4,7 @@ import { hasLocale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { LOCALES, directionOf } from '@/i18n/locales';
 import { env } from '@/lib/env';
+import { fontVariables } from '@/styles/fonts';
 import '../globals.css';
 
 // Unknown locales are rejected below with notFound(); `dynamicParams` is incompatible with
@@ -33,7 +34,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   if (!hasLocale(LOCALES, locale)) notFound();
 
   return (
-    <html lang={locale} dir={directionOf(locale)}>
+    <html
+      lang={locale}
+      dir={directionOf(locale)}
+      className={fontVariables}
+      suppressHydrationWarning
+    >
       <body>{children}</body>
     </html>
   );

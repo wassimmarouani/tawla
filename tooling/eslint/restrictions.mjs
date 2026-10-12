@@ -62,6 +62,13 @@ export const projectRestrictions = [
     },
   },
   {
+    // Vendored shadcn/Base UI primitives: internal calc() geometry is tolerated, colours are not
+    // (they must come from tokens). Logical-direction rules still apply.
+    name: 'tawla/ui-primitives',
+    files: ['src/components/ui/**/*.{ts,tsx}'],
+    rules: { 'tawla/no-arbitrary-tailwind-values': ['error', { allowGeometry: true }] },
+  },
+  {
     name: 'tawla/admin-callers',
     files: ['src/app/api/**/*.{ts,tsx}', 'src/features/*/server/**/*.{ts,tsx}'],
     rules: {

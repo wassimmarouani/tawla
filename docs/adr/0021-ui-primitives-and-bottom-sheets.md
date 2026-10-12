@@ -32,3 +32,7 @@
 - https://github.com/emilkowalski/vaul
 - https://ui.shadcn.com/docs/components/drawer
 - https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default
+
+## Amendment — 2026-10-12 (P0-07)
+
+The Base UI Drawer shipped by shadcn supports **snap points and swipe directions natively** (`hasSnapPoints`, `swipeDirection`, swipe-progress CSS variables). Point 3 is therefore resolved: no custom Motion gesture layer is needed. Our `Sheet` wrapper (P1-07b) only adds URL sync, haptics and safe-area padding.

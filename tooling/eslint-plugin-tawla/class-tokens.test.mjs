@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  isArbitraryColorClass,
   isArbitraryValueClass,
   isPhysicalDirectionClass,
   parseClassToken,
@@ -57,6 +58,7 @@ describe('isPhysicalDirectionClass', () => {
     'px-4',
     'leading-tight',
     'lg:mt-2',
+    'data-[side=left]:-right-1',
   ])('allows %s', (token) => {
     expect(isPhysicalDirectionClass(token)).toBe(false);
   });
@@ -81,5 +83,26 @@ describe('isArbitraryValueClass', () => {
     'bg-brand-500',
   ])('allows %s', (token) => {
     expect(isArbitraryValueClass(token)).toBe(false);
+  });
+});
+
+describe('isArbitraryColorClass', () => {
+  it.each([
+    'bg-[#fff]',
+    'text-[rgb(0_0_0)]',
+    'hover:bg-[hsl(20_10%_50%)]',
+    'fill-[oklch(0.6_0.1_40)]',
+  ])('flags %s', (token) => {
+    expect(isArbitraryColorClass(token)).toBe(true);
+  });
+
+  it.each([
+    'rounded-[calc(var(--radius)-3px)]',
+    'p-[3px]',
+    'bg-brand',
+    'data-[state=open]:bg-muted',
+    'w-(--x)',
+  ])('allows %s', (token) => {
+    expect(isArbitraryColorClass(token)).toBe(false);
   });
 });

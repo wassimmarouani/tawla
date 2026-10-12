@@ -41,6 +41,7 @@ pnpm test:visual         # screenshot matrix
 pnpm screenshots <route> # 390/768/1440 × light/dark × fr/ar review captures
 pnpm db:start | db:reset | db:new <name> | db:pull
 pnpm size                # bundle budgets
+pnpm tokens:build        # regenerate src/styles/tokens.css from tokens.ts
 pnpm check:rls           # every table has RLS + tests
 ```
 
@@ -54,7 +55,7 @@ Environment: `docs/setup.md`. Local Supabase only. **Never use or request produc
 4. **The server recomputes totals** from DB prices with the pure pricing service. Client totals are display-only.
 5. **All UI strings live in `src/messages/{fr,ar,en}/*.json`.** No hard-coded user-facing text, including aria-labels and alt fallbacks.
 6. **Mobile-first, flawless at 360/390/430/768/1024/1280/1440.** No horizontal scroll, no overflow or truncation, no overlaps, targets ≥ 44 px (≥ 48 px staff), safe areas, `dvh`.
-7. **Design tokens only.** No hex, no arbitrary Tailwind values outside `src/styles/tokens.css`. **Logical properties only** (`ms-`, `pe-`, `start-`), never `ml-`/`pr-`/`left-`.
+7. **Design tokens only.** Tokens live in `src/styles/tokens.ts` (`pnpm tokens:build` generates `tokens.css`; tests check AA contrast and freshness). No hex and no arbitrary Tailwind values in product code. Vendored primitives in `src/components/ui/` may use internal `calc()` geometry but **never a colour literal** (lint-enforced). **Logical properties only** (`ms-`, `pe-`, `start-`), never `ml-`/`pr-`/`left-`. Text fields use `dir="auto"` (Latin text typed in the Arabic UI).
 8. **DB access:** user-scoped queries only through `withRls(claims, tx => …)`. The raw client and `SUPABASE_SECRET_KEY` are allowed only in `src/lib/db/**` and `src/server/admin/**` (lint-enforced). Privileged functions validate inputs and check preconditions explicitly.
 9. **Business logic is pure, in `features/*/services/`**: no React, Next or DB imports, unit-tested (≥ 90 % coverage; state machine, pricing and permissions 100 %).
 10. **Permissions checked three times:** UI (`can()`), server (`can()` + feature flag), DB (RLS). Flags are always checked server-side.

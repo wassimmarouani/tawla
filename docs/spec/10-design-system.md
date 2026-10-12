@@ -1,7 +1,7 @@
 # 10 — Design system, UX/UI, visual identity
 
 > Domain spec. Source: original spec §13, §14.3, amended by ADR-0021, 0026, 0027. ADRs win on conflict.
-> **The visual direction is chosen by the owner in task P0-06 and recorded as ADR-0029.** Until then this file defines structure, not the final palette or fonts.
+> **Visual direction: ADR-0029 "Tawla"** (A's calm header and surfaces, B's menu-card lists, C's food grid). Its table is the source for `src/styles/tokens.css`.
 
 Target: native-app quality. Calm, fast, animated with restraint, customisable with each venue's colours without ever breaking legibility. Premium 2026 product, not a template.
 
@@ -22,20 +22,20 @@ Target: native-app quality. Calm, fast, animated with restraint, customisable wi
 
 ## Tokens (`src/styles/tokens.css`, Tailwind v4 `@theme`)
 
-| Token group      | Values                                                                                                                                        |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Spacing          | 4 px grid: 0, 1 (4), 2 (8), 3 (12), 4 (16), 5 (20), 6 (24), 8 (32), 10 (40), 12 (48), 16 (64), 20 (80)                                        |
-| Radii            | `sm` 8 (buttons, inputs), `md` 16 (cards), `lg` 24 (sheets), `full`                                                                           |
-| Type scale       | 12 / 14 / 16 / 18 / 24 / 32 / 40 + **display 56 / 72 / 96** (staff); line heights per step; sizes in rem                                      |
-| Fonts            | Latin: Inter or Geist; Arabic: IBM Plex Sans Arabic or Cairo. Final choice in ADR-0029. Self-hosted, subset, `swap`, metric-matched fallbacks |
-| Colour: neutrals | 50–950 OKLCH scale, separate light/dark mappings                                                                                              |
-| Colour: brand    | `--brand-50…950` generated in OKLCH from the tenant colour (`generateBrandScale`)                                                             |
-| Colour: semantic | success, warning, danger, info, each 50–950; status colours for order states (always paired with icon + label)                                |
-| Semantic aliases | `--surface`, `--surface-raised`, `--text`, `--text-muted`, `--border`, `--ring`, `--brand-solid`, `--brand-on`, `--brand-text`                |
-| Shadows          | 3 soft levels (`sm`, `md`, `lg`), dark-mode variants                                                                                          |
-| Motion           | `--duration-micro` 150 ms, `--duration-base` 250 ms, `--ease-out` (cubic-bezier(0.16, 1, 0.3, 1)); none under reduced motion                  |
-| Z-index          | base, sticky, overlay, sheet, toast                                                                                                           |
-| Targets          | `--target-min` 44 px (customer, back-office), `--target-staff` 48 px                                                                          |
+| Token group      | Values                                                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Spacing          | 4 px grid: 0, 1 (4), 2 (8), 3 (12), 4 (16), 5 (20), 6 (24), 8 (32), 10 (40), 12 (48), 16 (64), 20 (80)                         |
+| Radii            | `sm` 8 (buttons, inputs), `md` 16 (cards), `lg` 24 (sheets), `full`                                                            |
+| Type scale       | 12 / 14 / 16 / 18 / 24 / 32 / 40 + **display 56 / 72 / 96** (staff); line heights per step; sizes in rem                       |
+| Fonts            | **Geist** (Latin) + **IBM Plex Sans Arabic** (ADR-0029). Self-hosted, subset, `swap`, metric-matched fallbacks                 |
+| Colour: neutrals | 50–950 OKLCH scale, separate light/dark mappings                                                                               |
+| Colour: brand    | `--brand-50…950` generated in OKLCH from the tenant colour (`generateBrandScale`)                                              |
+| Colour: semantic | success, warning, danger, info, each 50–950; status colours for order states (always paired with icon + label)                 |
+| Semantic aliases | `--surface`, `--surface-raised`, `--text`, `--text-muted`, `--border`, `--ring`, `--brand-solid`, `--brand-on`, `--brand-text` |
+| Shadows          | 3 soft levels (`sm`, `md`, `lg`), dark-mode variants                                                                           |
+| Motion           | `--duration-micro` 150 ms, `--duration-base` 250 ms, `--ease-out` (cubic-bezier(0.16, 1, 0.3, 1)); none under reduced motion   |
+| Z-index          | base, sticky, overlay, sheet, toast                                                                                            |
+| Targets          | `--target-min` 44 px (customer, back-office), `--target-staff` 48 px                                                           |
 
 **Rules:** components use tokens only. No hex values, no arbitrary Tailwind values (`[13px]`, `[#abc]`) outside `tokens.css` (lint rule). Physical direction utilities are banned; use logical ones (`ms-`, `pe-`, `start-`).
 

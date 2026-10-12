@@ -104,3 +104,10 @@ Spec items we drop:
 ## Amendments
 
 - **2026-10-12 (P0-01):** ESLint pinned to 9.39.5 instead of 10.x (peer caps of the plugins bundled by eslint-config-next). `eslint-plugin-boundaries` replaced by a small local plugin plus `no-restricted-imports` rules, fewer dependencies and fully tested. `@types/node` pinned to the Node 24 line (24.19.0) to match the runtime. pnpm 12 stores build-script approvals under `allowBuilds` in `pnpm-workspace.yaml`.
+
+- **2026-10-12 (P0-07):** shadcn/ui initialised with Base UI (`shadcn init -b base --rtl`, style `base-nova`). It adds:
+  - `@base-ui/react` 1.8.0, `class-variance-authority` 0.7.1;
+  - **`cn` 0.4.0**: shadcn's official compiled replacement for clsx + tailwind-merge, repo shadcn-ui/cn, maintained by shadcn;
+  - `tw-animate-css` 1.4.0, `next-themes` 0.4.6, `sonner` 2.0.8, `cmdk` 1.1.1.
+
+  The `shadcn` package itself is a devDependency: only its `shadcn/tailwind.css` variants are imported, at build time.

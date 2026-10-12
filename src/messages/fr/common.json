@@ -8,5 +8,17 @@
     "title": "Page introuvable",
     "description": "Ce lien ne mène nulle part. Vérifiez l’adresse ou scannez à nouveau le QR code.",
     "home": "Retour à l’accueil"
+  },
+  "states": {
+    "offline": {
+      "title": "Vous êtes hors ligne",
+      "description": "Les dernières informations restent affichées. La connexion revient automatiquement."
+    },
+    "error": {
+      "title": "Une erreur est survenue",
+      "description": "Ce n’est pas de votre faute. Réessayez dans un instant.",
+      "retry": "Réessayer"
+    },
+    "loading": "Chargement…"
   }
 }

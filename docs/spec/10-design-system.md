@@ -20,7 +20,9 @@ Target: native-app quality. Calm, fast, animated with restraint, customisable wi
 2. Tokens first, then shadcn (Base UI) components restyled on tokens.
 3. Each screen is validated by Playwright screenshots and automated layout and accessibility checks before it counts as done.
 
-## Tokens (`src/styles/tokens.css`, Tailwind v4 `@theme`)
+## Tokens (`src/styles/tokens.ts` → generated `tokens.css`, Tailwind v4 `@theme`)
+
+Source of truth: `src/styles/tokens.ts`. `pnpm tokens:build` renders `tokens.css`, emitting dark values for both `[data-theme=dark]` and `prefers-color-scheme: dark` (zero-JS "auto" mode; `light-dark()` is avoided because it breaks iOS < 17.5). `src/styles/tokens.test.ts` checks 24 contrast pairs in both themes and that the CSS is up to date. Names follow shadcn/ui (`background`, `card`, `muted`, `primary`…) plus `brand-*` roles. The dev gallery `/dev/design-system/{light|dark}` shows every token, component and state.
 
 | Token group      | Values                                                                                                                         |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------ |

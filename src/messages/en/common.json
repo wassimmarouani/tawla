@@ -8,5 +8,17 @@
     "title": "Page not found",
     "description": "This link doesn’t lead anywhere. Check the address or scan the QR code again.",
     "home": "Back to home"
+  },
+  "states": {
+    "offline": {
+      "title": "You’re offline",
+      "description": "The latest information stays on screen. We’ll reconnect automatically."
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "It’s not your fault. Please try again in a moment.",
+      "retry": "Try again"
+    },
+    "loading": "Loading…"
   }
 }

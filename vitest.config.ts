@@ -53,7 +53,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/features/*/services/**', 'src/lib/**', 'src/i18n/locales.ts'],
-      exclude: ['**/*.test.*', 'src/lib/env.ts'],
+      // src/lib/db is exercised by the integration suite (pnpm test:integration), not unit tests.
+      exclude: ['**/*.test.*', 'src/lib/env.ts', 'src/lib/db/**'],
       // CLAUDE.md rule 9: ≥ 90 % on business logic.
       thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },
     },

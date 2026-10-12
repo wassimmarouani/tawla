@@ -45,6 +45,8 @@ export const projectRestrictions = [
     rules: {
       'tawla/no-physical-direction-classes': 'error',
       'tawla/no-arbitrary-tailwind-values': 'error',
+      // Structured logging only (src/lib/log.ts, ADR-0020).
+      'no-console': 'error',
       'no-restricted-imports': [
         'error',
         { patterns: [featureDeepImport, rawDbClient, adminModule] },
@@ -98,6 +100,9 @@ export const projectRestrictions = [
     name: 'tawla/todo',
     files: ['**/*.{ts,tsx,mjs,js}'],
     plugins: { tawla },
-    rules: { 'tawla/todo-requires-issue': 'error' },
+    rules: {
+      'tawla/todo-requires-issue': 'error',
+      'tawla/no-invisible-characters': 'error',
+    },
   },
 ];

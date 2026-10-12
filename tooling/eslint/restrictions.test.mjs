@@ -78,6 +78,12 @@ describe('project lint restrictions', () => {
     expect(await ruleIds(code, 'src/lib/env.ts')).not.toContain('no-restricted-properties');
   });
 
+  it('forbids console in source code (structured logger only)', async () => {
+    expect(await ruleIds('console.log("x");\n', 'src/features/menu/server/x.ts')).toContain(
+      'no-console',
+    );
+  });
+
   it('applies the class and TODO rules to source files', async () => {
     expect(
       await ruleIds('export const A = () => <div className="ml-4" />;\n', 'src/components/a.tsx'),

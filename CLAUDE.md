@@ -65,6 +65,7 @@ Environment: `docs/setup.md`. Local Supabase only. **Never use or request produc
 15. **Customer menu budget:** < 150 KB gz initial JS. No TanStack Query or Supabase client in its initial bundle; lazy-load realtime, search and Motion features.
 16. **Accessibility:** WCAG 2.2 AA, keyboard paths, visible focus, never colour alone, `prefers-reduced-motion` respected.
 17. **TypeScript strict:** no `any`, no `@ts-ignore` (use `@ts-expect-error` with a reason only in tests), no dead code, no `TODO` without an issue reference: `TODO(#123): …`.
+18. **No `console`** in `src/`: log through `src/lib/log.ts` (structured JSON). **No invisible or bidi control characters** in source (NBSP, isolates, marks): write them as Unicode escape sequences. Both lint-enforced.
 
 ## Naming
 

@@ -83,6 +83,60 @@ const todoRequiresIssue = {
   },
 };
 
+/**
+ * Invisible or direction-changing characters must be written as escapes (e.g. NBSP as an escape
+ * sequence) so reviewers can see them. Listed by code point to keep this file ASCII-only.
+ */
+const INVISIBLE_CODE_POINTS = new Map([
+  [0x00a0, 'NO-BREAK SPACE'],
+  [0x202f, 'NARROW NO-BREAK SPACE'],
+  [0x200b, 'ZERO WIDTH SPACE'],
+  [0x200c, 'ZERO WIDTH NON-JOINER'],
+  [0x200d, 'ZERO WIDTH JOINER'],
+  [0x200e, 'LEFT-TO-RIGHT MARK'],
+  [0x200f, 'RIGHT-TO-LEFT MARK'],
+  [0x202a, 'LEFT-TO-RIGHT EMBEDDING'],
+  [0x202b, 'RIGHT-TO-LEFT EMBEDDING'],
+  [0x202c, 'POP DIRECTIONAL FORMATTING'],
+  [0x202d, 'LEFT-TO-RIGHT OVERRIDE'],
+  [0x202e, 'RIGHT-TO-LEFT OVERRIDE'],
+  [0x2066, 'LEFT-TO-RIGHT ISOLATE'],
+  [0x2067, 'RIGHT-TO-LEFT ISOLATE'],
+  [0x2068, 'FIRST STRONG ISOLATE'],
+  [0x2069, 'POP DIRECTIONAL ISOLATE'],
+  [0x061c, 'ARABIC LETTER MARK'],
+  [0xfeff, 'ZERO WIDTH NO-BREAK SPACE'],
+]);
+
+/** @type {import('eslint').Rule.RuleModule} */
+const noInvisibleCharacters = {
+  meta: {
+    type: 'problem',
+    docs: { description: 'Disallow invisible and bidi control characters in source code.' },
+    messages: {
+      invisible: 'Invisible character U+{{code}} ({{name}}). Write it as a \\u{{code}} escape.',
+    },
+    schema: [],
+  },
+  create(context) {
+    return {
+      Program() {
+        const text = context.sourceCode.getText();
+        for (let index = 0; index < text.length; index += 1) {
+          const name = INVISIBLE_CODE_POINTS.get(text.charCodeAt(index));
+          if (!name) continue;
+          const code = text.charCodeAt(index).toString(16).toUpperCase().padStart(4, '0');
+          context.report({
+            loc: context.sourceCode.getLocFromIndex(index),
+            messageId: 'invisible',
+            data: { code, name },
+          });
+        }
+      },
+    };
+  },
+};
+
 const plugin = {
   meta: { name: 'eslint-plugin-tawla', version: '0.0.0' },
   rules: {
@@ -99,6 +153,7 @@ const plugin = {
       predicate: isArbitraryValueClass,
     }),
     'todo-requires-issue': todoRequiresIssue,
+    'no-invisible-characters': noInvisibleCharacters,
   },
 };
 

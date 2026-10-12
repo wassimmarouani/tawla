@@ -44,6 +44,25 @@ ruleTester.run('no-arbitrary-tailwind-values', rules['no-arbitrary-tailwind-valu
   ],
 });
 
+// Built from code points so this test file itself stays free of invisible characters.
+const NBSP = String.fromCharCode(0xa0);
+const FSI = String.fromCharCode(0x2068);
+const BACKSLASH = String.fromCharCode(92);
+
+ruleTester.run('no-invisible-characters', rules['no-invisible-characters'], {
+  valid: [{ code: `const nbsp = '${BACKSLASH}u00A0';` }, { code: "const ar = 'د.ت';" }],
+  invalid: [
+    { code: `const a = '3${NBSP}DT';`, errors: [{ messageId: 'invisible' }] },
+    {
+      code: `const b = '${FSI}x';\nconst c = '${NBSP}';`,
+      errors: [
+        { messageId: 'invisible', line: 1 },
+        { messageId: 'invisible', line: 2 },
+      ],
+    },
+  ],
+});
+
 ruleTester.run('todo-requires-issue', rules['todo-requires-issue'], {
   valid: [
     { code: '// TODO(#12): handle offline queue\nconst a = 1;' },

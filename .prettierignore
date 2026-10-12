@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+.next/
+coverage/
+playwright-report/
+test-results/
+public/sw-*.js
+# Historical original spec, kept byte-for-byte as converted.
+docs/cahier-des-charges.md

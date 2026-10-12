@@ -1,0 +1,46 @@
+// @ts-check
+import { defineConfig, globalIgnores } from 'eslint/config';
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import nextTs from 'eslint-config-next/typescript';
+import tseslint from 'typescript-eslint';
+import { projectRestrictions } from './tooling/eslint/restrictions.mjs';
+
+export default defineConfig([
+  ...nextVitals,
+  ...nextTs,
+  globalIgnores([
+    '.next/**',
+    'coverage/**',
+    'playwright-report/**',
+    'test-results/**',
+    'public/sw-*.js',
+    'next-env.d.ts',
+    'docs/**',
+  ]),
+  {
+    name: 'tawla/typescript-strict',
+    files: ['**/*.{ts,tsx}'],
+    extends: [tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      '@typescript-eslint/ban-ts-comment': [
+        'error',
+        {
+          'ts-expect-error': 'allow-with-description',
+          'ts-ignore': true,
+          'ts-nocheck': true,
+          minimumDescriptionLength: 10,
+        },
+      ],
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+      'react/no-danger': 'error',
+    },
+  },
+  ...projectRestrictions,
+]);

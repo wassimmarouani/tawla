@@ -1,0 +1,14 @@
+# Single-package repo: this file only holds pnpm settings (ADR-0002).
+packages:
+  - .
+
+# Supply-chain safety: refuse versions published less than 14 days ago.
+# Security releases are adopted explicitly via minimumReleaseAgeExclude.
+minimumReleaseAge: 20160
+
+# Exact versions only.
+savePrefix: ''
+
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true

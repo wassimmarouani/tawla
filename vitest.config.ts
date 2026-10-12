@@ -2,7 +2,12 @@ import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 
-const alias = { '@': fileURLToPath(new URL('./src', import.meta.url)) };
+const alias = {
+  '@': fileURLToPath(new URL('./src', import.meta.url)),
+  'server-only': fileURLToPath(new URL('./tooling/vitest/server-only.ts', import.meta.url)),
+};
+
+const LOCAL_DATABASE_URL = 'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
 
 export default defineConfig({
   plugins: [react()],
@@ -15,6 +20,7 @@ export default defineConfig({
           name: 'node',
           environment: 'node',
           include: ['src/**/*.test.ts', 'tooling/**/*.test.mjs', 'scripts/**/*.test.ts'],
+          exclude: ['src/**/*.int.test.ts'],
         },
       },
       {
@@ -24,6 +30,23 @@ export default defineConfig({
           environment: 'jsdom',
           include: ['src/**/*.test.tsx'],
           setupFiles: ['./vitest.setup.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          // Requires local Supabase (pnpm db:start). Run with pnpm test:integration.
+          name: 'integration',
+          environment: 'node',
+          include: ['src/**/*.int.test.ts'],
+          fileParallelism: false,
+          testTimeout: 30_000,
+          env: {
+            DATABASE_URL: LOCAL_DATABASE_URL,
+            APP_DOMAIN: 'localhost:3000',
+            NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+            NEXT_PUBLIC_APP_NAME: 'Tawla',
+          },
         },
       },
     ],

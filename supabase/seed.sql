@@ -1,0 +1,1 @@
+-- Demo seed (P0-12 fills it: demo café "Café El Bahja" and a second tenant for isolation tests).

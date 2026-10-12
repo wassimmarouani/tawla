@@ -17,6 +17,7 @@ env:
   APP_DOMAIN: localhost:3100
   NEXT_PUBLIC_APP_URL: http://localhost:3100
   NEXT_PUBLIC_APP_NAME: Tawla
+  DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
   NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:
@@ -57,6 +58,43 @@ jobs:
           path: .next
           include-hidden-files: true
           retention-days: 1
+
+  database:
+    name: Database (pgTAP, RLS coverage, integration, schema drift)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Start local Supabase
+        run: pnpm db:start
+
+      - name: pgTAP tests
+        run: pnpm test:db
+
+      - name: Every table has RLS and a test
+        run: pnpm check:rls
+
+      - name: Integration tests (RLS through Drizzle)
+        run: pnpm test:integration
+
+      - name: Drizzle schema matches the migrations
+        run: |
+          pnpm db:pull
+          git diff --exit-code -- src/lib/db/schema
+
+      - name: Stop Supabase
+        if: always()
+        run: pnpm db:stop
 
   e2e:
     name: E2E (7 widths + WebKit iPhone)

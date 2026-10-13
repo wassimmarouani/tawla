@@ -89,6 +89,30 @@ export const projectRestrictions = [
     rules: { 'no-restricted-imports': ['error', { patterns: [featureDeepImport] }] },
   },
   {
+    // Customer menu (ADR-0020: < 150 KB initial JS). `cn` ships a Tailwind class merger and the
+    // states barrel ships client components; use '@/lib/classes' and direct state imports.
+    name: 'tawla/customer-menu-budget',
+    files: ['src/features/menu/components/**/*.{ts,tsx}', 'src/components/media/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: '@/lib/utils',
+              message: 'Use classes() from "@/lib/classes" in the customer menu (bundle budget).',
+            },
+            {
+              name: '@/components/states',
+              message: 'Import the state component file directly (the barrel ships client code).',
+            },
+          ],
+          patterns: [featureDeepImport, rawDbClient, adminModule],
+        },
+      ],
+    },
+  },
+  {
     name: 'tawla/env-readers',
     files: ['src/lib/env.ts', 'src/server/admin/env.ts'],
     rules: { 'no-restricted-properties': 'off' },

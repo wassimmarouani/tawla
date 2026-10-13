@@ -95,6 +95,8 @@ async function open(
     viewport: { width: run.width, height: run.width < 768 ? 844 : 900 },
     hasTouch: touch,
     colorScheme: run.scheme,
+    // Stable measurements: no colour transitions mid-check (axe contrast), no smooth scrolling.
+    reducedMotion: 'reduce',
     ...(storageState ? { storageState } : {}),
   });
   await context.addCookies([{ name: 'NEXT_LOCALE', value: run.locale, url: base }]);
@@ -156,6 +158,10 @@ async function main() {
               run.failures.push(`axe: ${violation}`);
             }
             run.image = `${width}-${scheme}-${locale}.jpg`;
+            // The checks scroll controls into view; capture from the top like a visitor.
+            await page.evaluate(() => {
+              window.scrollTo(0, 0);
+            });
             await page.screenshot({
               path: path.join(outDir, run.image),
               fullPage: true,

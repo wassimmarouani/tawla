@@ -43,10 +43,11 @@ insert into public.organizations (id, name) values
 
 -- Café El Bahja: Mon–Fri 07:00–23:00, Saturday overnight 08:00–02:00, Sunday 08:00–22:00.
 insert into public.restaurants (
-  id, organization_id, slug, public_id, name, type, default_locale, opening_schedule
+  id, organization_id, slug, public_id, name, type, default_locale, theme, opening_schedule
 ) values (
   'b0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000001',
   'cafe-el-bahja', 'demoElBahjaPublicId-01', 'Café El Bahja', 'cafe', 'fr',
+  '{"brand_color": "#b4532a"}'::jsonb,
   '{
     "weekly": [
       {"day": 1, "ranges": [{"from": "07:00", "to": "23:00"}]},
@@ -62,6 +63,7 @@ insert into public.restaurants (
 ), (
   'b0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000002',
   'pizzeria-test', 'demoPizzeriaPublicId-02', 'Pizzeria Test', 'restaurant', 'fr',
+  '{"brand_color": "#1f7a4d"}'::jsonb,
   '{
     "weekly": [
       {"day": 2, "ranges": [{"from": "12:00", "to": "15:00"}, {"from": "19:00", "to": "23:30"}]},

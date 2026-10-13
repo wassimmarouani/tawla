@@ -7,7 +7,7 @@ import {
   thumbhashBytes,
   type MediaSource,
 } from '@/lib/media/urls';
-import { cn } from '@/lib/utils';
+import { classes as cn } from '@/lib/classes';
 
 interface MenuImageProps {
   media: MediaSource & { thumbhash: string | null; dominant_color: string | null };

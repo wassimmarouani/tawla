@@ -22,7 +22,7 @@ describe('get_public_menu contract (demo seed)', () => {
   it.each(['fr', 'ar', 'en'])('parses the Café El Bahja menu in %s', async (locale) => {
     const menu = await publicMenu('cafe-el-bahja', locale);
     expect(menu.restaurant.locale).toBe(locale);
-    expect(menu.categories).toHaveLength(8);
+    expect(menu.categories).toHaveLength(9);
     const products = menu.categories.flatMap((category) => category.products);
     expect(products).toHaveLength(42);
     expect(products.filter((product) => !product.is_available)).toHaveLength(3);

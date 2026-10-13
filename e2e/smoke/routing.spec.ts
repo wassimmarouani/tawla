@@ -36,12 +36,11 @@ test.describe('locale routing (ADR-0012)', () => {
     await context.addCookies([
       { name: 'NEXT_LOCALE', value: 'ar', domain: 'localhost', path: '/' },
     ]);
-    const response = await page.goto('/cafe-inconnu');
-    // No restaurant data yet (P1-07a): the localized not-found page proves the rewrite.
-    expect(response?.status()).toBe(404);
-    expect(new URL(page.url()).pathname).toBe('/cafe-inconnu');
+    const response = await page.goto('/cafe-el-bahja');
+    expect(response?.status()).toBe(200);
+    expect(new URL(page.url()).pathname).toBe('/cafe-el-bahja');
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
-    await expect(page.getByRole('heading', { name: 'الصفحة غير موجودة' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'أطباقنا المميزة' })).toBeVisible();
   });
 
   test('app paths have no visible locale and follow Accept-Language', async ({ browser }) => {

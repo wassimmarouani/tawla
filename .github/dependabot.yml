@@ -12,6 +12,10 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # Types follow the runtime: Node 24 LTS (.nvmrc). Bump with the runtime, not before.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: /
@@ -20,3 +24,7 @@ updates:
       day: monday
     cooldown:
       default-days: 14
+    # One PR for all action updates: they touch the same workflow file.
+    groups:
+      actions:
+        patterns: ['*']

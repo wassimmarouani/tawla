@@ -25,6 +25,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
+export const mediaKind = pgEnum('media_kind', ['product', 'cover', 'logo', 'category']);
 export const membershipRole = pgEnum('membership_role', [
   'owner',
   'manager',
@@ -70,14 +71,15 @@ export const profiles = pgTable(
       foreignColumns: [users.id],
       name: 'profiles_id_fkey',
     }).onDelete('cascade'),
-    pgPolicy('profiles: read own', {
+    pgPolicy('profiles: update own', {
       as: 'permissive',
-      for: 'select',
+      for: 'update',
       to: ['authenticated'],
       using: sql`(id = ( SELECT auth.uid() AS uid))`,
+      withCheck: sql`(id = ( SELECT auth.uid() AS uid))`,
     }),
     pgPolicy('profiles: platform read', { as: 'permissive', for: 'select', to: ['authenticated'] }),
-    pgPolicy('profiles: update own', { as: 'permissive', for: 'update', to: ['authenticated'] }),
+    pgPolicy('profiles: read own', { as: 'permissive', for: 'select', to: ['authenticated'] }),
     check('profiles_full_name_check', sql`char_length(full_name) <= 120`),
     check('profiles_locale_check', sql`locale = ANY (ARRAY['fr'::text, 'ar'::text, 'en'::text])`),
     check('profiles_phone_check', sql`char_length(phone) <= 32`),
@@ -101,15 +103,13 @@ export const organizations = pgTable(
     deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
   },
   () => [
-    pgPolicy('organizations: members read', {
+    pgPolicy('organizations: platform read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
-      using: sql`(EXISTS ( SELECT 1
-   FROM restaurants r
-  WHERE ((r.organization_id = organizations.id) AND ( SELECT is_member(r.id) AS is_member))))`,
+      using: sql`( SELECT is_platform_admin() AS is_platform_admin)`,
     }),
-    pgPolicy('organizations: platform read', {
+    pgPolicy('organizations: members read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
@@ -180,20 +180,21 @@ export const restaurants = pgTable(
       name: 'restaurants_organization_id_fkey',
     }),
     unique('restaurants_public_id_key').on(table.publicId),
-    pgPolicy('restaurants: members read', {
+    pgPolicy('restaurants: managers update', {
       as: 'permissive',
-      for: 'select',
+      for: 'update',
       to: ['authenticated'],
-      using: sql`( SELECT is_member(restaurants.id) AS is_member)`,
+      using: sql`( SELECT has_restaurant_role(restaurants.id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+      withCheck: sql`( SELECT has_restaurant_role(restaurants.id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
     }),
     pgPolicy('restaurants: platform read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
     }),
-    pgPolicy('restaurants: managers update', {
+    pgPolicy('restaurants: members read', {
       as: 'permissive',
-      for: 'update',
+      for: 'select',
       to: ['authenticated'],
     }),
     check('restaurants_currency_check', sql`currency = 'TND'::text`),
@@ -288,15 +289,16 @@ export const memberships = pgTable(
     }).onDelete('cascade'),
     unique('memberships_restaurant_id_id_key').on(table.id, table.restaurantId),
     unique('memberships_restaurant_id_user_id_key').on(table.restaurantId, table.userId),
-    pgPolicy('memberships: read own', {
+    pgPolicy('memberships: managers update', {
       as: 'permissive',
-      for: 'select',
+      for: 'update',
       to: ['authenticated'],
-      using: sql`(user_id = ( SELECT auth.uid() AS uid))`,
+      using: sql`(( SELECT has_restaurant_role(memberships.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role) AND ((role <> 'owner'::membership_role) OR ( SELECT has_restaurant_role(memberships.restaurant_id, ARRAY['owner'::membership_role]) AS has_restaurant_role)))`,
+      withCheck: sql`(( SELECT has_restaurant_role(memberships.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role) AND ((role <> 'owner'::membership_role) OR ( SELECT has_restaurant_role(memberships.restaurant_id, ARRAY['owner'::membership_role]) AS has_restaurant_role)))`,
     }),
-    pgPolicy('memberships: managers read team', {
+    pgPolicy('memberships: managers insert', {
       as: 'permissive',
-      for: 'select',
+      for: 'insert',
       to: ['authenticated'],
     }),
     pgPolicy('memberships: platform read', {
@@ -304,16 +306,12 @@ export const memberships = pgTable(
       for: 'select',
       to: ['authenticated'],
     }),
-    pgPolicy('memberships: managers insert', {
+    pgPolicy('memberships: managers read team', {
       as: 'permissive',
-      for: 'insert',
+      for: 'select',
       to: ['authenticated'],
     }),
-    pgPolicy('memberships: managers update', {
-      as: 'permissive',
-      for: 'update',
-      to: ['authenticated'],
-    }),
+    pgPolicy('memberships: read own', { as: 'permissive', for: 'select', to: ['authenticated'] }),
     check('memberships_display_name_check', sql`char_length(display_name) <= 60`),
     check('memberships_pin_hmac_check', sql`pin_hmac ~ '^[0-9a-f]{64}$'::text`),
   ],
@@ -345,13 +343,14 @@ export const plans = pgTable(
   },
   (table) => [
     unique('plans_code_key').on(table.code),
-    pgPolicy('plans: read public', {
+    pgPolicy('plans: super admin write', {
       as: 'permissive',
-      for: 'select',
+      for: 'all',
       to: ['authenticated'],
-      using: sql`(is_public OR ( SELECT is_platform_admin() AS is_platform_admin))`,
+      using: sql`( SELECT is_super_admin() AS is_super_admin)`,
+      withCheck: sql`( SELECT is_super_admin() AS is_super_admin)`,
     }),
-    pgPolicy('plans: super admin write', { as: 'permissive', for: 'all', to: ['authenticated'] }),
+    pgPolicy('plans: read public', { as: 'permissive', for: 'select', to: ['authenticated'] }),
     check('plans_ai_limits_check', sql`jsonb_typeof(ai_limits) = 'object'::text`),
     check('plans_ai_monthly_cap_millimes_check', sql`ai_monthly_cap_millimes >= 0`),
     check('plans_code_check', sql`code ~ '^[a-z_]{2,32}$'::text`),
@@ -397,20 +396,21 @@ export const subscriptions = pgTable(
       name: 'subscriptions_restaurant_id_fkey',
     }).onDelete('cascade'),
     unique('subscriptions_restaurant_id_key').on(table.restaurantId),
-    pgPolicy('subscriptions: managers read', {
+    pgPolicy('subscriptions: super admin write', {
       as: 'permissive',
-      for: 'select',
+      for: 'all',
       to: ['authenticated'],
-      using: sql`( SELECT has_restaurant_role(subscriptions.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+      using: sql`( SELECT is_super_admin() AS is_super_admin)`,
+      withCheck: sql`( SELECT is_super_admin() AS is_super_admin)`,
     }),
     pgPolicy('subscriptions: platform read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
     }),
-    pgPolicy('subscriptions: super admin write', {
+    pgPolicy('subscriptions: managers read', {
       as: 'permissive',
-      for: 'all',
+      for: 'select',
       to: ['authenticated'],
     }),
   ],
@@ -452,20 +452,21 @@ export const featureOverrides = pgTable(
       table.restaurantId,
       table.featureKey,
     ),
-    pgPolicy('feature_overrides: members read', {
+    pgPolicy('feature_overrides: super admin write', {
       as: 'permissive',
-      for: 'select',
+      for: 'all',
       to: ['authenticated'],
-      using: sql`( SELECT is_member(feature_overrides.restaurant_id) AS is_member)`,
+      using: sql`( SELECT is_super_admin() AS is_super_admin)`,
+      withCheck: sql`( SELECT is_super_admin() AS is_super_admin)`,
     }),
     pgPolicy('feature_overrides: platform read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
     }),
-    pgPolicy('feature_overrides: super admin write', {
+    pgPolicy('feature_overrides: members read', {
       as: 'permissive',
-      for: 'all',
+      for: 'select',
       to: ['authenticated'],
     }),
     check('feature_overrides_feature_key_check', sql`feature_key ~ '^[a-z_]{2,40}$'::text`),
@@ -519,17 +520,570 @@ export const auditLogs = pgTable(
       foreignColumns: [restaurants.id],
       name: 'audit_logs_restaurant_id_fkey',
     }).onDelete('set null'),
-    pgPolicy('audit_logs: managers read', {
+    pgPolicy('audit_logs: platform read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
-      using: sql`((restaurant_id IS NOT NULL) AND ( SELECT has_restaurant_role(audit_logs.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role))`,
+      using: sql`( SELECT is_platform_admin() AS is_platform_admin)`,
     }),
-    pgPolicy('audit_logs: platform read', {
+    pgPolicy('audit_logs: managers read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
     }),
     check('audit_logs_action_check', sql`action ~ '^[a-z_]+(\.[a-z_]+)+$'::text`),
+  ],
+);
+
+export const media = pgTable(
+  'media',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    kind: mediaKind().notNull(),
+    basePath: text('base_path').notNull(),
+    width: integer().notNull(),
+    height: integer().notNull(),
+    thumbhash: text(),
+    dominantColor: text('dominant_color'),
+    renditions: jsonb().default({}).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'media_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    unique('media_restaurant_id_id_key').on(table.id, table.restaurantId),
+    pgPolicy('media: managers delete', {
+      as: 'permissive',
+      for: 'delete',
+      to: ['authenticated'],
+      using: sql`( SELECT has_restaurant_role(media.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+    }),
+    pgPolicy('media: managers update', { as: 'permissive', for: 'update', to: ['authenticated'] }),
+    pgPolicy('media: managers insert', { as: 'permissive', for: 'insert', to: ['authenticated'] }),
+    pgPolicy('media: platform read', { as: 'permissive', for: 'select', to: ['authenticated'] }),
+    pgPolicy('media: members read', { as: 'permissive', for: 'select', to: ['authenticated'] }),
+    check('media_base_path_check', sql`base_path ~ '^[a-z0-9/_-]{8,200}$'::text`),
+    check('media_dominant_color_check', sql`dominant_color ~ '^#[0-9a-f]{6}$'::text`),
+    check('media_height_check', sql`(height >= 1) AND (height <= 6000)`),
+    check('media_renditions_check', sql`jsonb_typeof(renditions) = 'object'::text`),
+    check('media_thumbhash_check', sql`char_length(thumbhash) <= 64`),
+    check('media_width_check', sql`(width >= 1) AND (width <= 6000)`),
+  ],
+);
+
+export const categories = pgTable(
+  'categories',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    name: jsonb().notNull(),
+    mediaId: uuid('media_id'),
+    icon: text(),
+    sortOrder: integer('sort_order').default(0).notNull(),
+    isVisible: boolean('is_visible').default(true).notNull(),
+    availability: jsonb(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table) => [
+    index('categories_media_id_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.mediaId.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('categories_restaurant_sort_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('int4_ops'),
+      table.sortOrder.asc().nullsLast().op('int4_ops'),
+    ),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'categories_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.mediaId],
+      foreignColumns: [media.id, media.restaurantId],
+      name: 'categories_restaurant_id_media_id_fkey',
+    }).onDelete('set null'),
+    unique('categories_restaurant_id_id_key').on(table.id, table.restaurantId),
+    pgPolicy('categories: managers delete', {
+      as: 'permissive',
+      for: 'delete',
+      to: ['authenticated'],
+      using: sql`( SELECT has_restaurant_role(categories.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+    }),
+    pgPolicy('categories: managers update', {
+      as: 'permissive',
+      for: 'update',
+      to: ['authenticated'],
+    }),
+    pgPolicy('categories: managers insert', {
+      as: 'permissive',
+      for: 'insert',
+      to: ['authenticated'],
+    }),
+    pgPolicy('categories: platform read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    pgPolicy('categories: members read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    check(
+      'categories_availability_check',
+      sql`(availability IS NULL) OR (jsonb_typeof(availability) = 'object'::text)`,
+    ),
+    check('categories_icon_check', sql`icon ~ '^[a-z0-9-]{1,40}$'::text`),
+    check('categories_name_check', sql`CHECK (is_i18n_text(name, 80, true`),
+  ],
+);
+
+export const products = pgTable(
+  'products',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    categoryId: uuid('category_id').notNull(),
+    slug: text().notNull(),
+    name: jsonb().notNull(),
+    description: jsonb().default({}).notNull(),
+    price: integer().notNull(),
+    mediaId: uuid('media_id'),
+    stationId: uuid('station_id'),
+    badges: text().array().default([]).notNull(),
+    allergens: text().array().default([]).notNull(),
+    dietary: text().array().default([]).notNull(),
+    isAvailable: boolean('is_available').default(true).notNull(),
+    isVisible: boolean('is_visible').default(true).notNull(),
+    sortOrder: integer('sort_order').default(0).notNull(),
+    version: integer().default(1).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table) => [
+    index('products_category_sort_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.categoryId.asc().nullsLast().op('uuid_ops'),
+      table.sortOrder.asc().nullsLast().op('int4_ops'),
+    ),
+    index('products_media_id_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.mediaId.asc().nullsLast().op('uuid_ops'),
+    ),
+    uniqueIndex('products_slug_key')
+      .using(
+        'btree',
+        table.restaurantId.asc().nullsLast().op('text_ops'),
+        table.slug.asc().nullsLast().op('uuid_ops'),
+      )
+      .where(sql`(deleted_at IS NULL)`),
+    foreignKey({
+      columns: [table.restaurantId, table.categoryId],
+      foreignColumns: [categories.id, categories.restaurantId],
+      name: 'products_restaurant_id_category_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'products_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.mediaId],
+      foreignColumns: [media.id, media.restaurantId],
+      name: 'products_restaurant_id_media_id_fkey',
+    }).onDelete('set null'),
+    unique('products_restaurant_id_id_key').on(table.id, table.restaurantId),
+    pgPolicy('products: managers delete', {
+      as: 'permissive',
+      for: 'delete',
+      to: ['authenticated'],
+      using: sql`( SELECT has_restaurant_role(products.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+    }),
+    pgPolicy('products: managers update', {
+      as: 'permissive',
+      for: 'update',
+      to: ['authenticated'],
+    }),
+    pgPolicy('products: managers insert', {
+      as: 'permissive',
+      for: 'insert',
+      to: ['authenticated'],
+    }),
+    pgPolicy('products: platform read', { as: 'permissive', for: 'select', to: ['authenticated'] }),
+    pgPolicy('products: members read', { as: 'permissive', for: 'select', to: ['authenticated'] }),
+    check(
+      'products_allergens_check',
+      sql`allergens <@ ARRAY['gluten'::text, 'crustaceans'::text, 'eggs'::text, 'fish'::text, 'peanuts'::text, 'soy'::text, 'milk'::text, 'nuts'::text, 'celery'::text, 'mustard'::text, 'sesame'::text, 'sulphites'::text, 'lupin'::text, 'molluscs'::text]`,
+    ),
+    check(
+      'products_badges_check',
+      sql`badges <@ ARRAY['new'::text, 'popular'::text, 'house'::text, 'seasonal'::text]`,
+    ),
+    check('products_description_check', sql`CHECK (is_i18n_text(description, 500, false`),
+    check(
+      'products_dietary_check',
+      sql`dietary <@ ARRAY['vegetarian'::text, 'vegan'::text, 'gluten_free'::text, 'spicy'::text]`,
+    ),
+    check('products_name_check', sql`CHECK (is_i18n_text(name, 120, true`),
+    check('products_price_check', sql`(price >= 0) AND (price <= 10000000)`),
+    check('products_slug_check', sql`slug ~ '^[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?$'::text`),
+  ],
+);
+
+export const optionGroups = pgTable(
+  'option_groups',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    name: jsonb().notNull(),
+    minSelect: integer('min_select').default(0).notNull(),
+    maxSelect: integer('max_select').default(1).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'option_groups_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    unique('option_groups_restaurant_id_id_key').on(table.id, table.restaurantId),
+    pgPolicy('option_groups: managers delete', {
+      as: 'permissive',
+      for: 'delete',
+      to: ['authenticated'],
+      using: sql`( SELECT has_restaurant_role(option_groups.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+    }),
+    pgPolicy('option_groups: managers update', {
+      as: 'permissive',
+      for: 'update',
+      to: ['authenticated'],
+    }),
+    pgPolicy('option_groups: managers insert', {
+      as: 'permissive',
+      for: 'insert',
+      to: ['authenticated'],
+    }),
+    pgPolicy('option_groups: platform read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    pgPolicy('option_groups: members read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    check('option_groups_check', sql`max_select >= min_select`),
+    check('option_groups_max_select_check', sql`(max_select >= 1) AND (max_select <= 20)`),
+    check('option_groups_min_select_check', sql`(min_select >= 0) AND (min_select <= 20)`),
+    check('option_groups_name_check', sql`CHECK (is_i18n_text(name, 80, true`),
+  ],
+);
+
+export const options = pgTable(
+  'options',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    optionGroupId: uuid('option_group_id').notNull(),
+    name: jsonb().notNull(),
+    priceDelta: integer('price_delta').default(0).notNull(),
+    isAvailable: boolean('is_available').default(true).notNull(),
+    sortOrder: integer('sort_order').default(0).notNull(),
+    version: integer().default(1).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table) => [
+    index('options_group_sort_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.optionGroupId.asc().nullsLast().op('uuid_ops'),
+      table.sortOrder.asc().nullsLast().op('uuid_ops'),
+    ),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'options_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.optionGroupId],
+      foreignColumns: [optionGroups.id, optionGroups.restaurantId],
+      name: 'options_restaurant_id_option_group_id_fkey',
+    }).onDelete('cascade'),
+    unique('options_restaurant_id_id_key').on(table.id, table.restaurantId),
+    pgPolicy('options: managers delete', {
+      as: 'permissive',
+      for: 'delete',
+      to: ['authenticated'],
+      using: sql`( SELECT has_restaurant_role(options.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+    }),
+    pgPolicy('options: managers update', {
+      as: 'permissive',
+      for: 'update',
+      to: ['authenticated'],
+    }),
+    pgPolicy('options: managers insert', {
+      as: 'permissive',
+      for: 'insert',
+      to: ['authenticated'],
+    }),
+    pgPolicy('options: platform read', { as: 'permissive', for: 'select', to: ['authenticated'] }),
+    pgPolicy('options: members read', { as: 'permissive', for: 'select', to: ['authenticated'] }),
+    check('options_name_check', sql`CHECK (is_i18n_text(name, 80, true`),
+    check('options_price_delta_check', sql`(price_delta >= 0) AND (price_delta <= 10000000)`),
+  ],
+);
+
+export const productOptionGroups = pgTable(
+  'product_option_groups',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    productId: uuid('product_id').notNull(),
+    optionGroupId: uuid('option_group_id').notNull(),
+    sortOrder: integer('sort_order').default(0).notNull(),
+    minSelect: integer('min_select'),
+    maxSelect: integer('max_select'),
+    priceOverrides: jsonb('price_overrides').default({}).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('product_option_groups_group_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.optionGroupId.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('product_option_groups_product_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('int4_ops'),
+      table.productId.asc().nullsLast().op('int4_ops'),
+      table.sortOrder.asc().nullsLast().op('int4_ops'),
+    ),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'product_option_groups_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.optionGroupId],
+      foreignColumns: [optionGroups.id, optionGroups.restaurantId],
+      name: 'product_option_groups_restaurant_id_option_group_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.productId],
+      foreignColumns: [products.id, products.restaurantId],
+      name: 'product_option_groups_restaurant_id_product_id_fkey',
+    }).onDelete('cascade'),
+    unique('product_option_groups_product_id_option_group_id_key').on(
+      table.productId,
+      table.optionGroupId,
+    ),
+    pgPolicy('product_option_groups: managers delete', {
+      as: 'permissive',
+      for: 'delete',
+      to: ['authenticated'],
+      using: sql`( SELECT has_restaurant_role(product_option_groups.restaurant_id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+    }),
+    pgPolicy('product_option_groups: managers update', {
+      as: 'permissive',
+      for: 'update',
+      to: ['authenticated'],
+    }),
+    pgPolicy('product_option_groups: managers insert', {
+      as: 'permissive',
+      for: 'insert',
+      to: ['authenticated'],
+    }),
+    pgPolicy('product_option_groups: platform read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    pgPolicy('product_option_groups: members read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    check(
+      'product_option_groups_check',
+      sql`(min_select IS NULL) OR (max_select IS NULL) OR (max_select >= min_select)`,
+    ),
+    check('product_option_groups_max_select_check', sql`(max_select >= 1) AND (max_select <= 20)`),
+    check('product_option_groups_min_select_check', sql`(min_select >= 0) AND (min_select <= 20)`),
+    check(
+      'product_option_groups_price_overrides_check',
+      sql`jsonb_typeof(price_overrides) = 'object'::text`,
+    ),
+  ],
+);
+
+export const priceHistory = pgTable(
+  'price_history',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    productId: uuid('product_id').notNull(),
+    oldPrice: integer('old_price').notNull(),
+    newPrice: integer('new_price').notNull(),
+    changedBy: uuid('changed_by'),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index('price_history_product_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.productId.asc().nullsLast().op('timestamptz_ops'),
+      table.createdAt.desc().nullsFirst().op('timestamptz_ops'),
+    ),
+    foreignKey({
+      columns: [table.changedBy],
+      foreignColumns: [users.id],
+      name: 'price_history_changed_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'price_history_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.productId],
+      foreignColumns: [products.id, products.restaurantId],
+      name: 'price_history_restaurant_id_product_id_fkey',
+    }).onDelete('cascade'),
+    pgPolicy('price_history: platform read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+      using: sql`( SELECT is_platform_admin() AS is_platform_admin)`,
+    }),
+    pgPolicy('price_history: managers read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    check('price_history_new_price_check', sql`new_price >= 0`),
+    check('price_history_old_price_check', sql`old_price >= 0`),
+  ],
+);
+
+export const translationGlossary = pgTable(
+  'translation_glossary',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id'),
+    term: text().notNull(),
+    translations: jsonb().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex('translation_glossary_term_key').using(
+      'btree',
+      sql`COALESCE(restaurant_id, '00000000-0000-0000-0000-000000000000':`,
+      sql`lower(term)`,
+    ),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'translation_glossary_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    pgPolicy('translation_glossary: super admin writes platform terms', {
+      as: 'permissive',
+      for: 'all',
+      to: ['authenticated'],
+      using: sql`((restaurant_id IS NULL) AND ( SELECT is_super_admin() AS is_super_admin))`,
+      withCheck: sql`((restaurant_id IS NULL) AND ( SELECT is_super_admin() AS is_super_admin))`,
+    }),
+    pgPolicy('translation_glossary: managers write own', {
+      as: 'permissive',
+      for: 'all',
+      to: ['authenticated'],
+    }),
+    pgPolicy('translation_glossary: read platform and own', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    check(
+      'translation_glossary_term_check',
+      sql`(char_length(btrim(term)) >= 1) AND (char_length(btrim(term)) <= 80)`,
+    ),
+    check(
+      'translation_glossary_translations_check',
+      sql`CHECK (is_i18n_text(translations, 120, true`,
+    ),
   ],
 );

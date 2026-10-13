@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "title": "Dashboard"
+  },
+  "nav": {
+    "label": "Dashboard navigation",
+    "switchRestaurant": "Switch venue",
+    "restaurants": "Your venues",
+    "account": "Account",
+    "logOut": "Log out",
+    "plan": "{plan} plan"
+  },
+  "home": {
+    "eyebrow": "Dashboard",
+    "emptyTitle": "Next step: your menu",
+    "emptyDescription": "The menu editor lands here very soon. Your categories and products will appear on this page.",
+    "publicAddress": "Your menu address"
+  },
+  "forbidden": {
+    "title": "Access denied",
+    "description": "This account cannot open this venue, or the dashboard.",
+    "back": "Back to my venue",
+    "logOut": "Switch account"
+  },
+  "loading": "Loading the dashboard…",
+  "plans": {
+    "basic": "Basic",
+    "pro": "Pro",
+    "premium": "Premium"
+  }
+}

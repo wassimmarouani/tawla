@@ -147,9 +147,16 @@ select pg_temp.act_as('00000000-0000-4000-8000-0000000000ad', '[]', 'super_admin
 select is((select count(*) from public.restaurants), 0::bigint, 'platform role grants nothing without TOTP (aal1)');
 reset role;
 
+-- Totals as the table owner sees them: a local database may hold rows from other suites
+-- (audit entries are append-only), so "every row" is compared against the real totals.
+create temp table platform_totals as
+  select (select count(*) from public.restaurants) as restaurants,
+         (select count(*) from public.audit_logs) as audit_logs;
+grant select on platform_totals to authenticated;
+
 select pg_temp.act_as('00000000-0000-4000-8000-0000000000ad', '[]', 'super_admin', 'aal2');
-select is((select count(*) from public.restaurants), 2::bigint, 'super admin with TOTP sees every restaurant');
-select is((select count(*) from public.audit_logs), 2::bigint, 'super admin with TOTP reads the global audit log');
+select is((select count(*) from public.restaurants), (select restaurants from platform_totals), 'super admin with TOTP sees every restaurant');
+select is((select count(*) from public.audit_logs), (select audit_logs from platform_totals), 'super admin with TOTP reads the global audit log');
 reset role;
 
 -- ---------------------------------------------------------------- audit log is append-only

@@ -38,6 +38,8 @@
   --brand-text: #1a4f92;
   --brand-subtle: #e7eef8;
   --brand-on-subtle: #163e72;
+  --brand-panel: #1d5aa6;
+  --brand-on-panel: #ffffff;
   --success: #17663a;
   --success-subtle: #e2f3e8;
   --warning: #8a5300;
@@ -80,6 +82,8 @@
     --brand-text: #8db6ee;
     --brand-subtle: #172638;
     --brand-on-subtle: #b9d2f5;
+    --brand-panel: #16294a;
+    --brand-on-panel: #eef3fb;
     --success: #7fdca6;
     --success-subtle: #12301f;
     --warning: #f2c16b;
@@ -122,6 +126,8 @@
   --brand-text: #8db6ee;
   --brand-subtle: #172638;
   --brand-on-subtle: #b9d2f5;
+  --brand-panel: #16294a;
+  --brand-on-panel: #eef3fb;
   --success: #7fdca6;
   --success-subtle: #12301f;
   --warning: #f2c16b;
@@ -162,6 +168,8 @@
   --color-brand-text: var(--brand-text);
   --color-brand-subtle: var(--brand-subtle);
   --color-brand-on-subtle: var(--brand-on-subtle);
+  --color-brand-panel: var(--brand-panel);
+  --color-brand-on-panel: var(--brand-on-panel);
   --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
   --color-warning: var(--warning);

@@ -244,7 +244,16 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
-# Uncomment to customize email template
+# Links point to our pages (token exchanged on an explicit click, ADR-0010), localized with
+# the user's `locale` metadata. Hosted projects use the same templates (docs/setup.md).
+[auth.email.template.confirmation]
+subject = "Tawla · Confirmez votre adresse / تأكيد البريد / Confirm your email"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Tawla · Mot de passe / كلمة المرور / Password"
+content_path = "./supabase/templates/recovery.html"
+
 # [auth.email.template.invite]
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"

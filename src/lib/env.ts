@@ -22,6 +22,9 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
     NEXT_PUBLIC_APP_NAME: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_URL: z.url(),
+    /** Publishable (formerly anon) key: safe in the browser, RLS applies (ADR-0024). */
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().startsWith('sb_publishable_'),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -30,6 +33,8 @@ export const env = createEnv({
     ENABLE_DEV_ROUTES: process.env.ENABLE_DEV_ROUTES,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   },
   emptyStringAsUndefined: true,
   skipValidation: process.env.SKIP_ENV_VALIDATION === 'true',

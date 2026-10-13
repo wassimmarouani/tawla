@@ -17,7 +17,8 @@ export interface SecurityHeaderOptions {
  * Public, cached surfaces (customer menu, marketing) cannot use nonces without becoming dynamic,
  * so `script-src` allows inline scripts (Next.js inlines RSC payloads). Mitigations: no
  * dangerouslySetInnerHTML (lint), user content always rendered as text.
- * Authenticated app surfaces switch to a nonce-based strict CSP when auth lands (P0-11).
+ * Authenticated surfaces use the same policy: under Cache Components their prerendered shells
+ * cannot carry a per-request nonce (verified in P0-11, ADR-0017 amendment 2026-10-13).
  */
 export function buildSecurityHeaders(options: SecurityHeaderOptions): Record<string, string> {
   const { isHttps, isProduction, surface } = options;

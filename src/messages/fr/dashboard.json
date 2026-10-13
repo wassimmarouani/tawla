@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "title": "Tableau de bord"
+  },
+  "nav": {
+    "label": "Navigation du tableau de bord",
+    "switchRestaurant": "Changer d’établissement",
+    "restaurants": "Vos établissements",
+    "account": "Compte",
+    "logOut": "Se déconnecter",
+    "plan": "Formule {plan}"
+  },
+  "home": {
+    "eyebrow": "Tableau de bord",
+    "emptyTitle": "Prochaine étape : votre carte",
+    "emptyDescription": "L’éditeur de menu arrive ici très bientôt. Vos catégories et produits apparaîtront sur cette page.",
+    "publicAddress": "Adresse de votre menu"
+  },
+  "forbidden": {
+    "title": "Accès refusé",
+    "description": "Ce compte n’a pas accès à cet établissement, ou pas au tableau de bord.",
+    "back": "Revenir à mon établissement",
+    "logOut": "Changer de compte"
+  },
+  "loading": "Chargement du tableau de bord…",
+  "plans": {
+    "basic": "Basic",
+    "pro": "Pro",
+    "premium": "Premium"
+  }
+}

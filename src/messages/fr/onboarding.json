@@ -1,0 +1,16 @@
+{
+  "venueName": "Nom de l’établissement",
+  "venueType": "Type d’établissement",
+  "venueTypes": {
+    "cafe": "Café",
+    "restaurant": "Restaurant",
+    "tea_room": "Salon de thé",
+    "pastry": "Pâtisserie",
+    "fast_food": "Restauration rapide"
+  },
+  "create": {
+    "title": "Créez votre établissement",
+    "description": "Donnez-lui un nom : vous pourrez tout modifier plus tard.",
+    "submit": "Créer l’établissement"
+  }
+}

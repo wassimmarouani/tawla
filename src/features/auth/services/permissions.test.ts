@@ -8,6 +8,7 @@ import { ACTIONS, TENANT_ROLES, can, type Action, type Actor } from './permissio
  */
 type Cell = 'y' | 'n' | 'c';
 const SPEC: Record<Action, [Cell, Cell, Cell, Cell, Cell, Cell]> = {
+  'dashboard.view': ['y', 'y', 'n', 'n', 'n', 'n'],
   'menu.view': ['y', 'y', 'y', 'y', 'y', 'y'],
   'menu.edit': ['y', 'y', 'n', 'n', 'n', 'n'],
   'product.toggleAvailability': ['y', 'y', 'y', 'y', 'y', 'n'],

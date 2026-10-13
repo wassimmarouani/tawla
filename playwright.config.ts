@@ -9,6 +9,9 @@ const isCI = Boolean(process.env.CI);
 
 export default defineConfig({
   testDir: './e2e',
+  globalTeardown: './e2e/global-teardown.ts',
+  // Server Actions hit Supabase Auth and Postgres; 8 parallel workers slow them down locally.
+  expect: { timeout: 10_000 },
   outputDir: './test-results',
   fullyParallel: true,
   forbidOnly: isCI,
@@ -42,6 +45,8 @@ export default defineConfig({
       APP_DOMAIN: 'localhost',
       NEXT_PUBLIC_APP_URL: baseURL,
       NEXT_PUBLIC_APP_NAME: 'Tawla',
+      NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
       DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
     },
   },

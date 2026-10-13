@@ -8,6 +8,7 @@ export type TenantRole = (typeof TENANT_ROLES)[number];
 export type Actor = TenantRole | 'client';
 
 export const ACTIONS = [
+  'dashboard.view',
   'menu.view',
   'menu.edit',
   'product.toggleAvailability',
@@ -61,6 +62,7 @@ const MANAGEMENT = { owner: true, manager: true } as const;
 const FLOOR = { owner: true, manager: true, counter: true, waiter: true } as const;
 
 const MATRIX: Record<Action, Partial<Record<Actor, Rule>>> = {
+  'dashboard.view': MANAGEMENT,
   'menu.view': { ...ALL_STAFF, client: true },
   'menu.edit': MANAGEMENT,
   'product.toggleAvailability': ALL_STAFF,

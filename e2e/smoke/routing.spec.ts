@@ -47,10 +47,11 @@ test.describe('locale routing (ADR-0012)', () => {
   test('app paths have no visible locale and follow Accept-Language', async ({ browser }) => {
     const context = await browser.newContext({ locale: 'en-US' });
     const page = await context.newPage();
-    const response = await page.goto('/dashboard');
-    expect(response?.status()).toBe(404);
-    expect(new URL(page.url()).pathname).toBe('/dashboard');
+    const response = await page.goto('/login');
+    expect(response?.status()).toBe(200);
+    expect(new URL(page.url()).pathname).toBe('/login');
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+    await expect(page.getByRole('heading', { level: 1, name: 'Welcome back' })).toBeVisible();
     await context.close();
   });
 

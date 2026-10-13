@@ -22,6 +22,7 @@
 
 | Action                                            | Owner | Manager | Counter | Waiter                               | Station | Client      |
 | ------------------------------------------------- | ----- | ------- | ------- | ------------------------------------ | ------- | ----------- |
+| Open the back-office (`/dashboard`)               | ✓     | ✓       | —       | —                                    | —       | —           |
 | View public menu                                  | ✓     | ✓       | ✓       | ✓                                    | ✓       | ✓           |
 | Create / edit categories, products, options       | ✓     | ✓       | —       | —                                    | —       | —           |
 | Mark product (un)available                        | ✓     | ✓       | ✓       | ✓                                    | ✓       | —           |

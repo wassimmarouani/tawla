@@ -67,7 +67,7 @@ export function CategoryNav({ label, categories }: { label: string; categories: 
     >
       <ul className="mx-auto scrollbar-none flex max-w-3xl gap-2 overflow-x-auto px-gutter py-2">
         {categories.map((category) => (
-          <li key={category.id} className="shrink-0">
+          <li key={category.id} className="shrink-0" data-chip={categoryAnchor(category.id)}>
             <a
               ref={(node) => {
                 if (node) chips.current.set(category.id, node);

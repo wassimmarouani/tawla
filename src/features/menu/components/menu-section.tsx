@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+import Link from 'next/link';
 import { MenuImage } from '@/components/media/menu-image';
 import type { Locale } from '@/i18n/locales';
 import { formatMoney } from '@/lib/money';
@@ -53,6 +54,34 @@ function Tags({ product, t }: { product: PublicProduct; t: Translator }) {
   );
 }
 
+/** Filter tags of a product (MenuFilters): vegan dishes are vegetarian too. */
+export function filterTags(product: PublicProduct): string {
+  const tags = new Set<string>();
+  if (product.dietary.includes('vegetarian') || product.dietary.includes('vegan'))
+    tags.add('vegetarian');
+  if (product.dietary.includes('gluten_free')) tags.add('gluten_free');
+  if (product.dietary.includes('spicy')) tags.add('spicy');
+  if (product.badges.includes('new')) tags.add('new');
+  return [...tags].join(' ');
+}
+
+/**
+ * The product name opens its sheet (`?p=slug`, spec 02): one link per product, stretched over
+ * the whole card or row so the entire surface is the touch target.
+ */
+function ProductLink({ product, locale }: { product: PublicProduct; locale: Locale }) {
+  return (
+    <Link
+      href={`?p=${encodeURIComponent(product.slug)}`}
+      scroll={false}
+      prefetch={false}
+      className="outline-none after:absolute after:inset-0"
+    >
+      <Localized value={product.name} locale={locale} />
+    </Link>
+  );
+}
+
 function ProductCard({
   product,
   locale,
@@ -66,7 +95,12 @@ function ProductCard({
 }) {
   const available = product.is_available;
   return (
-    <li className="flex flex-col rounded-md bg-card p-1.5 shadow-sm" data-available={available}>
+    <li
+      className="relative flex flex-col rounded-md bg-card p-1.5 shadow-sm has-focus-visible:ring-2 has-focus-visible:ring-ring"
+      data-available={available}
+      data-product=""
+      data-tags={filterTags(product)}
+    >
       <div className="relative aspect-square overflow-hidden rounded-sm bg-muted">
         {product.media ? (
           <MenuImage
@@ -94,15 +128,14 @@ function ProductCard({
         )}
       </div>
       <div className="flex flex-1 flex-col gap-1 px-2 pt-2.5 pb-1.5">
-        <Localized
-          value={product.name}
-          locale={locale}
-          as="h3"
+        <h3
           className={cn(
             'line-clamp-2 text-md leading-snug font-semibold',
             available ? 'text-foreground' : 'text-muted-foreground',
           )}
-        />
+        >
+          <ProductLink product={product} locale={locale} />
+        </h3>
         {product.description ? (
           <Localized
             value={product.description}
@@ -139,14 +172,16 @@ function ProductRow({
   const available = product.is_available;
   const tone = available ? 'text-foreground' : 'text-muted-foreground';
   return (
-    <li className="py-3" data-available={available}>
+    <li
+      className="relative py-3 has-focus-visible:ring-2 has-focus-visible:ring-ring"
+      data-available={available}
+      data-product=""
+      data-tags={filterTags(product)}
+    >
       <div className="flex items-end gap-2">
-        <Localized
-          value={product.name}
-          locale={locale}
-          as="h3"
-          className={cn('min-w-0 text-base font-semibold break-words', tone)}
-        />
+        <h3 className={cn('min-w-0 text-base font-semibold break-words', tone)}>
+          <ProductLink product={product} locale={locale} />
+        </h3>
         <span
           aria-hidden="true"
           className="mb-1.5 min-w-6 flex-1 border-b-2 border-dotted border-border"
@@ -187,6 +222,7 @@ export async function MenuSection({ category, index, locale, priority }: MenuSec
   return (
     <section
       id={categoryAnchor(category.id)}
+      data-section=""
       aria-labelledby={titleId}
       className="scroll-mt-16 pt-9 first:pt-6"
     >

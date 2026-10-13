@@ -6,7 +6,12 @@
     "open": "Ouvert"
   },
   "search": {
-    "placeholder": "Rechercher un plat, une boisson…"
+    "placeholder": "Rechercher un plat, une boisson…",
+    "label": "Rechercher dans le menu",
+    "close": "Fermer la recherche",
+    "results": "{count, plural, =0 {Aucun résultat} one {# résultat} other {# résultats}}",
+    "empty": "Aucun plat ne correspond. Essayez un autre mot, en français, en arabe ou en anglais.",
+    "hint": "Tapez au moins deux lettres."
   },
   "info": "Infos",
   "wifi": "Wi-Fi",
@@ -44,5 +49,41 @@
     "description": "Cet établissement prépare son menu. Revenez dans un instant."
   },
   "logo": "Logo de {name}",
-  "loading": "Chargement du menu…"
+  "loading": "Chargement du menu…",
+  "allergenNames": {
+    "gluten": "Gluten",
+    "crustaceans": "Crustacés",
+    "eggs": "Œufs",
+    "fish": "Poisson",
+    "peanuts": "Arachides",
+    "soy": "Soja",
+    "milk": "Lait",
+    "nuts": "Fruits à coque",
+    "celery": "Céleri",
+    "mustard": "Moutarde",
+    "sesame": "Sésame",
+    "sulphites": "Sulfites",
+    "lupin": "Lupin",
+    "molluscs": "Mollusques"
+  },
+  "sheet": {
+    "close": "Fermer",
+    "allergens": "Allergènes",
+    "noAllergens": "Aucun allergène déclaré par l’établissement.",
+    "allergenNote": "Un doute ? Demandez au serveur avant de commander.",
+    "dietary": "Régime",
+    "required": "Obligatoire",
+    "optional": "Facultatif",
+    "chooseExactly": "{count, plural, one {Choisissez 1 option} other {Choisissez # options}}",
+    "chooseUpTo": "{count, plural, one {1 option au maximum} other {Jusqu’à # options}}",
+    "chooseBetween": "Entre {min} et {max} options",
+    "delta": "+{price}",
+    "included": "Inclus",
+    "options": "Options"
+  },
+  "filters": {
+    "label": "Filtrer les plats",
+    "empty": "Aucun plat ne correspond à ces filtres.",
+    "clear": "Effacer les filtres"
+  }
 }

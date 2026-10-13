@@ -16,9 +16,13 @@ function flatten(tree: Tree, prefix = ''): Map<string, string> {
   return entries;
 }
 
-/** ICU argument names (`{count}`, `{name, plural, …}`) used by a message. */
+/**
+ * ICU argument names (`{count}`, `{name, plural, …}`) used by a message. Plural branches such as
+ * `{Choose # options}` are text, not arguments, so a name must be followed by `}` or `,`.
+ */
 function argumentsOf(message: string): string[] {
-  return [...message.matchAll(/\{\s*([a-zA-Z_][\w]*)/g)].map((match) => match[1] ?? '').sort();
+  const names = [...message.matchAll(/\{\s*([a-zA-Z_]\w*)\s*[,}]/g)].map((match) => match[1] ?? '');
+  return [...new Set(names)].sort();
 }
 
 describe('messages', () => {

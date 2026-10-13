@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { PublicMenu } from '../schemas/public-menu';
 import { id, product, text } from '../testing/fixtures';
-import { buildSearchIndex, normalizeForSearch, phoneticKey, searchMenu } from './search';
+import {
+  buildSearchIndex,
+  normalizeForSearch,
+  phoneticKey,
+  searchEntries,
+  searchMenu,
+} from './search';
 
 const ITEMS = {
   capucin: { id: id(1), search: 'Capucin كابوسان Capucin Cafés القهوة Coffee' },
@@ -34,7 +40,7 @@ const menu: Pick<PublicMenu, 'categories'> = {
     },
   ],
 };
-const index = buildSearchIndex(menu);
+const index = buildSearchIndex(searchEntries(menu));
 const search = (query: string) => searchMenu(index, query);
 
 describe('normalizeForSearch', () => {

@@ -4,7 +4,7 @@
 -- public.product_option_groups
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(24);
+select plan(25);
 
 insert into public.organizations (id, name) values
   ('15000000-0000-4000-8000-00000000000a', 'Org A'),
@@ -66,12 +66,15 @@ select is(
 -- ---------------------------------------------------------------- whitelisted columns only
 select is(
   (select jsonb_agg(k order by k) from menu_fr, jsonb_array_elements(body -> 'categories' -> 0 -> 'products') p, jsonb_object_keys(p) k where p ->> 'slug' = 'capucin'),
-  '["allergens", "badges", "description", "dietary", "id", "is_available", "media", "name", "option_groups", "price", "slug", "version"]'::jsonb,
+  '["allergens", "badges", "description", "dietary", "id", "is_available", "media", "name", "option_groups", "price", "search", "slug", "version"]'::jsonb,
   'products expose whitelisted keys only (no station, sort order, restaurant or timestamps)');
 select is(
   (select jsonb_agg(k order by k) from menu_fr, jsonb_object_keys(body -> 'restaurant') k),
   '["currency", "default_locale", "locale", "locales", "manual_status", "manual_status_until", "name", "opening_schedule", "public_id", "slug", "status", "theme", "timezone", "type"]'::jsonb,
   'the restaurant exposes whitelisted keys only (no id, organization or settings)');
+select is(
+  (select p ->> 'search' from menu_fr, jsonb_array_elements(body -> 'categories' -> 0 -> 'products') p where p ->> 'slug' = 'capucin'),
+  'Capucin Capucin EN Cafés قهوة', 'search terms carry every language of the product and its category');
 select ok((select body::text not like '%25000000-0000-4000-8000-00000000000a%' from menu_fr), 'the internal restaurant id never appears');
 select ok((select body::text not like '%95000000-0000-4000-8000-000000000001%' from menu_fr), 'station ids never appear');
 

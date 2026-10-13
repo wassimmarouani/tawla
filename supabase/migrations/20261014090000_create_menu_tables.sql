@@ -409,6 +409,11 @@ begin
         'dietary', to_jsonb(p.dietary),
         'is_available', p.is_available,
         'version', p.version,
+        -- Every language of the product and category names: search matches "capucin" in the
+        -- Arabic UI and "قهوة" in the French one (ADR-0026 §5).
+        'search', concat_ws(' ',
+          p.name ->> 'fr', p.name ->> 'ar', p.name ->> 'en',
+          c.name ->> 'fr', c.name ->> 'ar', c.name ->> 'en'),
         'option_groups', (
           select coalesce(jsonb_agg(jsonb_build_object(
             'id', g.id,

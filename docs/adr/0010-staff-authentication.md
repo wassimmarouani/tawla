@@ -1,6 +1,6 @@
 # ADR-0010 — Staff authentication: shadow users, paired devices, "pick your name + PIN"
 
-- Status: Accepted (session minting to be proven by spike P0-09)
+- Status: Accepted. Session minting verified by spike P0-09 (2026-10-13, see "Spike result")
 - Date: 2026-10-11
 - Audit refs: Q2, C3, E4, spec §5.1, §6.4, §12.3
 
@@ -46,7 +46,7 @@
    - `fixed` devices keep the session until the end of the business day plus a grace period;
    - `mobile` devices are logged out after **12 h**;
    - managers see active sessions and revoke them remotely (§6.4).
-7. **JWT claims:** a Supabase **Custom Access Token Hook** adds `memberships: [{restaurant_id, role}]` and `device_id`. RLS reads `auth.jwt()` claims instead of querying memberships for every row. Access token lifetime is 10 min, and revocation deletes sessions immediately.
+7. **JWT claims:** a Supabase **Custom Access Token Hook** adds `memberships: [{restaurant_id, role}]` and `device_id`. RLS reads `auth.jwt()` claims instead of querying memberships for every row. Access token lifetime is 10 min. Revocation deletes sessions immediately, so refresh fails at once, but an access token already issued stays valid until it expires (≤ 10 min, see "Spike result").
 8. **Phase 1 (Q1):** the minimal staff screen = paired device + email login (a manager, or the single Basic staff account). Shadow users, PIN and the name picker arrive in Phase 2.
 9. **Spike P0-09** proves on local Supabase:
    - `generateLink` + `verifyOtp` yields a session carrying the hook claims;
@@ -54,6 +54,25 @@
    - revoking a device kills its sessions.
 
    **Fallback:** sign JWTs with our own imported asymmetric signing key (Supabase supports importing a private key).
+
+## Spike result (P0-09, 2026-10-13)
+
+Local Supabase (PG 17, GoTrue bundled with CLI 2.x), suite `src/server/admin/staff-session.int.test.ts` (6 tests, runs in CI). Helpers live in `src/server/admin/staff-session.ts` (`createShadowUser`, `mintSession`, `revokeSessions`).
+
+| Question                                                   | Result                                                                                                                                                                      |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `generateLink` + `verifyOtp(type 'email')` → real session? | **Yes.** Access + refresh token; the JWT carries `role: authenticated` and the hook's `memberships` claim.                                                                  |
+| Any email sent?                                            | **No.** Mailpit message count unchanged.                                                                                                                                    |
+| RLS with that session?                                     | **Yes.** The Data API returns exactly the member's restaurant.                                                                                                              |
+| `token_hash` reusable (gotrue#1357)?                       | **No.** The second `verifyOtp` with the same hash fails. No used-token table needed; the fallback (own signing key) is not required.                                        |
+| Password?                                                  | `createUser` without a password stores a **random bcrypt hash** nobody knows. Password sign-in fails.                                                                       |
+| Revocation (`admin.signOut(jwt, 'global')`)                | Refresh fails immediately. The **access token keeps working until expiry** (stateless JWT, ≤ `jwt_expiry` = 600 s); the test pins this bound so a config change is noticed. |
+
+Constraints carried into Phase 2 (PIN login):
+
+1. **Immediate revocation.** If 10 minutes is too long for a revoked device, staff RLS helpers check that `auth.jwt() ->> 'session_id'` still exists in `auth.sessions` (one lookup per statement through an initplan). Decide in the PIN-login ADR, with a benchmark.
+2. **Verify rate limit.** Every mint calls `/verify` from our server IP. GoTrue limits verifications per IP (`token_verifications`, 30 per 5 min locally). Raise it on the hosted project and alert on HTTP 429 before the pilot grows; logins only happen at shift start, and refresh does not count.
+3. **Staff email domain.** `STAFF_EMAIL_DOMAIN` gets a null MX record (RFC 7505), so a public `signInWithOtp` on a shadow address delivers nothing. A "before user created" Auth hook rejects public sign-ups on that domain.
 
 ## Consequences
 

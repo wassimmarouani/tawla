@@ -560,7 +560,7 @@
 | Risk                                        | Mitigation                                                                                                    |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Anon can't use private Realtime channels    | Spike P0-08 first. Fallback: anonymous sign-in with a raised per-IP limit (ADR-0008)                          |
-| Shadow-session minting flaw (token reuse)   | Spike P0-09. Fallback: own signing key (ADR-0010)                                                             |
+| Shadow-session minting flaw (token reuse)   | Retired: P0-09 proved tokens are single-use (ADR-0010). Fallback kept: own signing key                        |
 | 150 KB budget too tight with Next runtime   | size-limit from P1-07a. Islands only, lazy realtime/search/Motion features. Measure early in P0-06 prototypes |
 | AI extraction accuracy on handwritten menus | Evals before ship. Editable draft. Manual path always available                                               |
 | Next.js security release on 2026-10-14      | Adopt immediately in P0-01 (version policy exception)                                                         |

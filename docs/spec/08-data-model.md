@@ -56,6 +56,15 @@
 | stations              | restaurant_id, name (jsonb), sort_order (Phase 3)                                                                                                                                                                    |
 | translation_glossary  | restaurant_id (nullable = platform default), term, translations (jsonb)                                                                                                                                              |
 
+Implementation notes (P1-01, `20261014090000_create_menu_tables.sql`):
+
+- Allowed values: `badges` ⊆ new, popular, house, seasonal; `allergens` ⊆ the EU 14 (gluten, crustaceans, eggs, fish, peanuts, soy, milk, nuts, celery, mustard, sesame, sulphites, lupin, molluscs); `dietary` ⊆ vegetarian, vegan, gluten_free, spicy. `price` and `price_delta` are millimes between 0 and 10 000 DT.
+- Multilingual columns are checked by `is_i18n_text(value, max_length, required)` (keys fr/ar/en, string values).
+- `products` and `options` carry `version`, bumped by trigger on every update (ADR-0013). Clients cannot write it.
+- Floor roles change availability only through `set_product_availability` / `set_option_availability` (security definer, membership-checked, return the new version). Owners and managers edit everything else under RLS.
+- `get_public_menu(slug, locale)` is the only customer read path: visible, non-deleted rows of an active or read-only restaurant, empty categories omitted, unavailable products kept (sold out), whitelisted keys only, text resolved by `i18n_pick` as `{text, lang}` with the ADR-0026 fallback chain. Option rules are returned raw (group + product overrides) for `effectiveOptionGroup` (P1-02).
+- Demo menu: `supabase/seeds/10_menu_el_bahja.sql` (8 categories, 43 products) and `20_menu_pizzeria.sql`. Product photos are seeded with the media pipeline (P1-03).
+
 ## Service and orders
 
 | Table                        | Main columns                                                                                                                                                                                                                                                                                                                           |

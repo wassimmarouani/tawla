@@ -7,6 +7,7 @@ import {
   seriousAxeViolations,
   undersizedTargets,
 } from '../fixtures/quality';
+import { openCommandPalette } from '../fixtures/dashboard';
 
 /**
  * Signed-in back-office screens at every width × light/dark × FR/AR: venue creation fallback,
@@ -24,6 +25,7 @@ const COPY = {
     create: 'Créer l’établissement',
     forbidden: 'Accès refusé',
     back: 'Revenir à mon établissement',
+    team: 'Équipe',
   },
   ar: {
     email: 'البريد الإلكتروني',
@@ -33,6 +35,7 @@ const COPY = {
     create: 'إنشاء المؤسسة',
     forbidden: 'الوصول مرفوض',
     back: 'العودة إلى مؤسستي',
+    team: 'الفريق',
   },
 } as const;
 
@@ -95,6 +98,16 @@ for (const scheme of ['light', 'dark'] as const) {
       const heading = page.getByRole('heading', { level: 1 });
       await expect(heading).toHaveText(locale === 'ar' ? 'مقهى البهجة' : 'Café des Écrans');
       await check(page, 'dashboard-home', capture);
+
+      // Command palette, then a section page.
+      await openCommandPalette(page);
+      await check(page, 'dashboard-palette', capture);
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('dialog')).toBeHidden();
+      await page.goto('/dashboard/team');
+      await expect(heading).toHaveText(copy.team);
+      await check(page, 'dashboard-section', capture);
+      await page.goto('/dashboard');
 
       // A restaurant outside the memberships: 403, then back to the user's own.
       await context.addCookies([

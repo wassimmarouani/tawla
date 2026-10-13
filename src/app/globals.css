@@ -117,3 +117,8 @@
 html:has(dialog[open]) {
   overflow: hidden;
 }
+
+/* Fixed bottom bars: clear the home indicator only. */
+@utility pb-home-indicator {
+  padding-block-end: env(safe-area-inset-bottom);
+}

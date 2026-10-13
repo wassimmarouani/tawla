@@ -8,13 +8,30 @@
     "restaurants": "Your venues",
     "account": "Account",
     "logOut": "Log out",
-    "plan": "{plan} plan"
+    "plan": "{plan} plan",
+    "overview": "Overview",
+    "menu": "Menu",
+    "tables": "Tables & QR",
+    "team": "Team",
+    "settings": "Settings",
+    "sections": "Sections",
+    "search": "Search",
+    "searchHint": "Search or go to…",
+    "shortcut": "Ctrl K",
+    "tabs": {
+      "overview": "Overview",
+      "menu": "Menu",
+      "tables": "Tables",
+      "team": "Team",
+      "settings": "Settings"
+    }
   },
   "home": {
     "eyebrow": "Dashboard",
-    "emptyTitle": "Next step: your menu",
-    "emptyDescription": "The menu editor lands here very soon. Your categories and products will appear on this page.",
-    "publicAddress": "Your menu address"
+    "publicAddress": "Your menu address",
+    "viewMenu": "View menu",
+    "products": "{count, plural, =0 {No dishes} one {# dish} other {# dishes}}",
+    "categories": "{count, plural, =0 {no categories} one {# category} other {# categories}}"
   },
   "forbidden": {
     "title": "Access denied",
@@ -27,5 +44,62 @@
     "basic": "Basic",
     "pro": "Pro",
     "premium": "Premium"
+  },
+  "palette": {
+    "title": "Command palette",
+    "description": "Go to a section or run an action.",
+    "placeholder": "Go to…",
+    "empty": "No results.",
+    "navigation": "Navigation",
+    "actions": "Actions",
+    "restaurants": "Venues",
+    "viewMenu": "View public menu",
+    "logOut": "Log out"
+  },
+  "checklist": {
+    "title": "Getting started",
+    "progress": "{done} of {total} steps",
+    "done": "Done",
+    "next": "To do",
+    "venue": {
+      "title": "Create the venue",
+      "description": "Name, type and public address."
+    },
+    "menu": {
+      "title": "Add your menu",
+      "description": "Categories, dishes and prices, or import from a photo."
+    },
+    "branding": {
+      "title": "Customise the look",
+      "description": "Logo and main colour."
+    },
+    "tables": {
+      "title": "Create tables and QR codes",
+      "description": "One QR per table, ready to print as a tent."
+    },
+    "team": {
+      "title": "Invite the team",
+      "description": "Managers and waiters, with their role."
+    }
+  },
+  "sections": {
+    "comingTitle": "This section is coming soon",
+    "comingDescription": "It will be available in an upcoming update of your dashboard.",
+    "menu": {
+      "title": "Menu",
+      "description": "Categories, dishes, options and availability."
+    },
+    "tables": {
+      "title": "Tables & QR",
+      "description": "Tables, zones and printable tents."
+    },
+    "team": {
+      "title": "Team",
+      "description": "Members, roles and paired devices."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Hours, languages, appearance and links."
+    }
   }
 }

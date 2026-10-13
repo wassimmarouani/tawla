@@ -308,6 +308,8 @@
 
 - DoD screenshots at 7 widths; keyboard navigation of all navigation and the palette; axe clean; RTL mirrored correctly.
 
+**Note:** the undo-toast helper ships with its first consumer (category and product deletion, P1-05) rather than as unused code here.
+
 ### P1-05 — Menu editor: categories and products · L
 
 **Deliverables**

@@ -8,6 +8,11 @@ export const sessionClaimsSchema = z.looseObject({
   sub: z.uuid(),
   role: z.literal('authenticated'),
   email: z.string().optional(),
+  /** User-editable profile data: display only, never used for authorization. */
+  user_metadata: z
+    .looseObject({ full_name: z.string().max(120).optional().catch(undefined) })
+    .optional()
+    .catch(undefined),
   aal: z.enum(['aal1', 'aal2']).default('aal1'),
   session_id: z.uuid().optional(),
   platform_role: z.enum(['none', 'super_admin', 'support']).default('none'),

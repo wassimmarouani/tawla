@@ -39,16 +39,16 @@ select throws_ok(
   '23514', null, 'slugs must match the slug pattern');
 select lives_ok(
   $$ insert into public.restaurants (organization_id, slug, name)
-     values ('10000000-0000-4000-8000-0000000000c1', 'cafe-el-bahja', 'Café El Bahja') $$,
+     values ('10000000-0000-4000-8000-0000000000c1', 'pgtap-cafe-bahja', 'Café El Bahja') $$,
   'a valid slug is accepted');
 select throws_ok(
   $$ insert into public.restaurants (organization_id, slug, name)
-     values ('10000000-0000-4000-8000-0000000000c1', 'cafe-el-bahja', 'Twin') $$,
+     values ('10000000-0000-4000-8000-0000000000c1', 'pgtap-cafe-bahja', 'Twin') $$,
   '23505', null, 'live slugs are unique');
-update public.restaurants set deleted_at = now() where slug = 'cafe-el-bahja';
+update public.restaurants set deleted_at = now() where slug = 'pgtap-cafe-bahja';
 select lives_ok(
   $$ insert into public.restaurants (organization_id, slug, name)
-     values ('10000000-0000-4000-8000-0000000000c1', 'cafe-el-bahja', 'New owner') $$,
+     values ('10000000-0000-4000-8000-0000000000c1', 'pgtap-cafe-bahja', 'New owner') $$,
   'a soft-deleted restaurant frees its slug');
 select throws_ok(
   $$ insert into public.restaurants (organization_id, slug, name, locales, default_locale)
@@ -67,7 +67,7 @@ select results_eq(
 -- ---------------------------------------------------------------- access token hook
 insert into public.memberships (restaurant_id, user_id, role)
 select id, '00000000-0000-4000-8000-0000000000c1', 'manager' from public.restaurants
-where slug = 'cafe-el-bahja' and deleted_at is null;
+where slug = 'pgtap-cafe-bahja' and deleted_at is null;
 
 select is(
   jsonb_array_length(public.custom_access_token_hook(jsonb_build_object(

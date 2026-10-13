@@ -19,8 +19,13 @@ export default defineConfig({
         test: {
           name: 'node',
           environment: 'node',
-          include: ['src/**/*.test.ts', 'tooling/**/*.test.mjs', 'scripts/**/*.test.ts'],
-          exclude: ['src/**/*.int.test.ts'],
+          include: [
+            'src/**/*.test.ts',
+            'tooling/**/*.test.ts',
+            'tooling/**/*.test.mjs',
+            'scripts/**/*.test.ts',
+          ],
+          exclude: ['**/*.int.test.ts'],
         },
       },
       {
@@ -38,7 +43,7 @@ export default defineConfig({
           // Requires local Supabase (pnpm db:start). Run with pnpm test:integration.
           name: 'integration',
           environment: 'node',
-          include: ['src/**/*.int.test.ts'],
+          include: ['src/**/*.int.test.ts', 'tooling/**/*.int.test.ts'],
           fileParallelism: false,
           testTimeout: 30_000,
           env: {

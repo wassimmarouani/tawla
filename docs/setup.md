@@ -24,11 +24,14 @@ pnpm db:reset                       # apply migrations + seed demo café + proce
 pnpm dev                            # http://localhost:3000
 ```
 
-Demo entry points (seeded):
+Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or `pnpm demo:info`):
 
-- Customer table menu: `http://localhost:3000/t/<demo-token>`, printed by `pnpm db:reset`.
-- Public menu: `http://localhost:3000/cafe-el-bahja`.
-- Back-office: `owner@demo.tawla.local` / password printed by the seed (local only).
+- Back-office: `http://localhost:3000/login`. Local password for every demo account: `Tawla-demo-2026`.
+  - `owner@demo.tawla.local` (owner) and `manager@demo.tawla.local` (manager) of **Café El Bahja**;
+  - `counter@demo.tawla.local` (counter: refused by the back-office, used by the staff screen);
+  - `owner@pizzeria.tawla.local`, owner of **Pizzeria Test**, the second tenant for isolation checks.
+- Public menus (from P1-07): `http://localhost:3000/cafe-el-bahja`, `http://localhost:3000/pizzeria-test`.
+- Customer table menu: `http://localhost:3000/t/<demo-token>` (tables seeded in P1-08).
 - Staff screen: pair from back-office → Devices.
 - Supabase Studio: `http://localhost:54323` · Mailpit (auth emails): `http://localhost:54324`.
 
@@ -46,6 +49,7 @@ Demo entry points (seeded):
 | `pnpm test:e2e`                          | Playwright journeys + a11y                                                               |
 | `pnpm test:visual`                       | Playwright screenshot matrix (widths × theme × locale)                                   |
 | `pnpm screenshots <route>`               | Capture 390/768/1440 × light/dark × FR/AR for a route into `e2e/__screenshots__/review/` |
+| `pnpm demo:info`                         | Print the demo URLs and local accounts                                                   |
 | `pnpm db:start` / `db:stop` / `db:reset` | Supabase local lifecycle                                                                 |
 | `pnpm db:new <name>`                     | New SQL migration                                                                        |
 | `pnpm db:pull`                           | Regenerate Drizzle schema from the local DB (commit the result)                          |
@@ -78,6 +82,12 @@ Demo entry points (seeded):
 | `POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_KEY`, `POSTHOG_HOST`               | server / public                     | empty locally (disabled)                                                        |
 
 All variables are validated at boot by `src/lib/env.ts`. A missing required server variable fails fast with a clear message.
+
+## Design review captures
+
+`pnpm screenshots <route> [--as owner|manager|counter|pizzeriaOwner|none] [--base <url>]` needs the app running (`pnpm dev`, or `pnpm build && pnpm start`). `/dashboard` and `/admin` routes sign in as the demo owner by default. It writes 12 images plus `report.md` / `report.json` to `e2e/__screenshots__/review/<route>/` (git-ignored) and exits with 1 when a layout, target-size, axe or console check fails at any of the 7 widths.
+
+In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so `/dashboard` is not rewritten into a Windows path.
 
 ## Auth emails
 

@@ -24,14 +24,16 @@
     "prepare": "husky",
     "db:start": "supabase start -x vector,logflare",
     "db:stop": "supabase stop",
-    "db:reset": "supabase db reset",
+    "db:reset": "supabase db reset && tsx scripts/print-demo.ts",
     "db:new": "supabase migration new",
     "db:status": "supabase status",
     "test:db": "supabase test db",
     "check:rls": "tsx scripts/check-rls-coverage.ts",
     "test:integration": "vitest run --project integration",
     "db:pull": "drizzle-kit pull && tsx scripts/clean-drizzle-pull.ts",
-    "tokens:build": "tsx scripts/build-tokens.ts"
+    "tokens:build": "tsx scripts/build-tokens.ts",
+    "demo:info": "tsx scripts/print-demo.ts",
+    "screenshots": "tsx scripts/screenshots.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",

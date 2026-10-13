@@ -1,0 +1,32 @@
+<!doctype html>
+{{ $ar := eq .Data.locale "ar" }}{{ $en := eq .Data.locale "en" }}
+<html lang="{{ if $ar }}ar{{ else if $en }}en{{ else }}fr{{ end }}" dir="{{ if $ar }}rtl{{ else }}ltr{{ end }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body style="margin: 0; padding: 32px 16px; background: #f6f3ee; font-family: Arial, Helvetica, sans-serif; color: #1f1b16">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 480px; margin: 0 auto; background: #ffffff; border-radius: 16px">
+      <tr>
+        <td style="padding: 32px">
+          <p style="margin: 0 0 24px; font-size: 18px; font-weight: bold; color: #1d5aa6">Tawla</p>
+          <h1 style="margin: 0 0 12px; font-size: 22px; line-height: 1.3">
+            {{ if $ar }}فعّل حسابك{{ else if $en }}Activate your account{{ else }}Activez votre compte{{ end }}
+          </h1>
+          <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.5; color: #5c554c">
+            {{ if $ar }}اضغط على الزر لتأكيد بريدك الإلكتروني وفتح لوحة التحكم.{{ else if $en }}Click the button to confirm your email and open your dashboard.{{ else }}Cliquez sur le bouton pour confirmer votre adresse et ouvrir votre tableau de bord.{{ end }}
+          </p>
+          <a
+            href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=email"
+            style="display: inline-block; padding: 14px 24px; border-radius: 10px; background: #1d5aa6; color: #ffffff; font-weight: bold; text-decoration: none"
+          >
+            {{ if $ar }}تأكيد بريدي الإلكتروني{{ else if $en }}Confirm my email{{ else }}Confirmer mon adresse{{ end }}
+          </a>
+          <p style="margin: 24px 0 0; font-size: 13px; line-height: 1.5; color: #7a7268">
+            {{ if $ar }}إذا لم تطلب هذا الحساب، تجاهل هذه الرسالة.{{ else if $en }}If you did not create this account, ignore this email.{{ else }}Si vous n’avez pas créé ce compte, ignorez cet e-mail.{{ end }}
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

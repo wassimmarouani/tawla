@@ -1,7 +1,10 @@
+import auth from './auth.json';
 import client from './client.json';
 import common from './common.json';
+import dashboard from './dashboard.json';
 import marketing from './marketing.json';
+import onboarding from './onboarding.json';
 
-const messages = { client, common, marketing };
+const messages = { auth, client, common, dashboard, marketing, onboarding };
 
 export default messages;

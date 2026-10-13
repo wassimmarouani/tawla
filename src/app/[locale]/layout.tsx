@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
   if (!hasLocale(LOCALES, locale)) return {};
   const t = await getTranslations({ locale, namespace: 'marketing.meta' });
   return {
-    title: env.NEXT_PUBLIC_APP_NAME,
+    title: { default: env.NEXT_PUBLIC_APP_NAME, template: `%s · ${env.NEXT_PUBLIC_APP_NAME}` },
     description: t('description'),
   };
 }

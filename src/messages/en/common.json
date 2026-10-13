@@ -20,5 +20,16 @@
       "retry": "Try again"
     },
     "loading": "Loading…"
+  },
+  "forms": {
+    "errors": {
+      "required": "Required.",
+      "emailInvalid": "Invalid email address.",
+      "passwordTooShort": "At least 10 characters.",
+      "passwordTooLong": "Password too long.",
+      "passwordMismatch": "Passwords do not match.",
+      "tooLong": "Text too long."
+    },
+    "pending": "Please wait…"
   }
 }

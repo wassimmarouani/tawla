@@ -20,5 +20,16 @@
       "retry": "Réessayer"
     },
     "loading": "Chargement…"
+  },
+  "forms": {
+    "errors": {
+      "required": "Champ obligatoire.",
+      "emailInvalid": "Adresse e-mail invalide.",
+      "passwordTooShort": "Au moins 10 caractères.",
+      "passwordTooLong": "Mot de passe trop long.",
+      "passwordMismatch": "Les mots de passe ne correspondent pas.",
+      "tooLong": "Texte trop long."
+    },
+    "pending": "Patientez…"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "venueName": "Venue name",
+  "venueType": "Venue type",
+  "venueTypes": {
+    "cafe": "Café",
+    "restaurant": "Restaurant",
+    "tea_room": "Tea room",
+    "pastry": "Pastry shop",
+    "fast_food": "Fast food"
+  },
+  "create": {
+    "title": "Create your venue",
+    "description": "Give it a name; you can change everything later.",
+    "submit": "Create the venue"
+  }
+}

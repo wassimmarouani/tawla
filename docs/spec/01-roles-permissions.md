@@ -44,7 +44,7 @@
 ## Enforcement (three levels, always)
 
 1. **UI** hides actions the role can't do (`can()`).
-2. **Server** refuses: every route handler and Server Action calls `can(role, action, ctx)` from `src/features/auth/services/permissions.ts` and the feature flag check.
+2. **Server** refuses: every route handler and Server Action calls `can(role, action, ctx)` from `src/lib/auth/permissions.ts` (re-exported by `@/features/auth`) and the feature flag check.
 3. **Database** RLS mirrors the matrix. Tests cover every cell (ADR-0003).
 
 Sensitive actions are written to `audit_logs`: cancellations, deletions, price changes, impersonation, device pairing and revocation, PIN reset, plan or flag changes.

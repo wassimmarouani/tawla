@@ -36,3 +36,4 @@ export { getPublicMenu, menuCacheTags } from './queries/public-menu';
 export { ProductSheetSlot } from './components/product-sheet-slot';
 export { JsonLd } from './components/json-ld';
 export { menuJsonLd } from './services/structured-data';
+export { restaurantThemeSchema, type RestaurantTheme } from './schemas/restaurant-theme';

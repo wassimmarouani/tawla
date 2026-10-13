@@ -2,7 +2,7 @@ import { MailCheck, Unlink } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { ConfirmLinkForm } from '@/components/forms/confirm-link-form';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { tokenHashSchema } from '@/features/auth';
 import type { ActionResult } from '@/lib/errors';
 import { AuthHeading } from './auth-heading';
@@ -37,9 +37,9 @@ export async function EmailLinkPage({
           title={t('invalidTitle')}
           description={t('invalidDescription')}
         />
-        <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/login" />}>
+        <Link href="/login" className={buttonVariants({ size: 'lg', variant: 'outline' })}>
           {t('toLogin')}
-        </Button>
+        </Link>
       </div>
     );
   }

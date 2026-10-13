@@ -12,8 +12,9 @@ import { PasswordInput } from '@/components/forms/password-input';
 import { SubmitButton } from '@/components/forms/submit-button';
 import { useFormErrors } from '@/components/forms/use-form-errors';
 import { AuthHeading } from '@/components/layout/auth-heading';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { resendConfirmation } from '@/features/auth';
 import { isLocale } from '@/i18n/locales';
 import type { ActionError } from '@/lib/errors';
@@ -190,14 +191,9 @@ function SentState({ email }: { email: string }) {
         >
           {t('signup.resend')}
         </Button>
-        <Button
-          variant="ghost"
-          className="sm:flex-1"
-          nativeButton={false}
-          render={<Link href="/login" />}
-        >
+        <Link href="/login" className={cn(buttonVariants({ variant: 'ghost' }), 'sm:flex-1')}>
           {t('signup.back')}
-        </Button>
+        </Link>
       </div>
     </div>
   );

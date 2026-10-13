@@ -8,13 +8,30 @@
     "restaurants": "Vos établissements",
     "account": "Compte",
     "logOut": "Se déconnecter",
-    "plan": "Formule {plan}"
+    "plan": "Formule {plan}",
+    "overview": "Aperçu",
+    "menu": "Menu",
+    "tables": "Tables & QR",
+    "team": "Équipe",
+    "settings": "Réglages",
+    "sections": "Sections",
+    "search": "Rechercher",
+    "searchHint": "Rechercher ou aller à…",
+    "shortcut": "Ctrl K",
+    "tabs": {
+      "overview": "Aperçu",
+      "menu": "Menu",
+      "tables": "Tables",
+      "team": "Équipe",
+      "settings": "Réglages"
+    }
   },
   "home": {
     "eyebrow": "Tableau de bord",
-    "emptyTitle": "Prochaine étape : votre carte",
-    "emptyDescription": "L’éditeur de menu arrive ici très bientôt. Vos catégories et produits apparaîtront sur cette page.",
-    "publicAddress": "Adresse de votre menu"
+    "publicAddress": "Adresse de votre menu",
+    "viewMenu": "Voir le menu",
+    "products": "{count, plural, =0 {Aucun plat} one {# plat} other {# plats}}",
+    "categories": "{count, plural, =0 {aucune catégorie} one {# catégorie} other {# catégories}}"
   },
   "forbidden": {
     "title": "Accès refusé",
@@ -27,5 +44,62 @@
     "basic": "Basic",
     "pro": "Pro",
     "premium": "Premium"
+  },
+  "palette": {
+    "title": "Palette de commandes",
+    "description": "Aller à une section ou lancer une action.",
+    "placeholder": "Aller à…",
+    "empty": "Aucun résultat.",
+    "navigation": "Navigation",
+    "actions": "Actions",
+    "restaurants": "Établissements",
+    "viewMenu": "Voir le menu public",
+    "logOut": "Se déconnecter"
+  },
+  "checklist": {
+    "title": "Mise en route",
+    "progress": "{done, plural, one {# étape sur {total}} other {# étapes sur {total}}}",
+    "done": "Fait",
+    "next": "À faire",
+    "venue": {
+      "title": "Créer l’établissement",
+      "description": "Nom, type et adresse publique."
+    },
+    "menu": {
+      "title": "Ajouter votre carte",
+      "description": "Catégories, plats et prix, ou import par photo."
+    },
+    "branding": {
+      "title": "Personnaliser l’apparence",
+      "description": "Logo et couleur principale."
+    },
+    "tables": {
+      "title": "Créer les tables et les QR codes",
+      "description": "Un QR par table, à imprimer en chevalet."
+    },
+    "team": {
+      "title": "Inviter l’équipe",
+      "description": "Gérants et serveurs, avec leur rôle."
+    }
+  },
+  "sections": {
+    "comingTitle": "Cette section arrive bientôt",
+    "comingDescription": "Elle sera disponible dans une prochaine mise à jour de votre tableau de bord.",
+    "menu": {
+      "title": "Menu",
+      "description": "Catégories, plats, options et disponibilités."
+    },
+    "tables": {
+      "title": "Tables & QR",
+      "description": "Tables, zones et chevalets à imprimer."
+    },
+    "team": {
+      "title": "Équipe",
+      "description": "Membres, rôles et appareils appairés."
+    },
+    "settings": {
+      "title": "Réglages",
+      "description": "Horaires, langues, apparence et liens."
+    }
   }
 }

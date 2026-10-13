@@ -4,6 +4,15 @@
 
 Route `/dashboard`. Desktop and tablet first, fully usable on phones. Measurable goal: **a new venue publishes its full menu in < 30 minutes.**
 
+## Shell and navigation
+
+- **Header:** logo (links to the overview), venue switcher, search button with the **Ctrl/Cmd + K** command palette, plan badge (≥ 1024 px), account menu.
+- **Sections:** Overview, Menu, Tables & QR, Team, Settings. Only the sections the role may open are listed (`dashboardNavigation(role)` over `can()`); the server and RLS still check every request (rule 10).
+- **Navigation:** sidebar from 1024 px; below, a fixed bottom tab bar (64 px items, safe-area padding) with short visible labels whose accessible name is the full section name. The current section carries `aria-current="page"` (longest path prefix).
+- **Command palette:** sections, venue switch (when the account has several), open the public menu, log out.
+- **Page template:** one `h1` per page (`PageHeader`: eyebrow, title, description, actions), then content. `loading.tsx` shows a skeleton inside the shell; `error.tsx` shows an inline error with "Try again" while the shell stays usable. Sections not built yet show an honest "coming soon" state, never a dead link.
+- **Overview:** venue name, public address, product and category counts, "View menu" (new tab) and the getting-started checklist below.
+
 ## Guided onboarding
 
 0. **Sign-up:** venue name and type plus the owner account (name, email, password ≥ 10 characters). Confirming the email creates the venue on an active Basic plan and opens `/dashboard` (ADR-0010 amendment 2026-10-13). The public slug is derived from the name (Latin transliteration; type-based fallback such as `cafe-k3x9` for Arabic names) and editable later.
@@ -14,7 +23,7 @@ Route `/dashboard`. Desktop and tablet first, fully usable on phones. Measurable
 5. **QR codes:** generate and print the tents (ADR-0019).
 6. **Staff:** invite by email, pair devices (PIN creation in Phase 2).
 
-A progress checklist stays on the dashboard until onboarding is complete.
+A progress checklist stays on the dashboard until onboarding is complete. Steps and their "done" rule: venue (always, the venue exists), menu (≥ 1 product), branding (a logo or a brand colour), tables (≥ 1 table, from P1-08), team (> 1 active member). The first unfinished step is highlighted as the next one.
 
 ## Menu management
 

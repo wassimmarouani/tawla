@@ -35,7 +35,8 @@ describe('sniffImageType', () => {
   });
 });
 
-describe('processImage (ADR-0018)', () => {
+// AVIF encoding of real photos takes seconds on shared CI runners.
+describe('processImage (ADR-0018)', { timeout: 30_000 }, () => {
   it('rejects files over 5 MB', async () => {
     const big = Buffer.alloc(MAX_UPLOAD_BYTES + 1);
     big.set([0xff, 0xd8, 0xff]);

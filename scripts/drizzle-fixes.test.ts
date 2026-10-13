@@ -1,5 +1,77 @@
 import { describe, expect, it } from 'vitest';
-import { fixSchema } from './drizzle-fixes';
+import {
+  fixSchema,
+  normalizeExtras,
+  pruneImports,
+  sortTables,
+  splitTopLevel,
+} from './drizzle-fixes';
+
+describe('splitTopLevel', () => {
+  it('splits on top-level commas only, ignoring brackets and literals', () => {
+    expect(splitTopLevel(" a(1, 2), b({ x: [3, 4] }), c('x, y'), d(sql`f(a, (b`) ")).toEqual([
+      'a(1, 2)',
+      'b({ x: [3, 4] })',
+      "c('x, y')",
+      'd(sql`f(a, (b`)',
+    ]);
+  });
+});
+
+describe('normalizeExtras', () => {
+  it('drops policies and checks, sorts the rest and types the callback', () => {
+    const source = [
+      "t('x', {}, (table) => [",
+      "  uniqueIndex('b').on(table.id),",
+      "  pgPolicy('p', { using: sql`(a, b)` }),",
+      "  check('c', sql`CHECK (f(x`),",
+      "  index('a').on(table.slug),",
+      '])',
+    ].join('\n');
+    expect(normalizeExtras(source)).toBe(
+      [
+        "t('x', {}, (table): PgTableExtraConfigValue[] => [",
+        "index('a').on(table.slug),",
+        "uniqueIndex('b').on(table.id),",
+        '])',
+      ].join('\n'),
+    );
+  });
+
+  it('drops the table parameter when nothing remains that reads it', () => {
+    expect(normalizeExtras("t((table) => [\n  check('c', sql`true`),\n])")).toBe(
+      't((): PgTableExtraConfigValue[] => [])',
+    );
+  });
+
+  it('is order-insensitive', () => {
+    const a = "t((table) => [\n  index('a').on(table.x),\n  index('b').on(table.y),\n])";
+    const b = "t((table) => [\n  index('b').on(table.y),\n  index('a').on(table.x),\n])";
+    expect(normalizeExtras(a)).toBe(normalizeExtras(b));
+  });
+});
+
+describe('pruneImports', () => {
+  it('keeps used pg-core imports and adds the extras type', () => {
+    const source =
+      'import { pgTable, type AnyPgColumn, pgPolicy, check, index } from "drizzle-orm/pg-core"\n' +
+      'x((table): PgTableExtraConfigValue[] => [index("i").on(table.id)]); pgTable';
+    expect(pruneImports(source)).toBe(
+      'import { pgTable, index, type PgTableExtraConfigValue } from "drizzle-orm/pg-core";\n' +
+        'x((table): PgTableExtraConfigValue[] => [index("i").on(table.id)]); pgTable',
+    );
+  });
+});
+
+describe('sortTables', () => {
+  it('keeps imports and enums first and sorts tables by name, whatever the input order', () => {
+    const enums = "import { pgTable } from 'x';\nexport const kind = pgEnum('kind', ['a']);\n";
+    const zebra = "export const zebra = pgTable('zebra', {});\n";
+    const apple = "export const apple = pgTable('apple', {});\n";
+    expect(sortTables(enums + zebra + apple)).toBe(enums + apple + zebra);
+    expect(sortTables(enums + apple + zebra)).toBe(enums + apple + zebra);
+  });
+});
 
 describe('fixSchema', () => {
   it('wraps SQL function defaults', () => {
@@ -15,34 +87,6 @@ describe('fixSchema', () => {
     );
     expect(fixSchema("features: text().array().default(['']),")).toBe(
       'features: text().array().default([]),',
-    );
-  });
-
-  it('drops the unused table parameter of extras and types every extras callback', () => {
-    expect(fixSchema('(table) => [\n  check("x", sql`true`),\n])')).toBe(
-      '(): PgTableExtraConfigValue[] => [\n  check("x", sql`true`),\n])',
-    );
-    expect(fixSchema('(table) => [\n  index("i").on(table.id),\n])')).toBe(
-      '(table): PgTableExtraConfigValue[] => [\n  index("i").on(table.id),\n])',
-    );
-  });
-
-  it('imports the extras type and drops an unused AnyPgColumn import (raw drizzle-kit output)', () => {
-    const source =
-      'import { pgTable, type AnyPgColumn, index } from "drizzle-orm/pg-core"\n' +
-      'x((table) => [\n  y(table.id),\n])';
-    expect(fixSchema(source)).toBe(
-      'import { pgTable, index, type PgTableExtraConfigValue } from "drizzle-orm/pg-core"\n' +
-        'x((table): PgTableExtraConfigValue[] => [\n  y(table.id),\n])',
-    );
-  });
-
-  it('handles a multi-line import with a trailing comma and AnyPgColumn last', () => {
-    const source =
-      "import {\n  pgTable,\n  type AnyPgColumn,\n} from 'drizzle-orm/pg-core';\nx(() => [\n])";
-    expect(fixSchema(source)).toBe(
-      "import {\n  pgTable,\n  type PgTableExtraConfigValue } from 'drizzle-orm/pg-core';\n" +
-        'x((): PgTableExtraConfigValue[] => [\n])',
     );
   });
 

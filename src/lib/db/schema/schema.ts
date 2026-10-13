@@ -2,7 +2,7 @@
 // Do not edit by hand.
 import { authUsers as users } from 'drizzle-orm/supabase';
 
-// relations.ts refers to auth.users under this name.
+// Kept for code that refers to auth.users under the introspected name.
 export { users as usersInAuth };
 import {
   pgTable,
@@ -13,15 +13,16 @@ import {
   text,
   timestamp,
   index,
-  uniqueIndex,
   unique,
-  jsonb,
-  interval,
   boolean,
+  jsonb,
   integer,
   smallint,
   inet,
+  uniqueIndex,
+  interval,
   pgEnum,
+  type PgTableExtraConfigValue,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
@@ -65,7 +66,7 @@ export const profiles = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     foreignKey({
       columns: [table.id],
       foreignColumns: [users.id],
@@ -102,7 +103,7 @@ export const organizations = pgTable(
       .notNull(),
     deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
   },
-  () => [
+  (): PgTableExtraConfigValue[] => [
     pgPolicy('organizations: platform read', {
       as: 'permissive',
       for: 'select',
@@ -123,102 +124,13 @@ export const reservedSlugs = pgTable(
   {
     slug: text().primaryKey().notNull(),
   },
-  () => [
+  (): PgTableExtraConfigValue[] => [
     pgPolicy('reserved_slugs: read', {
       as: 'permissive',
       for: 'select',
       to: ['authenticated'],
       using: sql`true`,
     }),
-  ],
-);
-
-export const restaurants = pgTable(
-  'restaurants',
-  {
-    id: uuid()
-      .default(sql`uuid_v7()`)
-      .primaryKey()
-      .notNull(),
-    organizationId: uuid('organization_id').notNull(),
-    slug: text().notNull(),
-    publicId: text('public_id')
-      .default(sql`random_token()`)
-      .notNull(),
-    name: text().notNull(),
-    type: restaurantType().default('cafe').notNull(),
-    timezone: text().default('Africa/Tunis').notNull(),
-    currency: text().default('TND').notNull(),
-    locales: text().array().default(['fr', 'ar', 'en']).notNull(),
-    defaultLocale: text('default_locale').default('fr').notNull(),
-    openingSchedule: jsonb('opening_schedule').default({ weekly: [], exceptions: [] }).notNull(),
-    manualStatus: text('manual_status').default('auto').notNull(),
-    manualStatusUntil: timestamp('manual_status_until', { withTimezone: true, mode: 'string' }),
-    dayCutoff: interval('day_cutoff').default('05:00:00').notNull(),
-    theme: jsonb().default({}).notNull(),
-    settings: jsonb().default({}).notNull(),
-    status: restaurantStatus().default('active').notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
-      .defaultNow()
-      .notNull(),
-    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
-  },
-  (table) => [
-    index('restaurants_organization_id_idx').using(
-      'btree',
-      table.organizationId.asc().nullsLast().op('uuid_ops'),
-    ),
-    uniqueIndex('restaurants_slug_key')
-      .using('btree', table.slug.asc().nullsLast().op('text_ops'))
-      .where(sql`(deleted_at IS NULL)`),
-    foreignKey({
-      columns: [table.organizationId],
-      foreignColumns: [organizations.id],
-      name: 'restaurants_organization_id_fkey',
-    }),
-    unique('restaurants_public_id_key').on(table.publicId),
-    pgPolicy('restaurants: managers update', {
-      as: 'permissive',
-      for: 'update',
-      to: ['authenticated'],
-      using: sql`( SELECT has_restaurant_role(restaurants.id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
-      withCheck: sql`( SELECT has_restaurant_role(restaurants.id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
-    }),
-    pgPolicy('restaurants: platform read', {
-      as: 'permissive',
-      for: 'select',
-      to: ['authenticated'],
-    }),
-    pgPolicy('restaurants: members read', {
-      as: 'permissive',
-      for: 'select',
-      to: ['authenticated'],
-    }),
-    check('restaurants_currency_check', sql`currency = 'TND'::text`),
-    check(
-      'restaurants_day_cutoff_check',
-      sql`(day_cutoff >= '00:00:00'::interval) AND (day_cutoff < '24:00:00'::interval)`,
-    ),
-    check('restaurants_default_locale_enabled', sql`default_locale = ANY (locales)`),
-    check(
-      'restaurants_locales_check',
-      sql`((cardinality(locales) >= 1) AND (cardinality(locales) <= 3)) AND (locales <@ ARRAY['fr'::text, 'ar'::text, 'en'::text])`,
-    ),
-    check(
-      'restaurants_manual_status_check',
-      sql`manual_status = ANY (ARRAY['auto'::text, 'open'::text, 'closed'::text])`,
-    ),
-    check('restaurants_name_check', sql`(char_length(name) >= 1) AND (char_length(name) <= 120)`),
-    check(
-      'restaurants_opening_schedule_check',
-      sql`jsonb_typeof(opening_schedule) = 'object'::text`,
-    ),
-    check('restaurants_settings_check', sql`jsonb_typeof(settings) = 'object'::text`),
-    check('restaurants_slug_check', sql`slug ~ '^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$'::text`),
-    check('restaurants_theme_check', sql`jsonb_typeof(theme) = 'object'::text`),
   ],
 );
 
@@ -235,7 +147,7 @@ export const slugRedirects = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('slug_redirects_restaurant_id_idx').using(
       'btree',
       table.restaurantId.asc().nullsLast().op('uuid_ops'),
@@ -275,7 +187,7 @@ export const memberships = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('memberships_user_id_idx').using('btree', table.userId.asc().nullsLast().op('uuid_ops')),
     foreignKey({
       columns: [table.restaurantId],
@@ -341,7 +253,7 @@ export const plans = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     unique('plans_code_key').on(table.code),
     pgPolicy('plans: super admin write', {
       as: 'permissive',
@@ -380,7 +292,7 @@ export const subscriptions = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('subscriptions_plan_id_idx').using(
       'btree',
       table.planId.asc().nullsLast().op('uuid_ops'),
@@ -433,7 +345,7 @@ export const featureOverrides = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('feature_overrides_created_by_idx').using(
       'btree',
       table.createdBy.asc().nullsLast().op('uuid_ops'),
@@ -494,7 +406,7 @@ export const auditLogs = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('audit_logs_actor_id_idx').using('btree', table.actorId.asc().nullsLast().op('uuid_ops')),
     index('audit_logs_impersonated_by_idx').using(
       'btree',
@@ -558,7 +470,7 @@ export const media = pgTable(
       .notNull(),
     deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     foreignKey({
       columns: [table.restaurantId],
       foreignColumns: [restaurants.id],
@@ -606,7 +518,7 @@ export const categories = pgTable(
       .notNull(),
     deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('categories_media_id_idx').using(
       'btree',
       table.restaurantId.asc().nullsLast().op('uuid_ops'),
@@ -693,7 +605,7 @@ export const products = pgTable(
       .notNull(),
     deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('products_category_sort_idx').using(
       'btree',
       table.restaurantId.asc().nullsLast().op('uuid_ops'),
@@ -784,7 +696,7 @@ export const optionGroups = pgTable(
       .notNull(),
     deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     foreignKey({
       columns: [table.restaurantId],
       foreignColumns: [restaurants.id],
@@ -846,7 +758,7 @@ export const options = pgTable(
       .notNull(),
     deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('options_group_sort_idx').using(
       'btree',
       table.restaurantId.asc().nullsLast().op('uuid_ops'),
@@ -908,7 +820,7 @@ export const productOptionGroups = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('product_option_groups_group_idx').using(
       'btree',
       table.restaurantId.asc().nullsLast().op('uuid_ops'),
@@ -994,7 +906,7 @@ export const priceHistory = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     index('price_history_product_idx').using(
       'btree',
       table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
@@ -1049,7 +961,7 @@ export const translationGlossary = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [
+  (table): PgTableExtraConfigValue[] => [
     uniqueIndex('translation_glossary_term_key').using(
       'btree',
       sql`COALESCE(restaurant_id, '00000000-0000-0000-0000-000000000000':`,
@@ -1085,5 +997,106 @@ export const translationGlossary = pgTable(
       'translation_glossary_translations_check',
       sql`CHECK (is_i18n_text(translations, 120, true`,
     ),
+  ],
+);
+
+export const restaurants = pgTable(
+  'restaurants',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    organizationId: uuid('organization_id').notNull(),
+    slug: text().notNull(),
+    publicId: text('public_id')
+      .default(sql`random_token()`)
+      .notNull(),
+    name: text().notNull(),
+    type: restaurantType().default('cafe').notNull(),
+    timezone: text().default('Africa/Tunis').notNull(),
+    currency: text().default('TND').notNull(),
+    locales: text().array().default(['fr', 'ar', 'en']).notNull(),
+    defaultLocale: text('default_locale').default('fr').notNull(),
+    openingSchedule: jsonb('opening_schedule').default({ weekly: [], exceptions: [] }).notNull(),
+    manualStatus: text('manual_status').default('auto').notNull(),
+    manualStatusUntil: timestamp('manual_status_until', { withTimezone: true, mode: 'string' }),
+    dayCutoff: interval('day_cutoff').default('05:00:00').notNull(),
+    theme: jsonb().default({}).notNull(),
+    settings: jsonb().default({}).notNull(),
+    status: restaurantStatus().default('active').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+    logoMediaId: uuid('logo_media_id'),
+    coverMediaId: uuid('cover_media_id'),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    index('restaurants_organization_id_idx').using(
+      'btree',
+      table.organizationId.asc().nullsLast().op('uuid_ops'),
+    ),
+    uniqueIndex('restaurants_slug_key')
+      .using('btree', table.slug.asc().nullsLast().op('text_ops'))
+      .where(sql`(deleted_at IS NULL)`),
+    foreignKey({
+      columns: [table.id, table.coverMediaId],
+      foreignColumns: [media.id, media.restaurantId],
+      name: 'restaurants_cover_media_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.id, table.logoMediaId],
+      foreignColumns: [media.id, media.restaurantId],
+      name: 'restaurants_logo_media_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.organizationId],
+      foreignColumns: [organizations.id],
+      name: 'restaurants_organization_id_fkey',
+    }),
+    unique('restaurants_public_id_key').on(table.publicId),
+    pgPolicy('restaurants: managers update', {
+      as: 'permissive',
+      for: 'update',
+      to: ['authenticated'],
+      using: sql`( SELECT has_restaurant_role(restaurants.id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+      withCheck: sql`( SELECT has_restaurant_role(restaurants.id, ARRAY['owner'::membership_role, 'manager'::membership_role]) AS has_restaurant_role)`,
+    }),
+    pgPolicy('restaurants: platform read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    pgPolicy('restaurants: members read', {
+      as: 'permissive',
+      for: 'select',
+      to: ['authenticated'],
+    }),
+    check('restaurants_currency_check', sql`currency = 'TND'::text`),
+    check(
+      'restaurants_day_cutoff_check',
+      sql`(day_cutoff >= '00:00:00'::interval) AND (day_cutoff < '24:00:00'::interval)`,
+    ),
+    check('restaurants_default_locale_enabled', sql`default_locale = ANY (locales)`),
+    check(
+      'restaurants_locales_check',
+      sql`((cardinality(locales) >= 1) AND (cardinality(locales) <= 3)) AND (locales <@ ARRAY['fr'::text, 'ar'::text, 'en'::text])`,
+    ),
+    check(
+      'restaurants_manual_status_check',
+      sql`manual_status = ANY (ARRAY['auto'::text, 'open'::text, 'closed'::text])`,
+    ),
+    check('restaurants_name_check', sql`(char_length(name) >= 1) AND (char_length(name) <= 120)`),
+    check(
+      'restaurants_opening_schedule_check',
+      sql`jsonb_typeof(opening_schedule) = 'object'::text`,
+    ),
+    check('restaurants_settings_check', sql`jsonb_typeof(settings) = 'object'::text`),
+    check('restaurants_slug_check', sql`slug ~ '^[a-z0-9](?:[a-z0-9-]{1,38}[a-z0-9])$'::text`),
+    check('restaurants_theme_check', sql`jsonb_typeof(theme) = 'object'::text`),
   ],
 );

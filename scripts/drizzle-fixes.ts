@@ -3,8 +3,10 @@
  */
 const AUTH_USERS =
   "import { authUsers as users } from 'drizzle-orm/supabase';\n\n" +
-  '// relations.ts refers to auth.users under this name.\n' +
+  '// Kept for code that refers to auth.users under the introspected name.\n' +
   'export { users as usersInAuth };\n';
+
+const EXTRAS_TYPE = 'PgTableExtraConfigValue';
 
 export function fixSchema(source: string): string {
   const fixed = source
@@ -22,9 +24,29 @@ export function fixSchema(source: string): string {
     // Table extras that never read `table` trip noUnusedParameters.
     .replace(/\(table\) => \[([\s\S]*?)\n\]\)/g, (block: string, body: string) =>
       body.includes('table.') ? block : block.replace('(table) => [', '() => ['),
-    );
-  // Foreign keys to auth.users reference `users`, which introspecting `public` cannot declare.
-  return /\busers\.id\b/.test(fixed) && !fixed.includes('authUsers as users')
-    ? AUTH_USERS + fixed
+    )
+    // Mutual foreign keys (restaurants <-> media) make table types circular (TS7022): an
+    // explicit return type on every extras callback breaks the cycle.
+    .replace(/\((table)?\) => \[/g, (_match: string, param: string | undefined) => {
+      return `(${param ?? ''}): ${EXTRAS_TYPE}[] => [`;
+    });
+
+  // Runs before Prettier: the import may be on one line, with either quote style.
+  const typed = fixed.includes(`${EXTRAS_TYPE}[]`)
+    ? fixed.replace(
+        /,?\s*\}\s*from\s*(["'])drizzle-orm\/pg-core\1/,
+        (_match: string, quote: string) =>
+          `, type ${EXTRAS_TYPE} } from ${quote}drizzle-orm/pg-core${quote}`,
+      )
     : fixed;
+  // drizzle-kit imports AnyPgColumn even when nothing uses it (noUnusedLocals).
+  const imports =
+    typed.split('AnyPgColumn').length === 2
+      ? typed.replace(/\btype AnyPgColumn\s*,\s*/, '').replace(/,\s*type AnyPgColumn(?=\s*\})/, '')
+      : typed;
+
+  // Foreign keys to auth.users reference `users`, which introspecting `public` cannot declare.
+  return /\busers\.id\b/.test(imports) && !imports.includes('authUsers as users')
+    ? AUTH_USERS + imports
+    : imports;
 }

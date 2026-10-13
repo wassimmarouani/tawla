@@ -18,9 +18,31 @@ describe('fixSchema', () => {
     );
   });
 
-  it('drops the unused table parameter of extras', () => {
+  it('drops the unused table parameter of extras and types every extras callback', () => {
     expect(fixSchema('(table) => [\n  check("x", sql`true`),\n])')).toBe(
-      '() => [\n  check("x", sql`true`),\n])',
+      '(): PgTableExtraConfigValue[] => [\n  check("x", sql`true`),\n])',
+    );
+    expect(fixSchema('(table) => [\n  index("i").on(table.id),\n])')).toBe(
+      '(table): PgTableExtraConfigValue[] => [\n  index("i").on(table.id),\n])',
+    );
+  });
+
+  it('imports the extras type and drops an unused AnyPgColumn import (raw drizzle-kit output)', () => {
+    const source =
+      'import { pgTable, type AnyPgColumn, index } from "drizzle-orm/pg-core"\n' +
+      'x((table) => [\n  y(table.id),\n])';
+    expect(fixSchema(source)).toBe(
+      'import { pgTable, index, type PgTableExtraConfigValue } from "drizzle-orm/pg-core"\n' +
+        'x((table): PgTableExtraConfigValue[] => [\n  y(table.id),\n])',
+    );
+  });
+
+  it('handles a multi-line import with a trailing comma and AnyPgColumn last', () => {
+    const source =
+      "import {\n  pgTable,\n  type AnyPgColumn,\n} from 'drizzle-orm/pg-core';\nx(() => [\n])";
+    expect(fixSchema(source)).toBe(
+      "import {\n  pgTable,\n  type PgTableExtraConfigValue } from 'drizzle-orm/pg-core';\n" +
+        'x((): PgTableExtraConfigValue[] => [\n])',
     );
   });
 

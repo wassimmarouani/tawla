@@ -40,7 +40,7 @@ pnpm test:e2e            # playwright journeys + axe
 pnpm test:visual         # screenshot matrix
 pnpm screenshots <route> # 390/768/1440 × light/dark × fr/ar captures + layout report (app running)
 pnpm demo:info           # demo URLs and local accounts (also printed by db:reset)
-pnpm db:start | db:reset | db:new <name> | db:pull
+pnpm db:start | db:reset | db:new <name> | db:pull | db:seed-media
 pnpm size                # bundle budgets
 pnpm tokens:build        # regenerate src/styles/tokens.css from tokens.ts
 pnpm check:rls           # every table has RLS + tests

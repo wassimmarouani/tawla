@@ -50,6 +50,7 @@ Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or 
 | `pnpm test:visual`                       | Playwright screenshot matrix (widths × theme × locale)                                   |
 | `pnpm screenshots <route>`               | Capture 390/768/1440 × light/dark × FR/AR for a route into `e2e/__screenshots__/review/` |
 | `pnpm demo:info`                         | Print the demo URLs and local accounts                                                   |
+| `pnpm db:seed-media`                     | Run the demo photos through the media pipeline (also part of `db:reset`)                 |
 | `pnpm db:start` / `db:stop` / `db:reset` | Supabase local lifecycle                                                                 |
 | `pnpm db:new <name>`                     | New SQL migration                                                                        |
 | `pnpm db:pull`                           | Regenerate Drizzle schema from the local DB (commit the result)                          |

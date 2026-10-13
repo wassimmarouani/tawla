@@ -2,7 +2,8 @@
   "table": "Table {number}",
   "status": {
     "openUntil": "Open · until {time}",
-    "closed": "Closed"
+    "closed": "Closed",
+    "open": "Open"
   },
   "search": {
     "placeholder": "Search dishes and drinks…"
@@ -14,11 +15,34 @@
   "badges": {
     "new": "New",
     "popular": "Popular",
-    "spicy": "Spicy"
+    "spicy": "Spicy",
+    "house": "House special",
+    "seasonal": "Seasonal"
   },
   "unavailable": "Unavailable",
   "service": {
     "callWaiter": "Call waiter",
     "bill": "Bill, please"
-  }
+  },
+  "meta": {
+    "title": "{name} · Menu",
+    "description": "The {name} menu: up-to-date prices, photos and availability in French, Arabic and English."
+  },
+  "from": "From {price}",
+  "dietary": {
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "gluten_free": "Gluten-free",
+    "spicy": "Spicy"
+  },
+  "menuNotFound": {
+    "title": "Menu not found",
+    "description": "This address matches no venue online. Check the link or scan the QR code again."
+  },
+  "emptyMenu": {
+    "title": "The menu is coming soon",
+    "description": "This venue is preparing its menu. Check back in a moment."
+  },
+  "logo": "{name} logo",
+  "loading": "Loading the menu…"
 }

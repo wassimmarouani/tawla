@@ -83,6 +83,16 @@ describe('project lint restrictions', () => {
     expect(await ruleIds(code, 'src/lib/env.ts')).not.toContain('no-restricted-properties');
   });
 
+  it('keeps heavy helpers out of the customer menu bundle', async () => {
+    const code = "import { cn } from '@/lib/utils';\nexport const x = cn;\n";
+    expect(await ruleIds(code, 'src/features/menu/components/card.tsx')).toContain(
+      'no-restricted-imports',
+    );
+    expect(await ruleIds(code, 'src/features/auth/components/form.tsx')).not.toContain(
+      'no-restricted-imports',
+    );
+  });
+
   it('forbids console in source code (structured logger only)', async () => {
     expect(await ruleIds('console.log("x");\n', 'src/features/menu/server/x.ts')).toContain(
       'no-console',

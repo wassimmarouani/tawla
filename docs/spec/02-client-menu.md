@@ -81,3 +81,9 @@ The customer uses their phone's browser after scanning: no app, no account.
 - Skeletons at final dimensions, thumbhash blur placeholders, no layout shift.
 - Touch targets ≥ 44 px, safe-area insets respected, `dvh` heights.
 - Light / dark / auto per restaurant setting.
+
+## Implementation status (P1-07a, 2026-10-14)
+
+- **Live:** `/{slug}` (rewritten to `/[locale]/r/[slug]`) with the cached `get_public_menu` loader (tags `menu:slug:<slug>` and `menu:<public_id>`, unknown slugs cached for minutes), header (cover or dotted brand band, logo or monogram, live open status as a dynamic hole), venue language pills, sticky category bar with scroll-spy, numbered sections (photo grid when ≥ 50 % photos, printed list otherwise), "from" prices, badges (spicy shown; other dietary facts in the product sheet), sold-out state, tenant brand colours for light and dark, not-found page for unknown, suspended or deleted venues (streamed: HTTP 200 with `noindex`).
+- **Measured:** initial JS 134.5 KB gz on a phone, CLS 0, axe clean and no overflow at 7 widths × FR/AR × light/dark.
+- **Next:** `/t/[token]` with the table badge (P1-08, needs tables), venue info panel (hours, Maps, Wi-Fi, socials), search, filters and the product sheet (P1-07b), service bar (P1-10).

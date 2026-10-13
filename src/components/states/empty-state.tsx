@@ -8,11 +8,21 @@ interface EmptyStateProps {
   description?: string;
   /** The next useful action ("Add your first category"), spec 10 UX principles. */
   action?: ReactNode;
+  /** Render the title as a heading when the state is the page's main content. */
+  headingLevel?: 1 | 2;
   className?: string;
 }
 
 /** Helpful empty state: always proposes the next action. */
-export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+  headingLevel,
+  className,
+}: EmptyStateProps) {
+  const Title = headingLevel === 1 ? 'h1' : headingLevel === 2 ? 'h2' : 'p';
   return (
     <div
       className={cn(
@@ -27,7 +37,7 @@ export function EmptyState({ icon, title, description, action, className }: Empt
         {icon}
       </span>
       <div className="flex max-w-sm flex-col gap-1.5">
-        <p className="text-lg font-title tracking-heading text-foreground">{title}</p>
+        <Title className="text-lg font-title tracking-heading text-foreground">{title}</Title>
         {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
       {action}

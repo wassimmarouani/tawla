@@ -31,3 +31,5 @@ export { validateSelection } from './services/selection';
 export type { SelectionError, SelectionResult, ValidSelection } from './services/selection';
 export { pickTranslation } from './services/translation';
 export type { I18nText } from './services/translation';
+export { PublicMenuView } from './components/public-menu-view';
+export { getPublicMenu, menuCacheTags } from './queries/public-menu';

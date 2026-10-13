@@ -2,7 +2,8 @@
   "table": "Table {number}",
   "status": {
     "openUntil": "Ouvert · jusqu’à {time}",
-    "closed": "Fermé"
+    "closed": "Fermé",
+    "open": "Ouvert"
   },
   "search": {
     "placeholder": "Rechercher un plat, une boisson…"
@@ -14,11 +15,34 @@
   "badges": {
     "new": "Nouveau",
     "popular": "Populaire",
-    "spicy": "Épicé"
+    "spicy": "Épicé",
+    "house": "Maison",
+    "seasonal": "De saison"
   },
   "unavailable": "Indisponible",
   "service": {
     "callWaiter": "Appeler le serveur",
     "bill": "L’addition"
-  }
+  },
+  "meta": {
+    "title": "{name} · Menu",
+    "description": "Le menu de {name} : prix, photos et disponibilités à jour, en français, arabe et anglais."
+  },
+  "from": "À partir de {price}",
+  "dietary": {
+    "vegetarian": "Végétarien",
+    "vegan": "Végan",
+    "gluten_free": "Sans gluten",
+    "spicy": "Épicé"
+  },
+  "menuNotFound": {
+    "title": "Menu introuvable",
+    "description": "Cette adresse ne correspond à aucun établissement en ligne. Vérifiez le lien ou scannez à nouveau le QR code."
+  },
+  "emptyMenu": {
+    "title": "La carte arrive bientôt",
+    "description": "Cet établissement prépare son menu. Revenez dans un instant."
+  },
+  "logo": "Logo de {name}",
+  "loading": "Chargement du menu…"
 }

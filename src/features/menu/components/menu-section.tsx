@@ -1,0 +1,228 @@
+import { getTranslations } from 'next-intl/server';
+import { MenuImage } from '@/components/media/menu-image';
+import type { Locale } from '@/i18n/locales';
+import { formatMoney } from '@/lib/money';
+import { classes as cn } from '@/lib/classes';
+import type { PublicCategory, PublicProduct } from '../schemas/public-menu';
+import { displayPrice } from '../services/pricing';
+import { categoryAnchor } from './anchors';
+import { firstGrapheme } from './first-grapheme';
+import { Localized } from './localized';
+
+type Translator = Awaited<ReturnType<typeof getTranslations<'client'>>>;
+
+/** ADR-0029: photo grid when at least half the dishes have a photo, printed list otherwise. */
+export function sectionLayout(category: Pick<PublicCategory, 'products'>): 'cards' | 'list' {
+  const withPhoto = category.products.filter((product) => product.media !== null).length;
+  return withPhoto > 0 && withPhoto * 2 >= category.products.length ? 'cards' : 'list';
+}
+
+function Price({ product, locale, t }: { product: PublicProduct; locale: Locale; t: Translator }) {
+  const { amount, from } = displayPrice(product);
+  const formatted = formatMoney(amount, locale);
+  return <>{from ? t('from', { price: formatted }) : formatted}</>;
+}
+
+function Tags({ product, t }: { product: PublicProduct; t: Translator }) {
+  const tags = [
+    ...product.badges.map((badge) => ({ key: badge, label: t(`badges.${badge}`), kind: badge })),
+    // Only "spicy" is a warning worth a pill on the card; the full dietary and allergen
+    // details live in the product sheet (P1-07b), so the list stays calm.
+    ...product.dietary
+      .filter((diet) => diet === 'spicy')
+      .map((diet) => ({ key: diet, label: t(`dietary.${diet}`), kind: diet })),
+  ];
+  if (tags.length === 0) return null;
+  return (
+    <ul className="flex flex-wrap gap-1.5">
+      {tags.map((tag) => (
+        <li
+          key={tag.key}
+          className={cn(
+            'rounded-full px-2 py-1 text-xs leading-none font-semibold',
+            tag.kind === 'new' && 'bg-brand-solid text-brand-on-solid',
+            tag.kind === 'popular' && 'bg-brand-subtle text-brand-on-subtle',
+            (tag.kind === 'house' || tag.kind === 'seasonal') && 'bg-muted text-foreground',
+            tag.kind === 'spicy' && 'bg-destructive-subtle text-destructive-text',
+          )}
+        >
+          {tag.label}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ProductCard({
+  product,
+  locale,
+  t,
+  priority,
+}: {
+  product: PublicProduct;
+  locale: Locale;
+  t: Translator;
+  priority: boolean;
+}) {
+  const available = product.is_available;
+  return (
+    <li className="flex flex-col rounded-md bg-card p-1.5 shadow-sm" data-available={available}>
+      <div className="relative aspect-square overflow-hidden rounded-sm bg-muted">
+        {product.media ? (
+          <MenuImage
+            media={product.media}
+            alt=""
+            sizes="(min-width: 768px) 15rem, (min-width: 640px) 30vw, 45vw"
+            priority={priority}
+            className={cn('size-full', !available && 'opacity-45 grayscale')}
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className={cn(
+              'grid size-full place-items-center bg-brand-subtle bg-dots text-4xl font-title text-brand-on-subtle',
+              !available && 'opacity-45 grayscale',
+            )}
+          >
+            {firstGrapheme(product.name.text)}
+          </span>
+        )}
+        {available ? null : (
+          <span className="absolute start-2 bottom-2 rounded-full bg-card px-2.5 py-1 text-xs font-semibold text-foreground shadow-sm">
+            {t('unavailable')}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-1 flex-col gap-1 px-2 pt-2.5 pb-1.5">
+        <Localized
+          value={product.name}
+          locale={locale}
+          as="h3"
+          className={cn(
+            'line-clamp-2 text-md leading-snug font-semibold',
+            available ? 'text-foreground' : 'text-muted-foreground',
+          )}
+        />
+        {product.description ? (
+          <Localized
+            value={product.description}
+            locale={locale}
+            as="p"
+            className="line-clamp-1 text-sm text-muted-foreground"
+          />
+        ) : null}
+        <div className="mt-auto flex flex-wrap items-center gap-x-2 gap-y-1.5 pt-1.5">
+          <span
+            className={cn(
+              'font-semibold tabular-nums',
+              available ? 'text-foreground' : 'text-muted-foreground',
+            )}
+          >
+            <Price product={product} locale={locale} t={t} />
+          </span>
+          <Tags product={product} t={t} />
+        </div>
+      </div>
+    </li>
+  );
+}
+
+function ProductRow({
+  product,
+  locale,
+  t,
+}: {
+  product: PublicProduct;
+  locale: Locale;
+  t: Translator;
+}) {
+  const available = product.is_available;
+  const tone = available ? 'text-foreground' : 'text-muted-foreground';
+  return (
+    <li className="py-3" data-available={available}>
+      <div className="flex items-end gap-2">
+        <Localized
+          value={product.name}
+          locale={locale}
+          as="h3"
+          className={cn('min-w-0 text-base font-semibold break-words', tone)}
+        />
+        <span
+          aria-hidden="true"
+          className="mb-1.5 min-w-6 flex-1 border-b-2 border-dotted border-border"
+        />
+        <span className={cn('shrink-0 font-semibold tabular-nums', tone)}>
+          {available ? <Price product={product} locale={locale} t={t} /> : t('unavailable')}
+        </span>
+      </div>
+      {product.description ? (
+        <Localized
+          value={product.description}
+          locale={locale}
+          as="p"
+          className="mt-1 pe-16 text-sm text-muted-foreground"
+        />
+      ) : null}
+      <div className="mt-1.5 empty:hidden">
+        <Tags product={product} t={t} />
+      </div>
+    </li>
+  );
+}
+
+interface MenuSectionProps {
+  category: PublicCategory;
+  index: number;
+  locale: Locale;
+  /** Eager-load the first visible photos (LCP). */
+  priority: boolean;
+}
+
+/** One category (ADR-0029): hairline, brand index `01`, title, then grid or printed list. */
+export async function MenuSection({ category, index, locale, priority }: MenuSectionProps) {
+  const t = await getTranslations('client');
+  const layout = sectionLayout(category);
+  const titleId = `${categoryAnchor(category.id)}-title`;
+
+  return (
+    <section
+      id={categoryAnchor(category.id)}
+      aria-labelledby={titleId}
+      className="scroll-mt-16 pt-9 first:pt-6"
+    >
+      <div className="mb-3 flex items-baseline gap-3 border-t border-border pt-3.5">
+        <span
+          aria-hidden="true"
+          className="text-xs font-bold tracking-label text-brand-text tabular-nums"
+        >
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <Localized
+          value={category.name}
+          locale={locale}
+          as="h2"
+          className="text-xl font-title tracking-heading text-foreground"
+        />
+      </div>
+      {layout === 'cards' ? (
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {category.products.map((product, position) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              locale={locale}
+              t={t}
+              priority={priority && position < 2}
+            />
+          ))}
+        </ul>
+      ) : (
+        <ul className="divide-y divide-border/60">
+          {category.products.map((product) => (
+            <ProductRow key={product.id} product={product} locale={locale} t={t} />
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}

@@ -2,7 +2,8 @@
   "table": "طاولة {number}",
   "status": {
     "openUntil": "مفتوح · حتى {time}",
-    "closed": "مغلق"
+    "closed": "مغلق",
+    "open": "مفتوح"
   },
   "search": {
     "placeholder": "ابحث عن طبق أو مشروب…"
@@ -14,11 +15,34 @@
   "badges": {
     "new": "جديد",
     "popular": "الأكثر طلبًا",
-    "spicy": "حار"
+    "spicy": "حار",
+    "house": "من صنع البيت",
+    "seasonal": "موسمي"
   },
   "unavailable": "غير متوفر",
   "service": {
     "callWaiter": "نداء النادل",
     "bill": "الحساب"
-  }
+  },
+  "meta": {
+    "title": "{name} · القائمة",
+    "description": "قائمة {name}: الأسعار والصور والتوفر محدّثة، بالفرنسية والعربية والإنجليزية."
+  },
+  "from": "ابتداءً من {price}",
+  "dietary": {
+    "vegetarian": "نباتي",
+    "vegan": "نباتي صرف",
+    "gluten_free": "خالٍ من الغلوتين",
+    "spicy": "حار"
+  },
+  "menuNotFound": {
+    "title": "القائمة غير موجودة",
+    "description": "لا يطابق هذا العنوان أي مؤسسة متاحة على الإنترنت. تحقّق من الرابط أو امسح رمز QR من جديد."
+  },
+  "emptyMenu": {
+    "title": "القائمة قريبًا",
+    "description": "تُحضّر هذه المؤسسة قائمتها. عُد بعد قليل."
+  },
+  "logo": "شعار {name}",
+  "loading": "جارٍ تحميل القائمة…"
 }

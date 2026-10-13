@@ -83,6 +83,12 @@ export const projectRestrictions = [
     },
   },
   {
+    // Integration tests build fixtures as a privileged role (they verify RLS, they are not app code).
+    name: 'tawla/integration-tests',
+    files: ['src/**/*.int.test.ts'],
+    rules: { 'no-restricted-imports': ['error', { patterns: [featureDeepImport] }] },
+  },
+  {
     name: 'tawla/env-readers',
     files: ['src/lib/env.ts', 'src/server/admin/env.ts'],
     rules: { 'no-restricted-properties': 'off' },

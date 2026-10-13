@@ -37,6 +37,11 @@ describe('project lint restrictions', () => {
       'no-restricted-imports',
     );
     expect(await ruleIds(code, 'src/lib/db/rls.ts')).not.toContain('no-restricted-imports');
+    // Integration tests may build fixtures with the raw client; unit tests may not.
+    expect(await ruleIds(code, 'src/lib/realtime/x.int.test.ts')).not.toContain(
+      'no-restricted-imports',
+    );
+    expect(await ruleIds(code, 'src/lib/realtime/x.test.ts')).toContain('no-restricted-imports');
   });
 
   it('only lets route handlers and feature server adapters call the admin module', async () => {

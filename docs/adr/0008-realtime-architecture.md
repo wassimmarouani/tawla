@@ -1,6 +1,6 @@
 # ADR-0008 — Realtime: private Broadcast channels fed by the database, lazy client connections
 
-- Status: Accepted (anon read on private channels to be proven by spike P0-08)
+- Status: Accepted — verified by spike P0-08 (2026-10-13)
 - Date: 2026-10-11
 - Audit refs: D2, D3, D4, spec §11.4–11.5
 
@@ -57,3 +57,19 @@
 - https://supabase.com/docs/guides/realtime/limits
 - https://supabase.com/docs/guides/auth/auth-anonymous
 - https://github.com/supabase/realtime/blob/main/lib/realtime/tenants/authorization.ex
+
+## Spike result — P0-08 (2026-10-13)
+
+The design is **confirmed on local Supabase** with real WebSocket clients (`@supabase/supabase-js` 2.117.2). No fallback is needed.
+
+- **Anonymous receive works on private channels:** an anon client joins `m:{restaurant public_id}` and receives database broadcasts. An unknown capability id is refused at join time.
+- **Clients cannot spoof:** a client-sent broadcast on a private channel is never delivered. There is no INSERT policy on `realtime.messages`. A database broadcast sent right after it is delivered, which proves the listener was live.
+- **Staff isolation holds:**
+  - a waiter receives `r:{own restaurant}:requests`;
+  - a waiter can't join another restaurant's topic or `r:{own}:orders`;
+  - the counter can join `r:{own}:orders`;
+  - anonymous clients never join `r:` topics.
+- **One decision function:** `public.can_receive_topic(topic)` holds all the rules (security definer, reads `auth.jwt()`). It's covered by pgTAP (`supabase/tests/realtime_authorization.test.sql`) and by the end-to-end suite (`src/lib/realtime/realtime-authorization.int.test.ts`), which runs in CI.
+- **Publisher:** `public.broadcast(topic, event, payload)` wraps `realtime.send(..., private => true)` and is not executable by clients.
+- **Payload note:** `realtime.send` adds an `id` to the payload. Consumers must tolerate it and use `version` for ordering (§6).
+- **To do in P1-09:** `s:{table session public_id}` topics, added with the `table_sessions` table.

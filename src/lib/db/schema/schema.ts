@@ -5,21 +5,21 @@ import { authUsers as users } from 'drizzle-orm/supabase';
 // Kept for code that refers to auth.users under the introspected name.
 export { users as usersInAuth };
 import {
-  pgTable,
-  index,
-  uniqueIndex,
-  foreignKey,
-  unique,
-  uuid,
-  text,
-  jsonb,
-  timestamp,
-  interval,
   boolean,
-  integer,
-  smallint,
+  foreignKey,
+  index,
   inet,
+  integer,
+  interval,
+  jsonb,
   pgEnum,
+  pgTable,
+  smallint,
+  text,
+  timestamp,
+  unique,
+  uniqueIndex,
+  uuid,
   type PgTableExtraConfigValue,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
@@ -629,7 +629,6 @@ export const restaurants = pgTable(
       .where(sql`(deleted_at IS NULL)`),
   ],
 );
-
 export const slugRedirects = pgTable(
   'slug_redirects',
   {

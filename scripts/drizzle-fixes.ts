@@ -100,6 +100,10 @@ export function pruneImports(source: string): string {
   if (rest.includes(`${EXTRAS_TYPE}[]`) && !names.includes(`type ${EXTRAS_TYPE}`)) {
     names.push(`type ${EXTRAS_TYPE}`);
   }
+  // Introspection order varies too: values first, then types, each alphabetical.
+  const key = (name: string) =>
+    `${name.startsWith('type ') ? '1' : '0'}${name.replace(/^type\s+/, '')}`;
+  names.sort((a, b) => key(a).localeCompare(key(b)));
   return source.replace(
     statement,
     `import { ${names.join(', ')} } from ${quote}drizzle-orm/pg-core${quote};`,

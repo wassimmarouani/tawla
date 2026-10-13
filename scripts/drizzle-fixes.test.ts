@@ -57,7 +57,7 @@ describe('pruneImports', () => {
       'import { pgTable, type AnyPgColumn, pgPolicy, check, index } from "drizzle-orm/pg-core"\n' +
       'x((table): PgTableExtraConfigValue[] => [index("i").on(table.id)]); pgTable';
     expect(pruneImports(source)).toBe(
-      'import { pgTable, index, type PgTableExtraConfigValue } from "drizzle-orm/pg-core";\n' +
+      'import { index, pgTable, type PgTableExtraConfigValue } from "drizzle-orm/pg-core";\n' +
         'x((table): PgTableExtraConfigValue[] => [index("i").on(table.id)]); pgTable',
     );
   });

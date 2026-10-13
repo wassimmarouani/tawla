@@ -21,6 +21,7 @@ const ID = {
   restaurantB: '22000000-0000-4000-8000-00000000000b',
 } as const;
 const PUBLIC_ID_A = 'rt-spike-public-id-aaaaaa';
+const PUBLIC_ID_B = 'rt-spike-public-id-bbbbbb';
 const PASSWORD = 'correct-horse-battery-staple';
 const STAFF = {
   waiterA: 'rt-waiter-a@example.org',
@@ -80,6 +81,23 @@ async function eventually(check: () => boolean, timeoutMs = 5000): Promise<boole
   return check();
 }
 
+/**
+ * Realtime starts its database-broadcast listener lazily on the first join, which can take
+ * several seconds on a cold stack (CI). Publish until one message arrives so every test runs
+ * against a live pipeline.
+ */
+async function warmUp(topic: string) {
+  const probe = await join(anonClient(), topic);
+  if (probe.status !== STATE.SUBSCRIBED) throw new Error(`warm-up join failed: ${probe.status}`);
+  const deadline = Date.now() + 30_000;
+  while (probe.received.length === 0 && Date.now() < deadline) {
+    await publish(topic, { warmUp: true });
+    await eventually(() => probe.received.length > 0, 1000);
+  }
+  await probe.channel.unsubscribe();
+  if (probe.received.length === 0) throw new Error('Realtime did not deliver within 30 s');
+}
+
 async function cleanup() {
   const db = rawDb();
   await db.execute(
@@ -98,7 +116,7 @@ beforeAll(async () => {
   await db.execute(sql`
     insert into public.restaurants (id, organization_id, slug, name, public_id) values
       (${ID.restaurantA}, ${ID.org}, 'rt-cafe-a', 'RT Café A', ${PUBLIC_ID_A}),
-      (${ID.restaurantB}, ${ID.org}, 'rt-cafe-b', 'RT Café B', 'rt-spike-public-id-bbbbbb')
+      (${ID.restaurantB}, ${ID.org}, 'rt-cafe-b', 'RT Café B', ${PUBLIC_ID_B})
   `);
 
   const { apiUrl, secretKey } = localSupabase();
@@ -118,7 +136,9 @@ beforeAll(async () => {
       values (${ID.restaurantA}, ${data.user.id}, ${role})
     `);
   }
-}, 60_000);
+
+  await warmUp(`m:${PUBLIC_ID_B}`);
+}, 90_000);
 
 afterAll(async () => {
   await Promise.all(clients.map((client) => client.removeAllChannels()));

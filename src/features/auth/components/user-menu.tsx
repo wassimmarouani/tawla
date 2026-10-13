@@ -14,16 +14,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { logOut } from '../server/actions';
+import { initialsOf } from '../services/initials';
 
 interface UserMenuProps {
   email: string;
+  name?: string | undefined;
 }
 
 /** Account menu of the back-office header. */
-export function UserMenu({ email }: UserMenuProps) {
+export function UserMenu({ email, name }: UserMenuProps) {
   const t = useTranslations('dashboard.nav');
   const [pending, startTransition] = useTransition();
-  const initial = email.trim().charAt(0).toUpperCase() || '?';
 
   return (
     <DropdownMenu>
@@ -34,15 +35,19 @@ export function UserMenu({ email }: UserMenuProps) {
       >
         <Avatar className="size-9">
           <AvatarFallback className="bg-brand-subtle font-semibold text-brand-on-subtle">
-            {initial}
+            {initialsOf(name, email)}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-60">
         <DropdownMenuGroup>
           <DropdownMenuLabel>
-            <span className="block text-xs text-muted-foreground">{t('account')}</span>
-            <span dir="ltr" className="block truncate text-sm font-medium text-foreground">
+            {name ? (
+              <span className="block truncate text-sm font-semibold text-foreground">{name}</span>
+            ) : (
+              <span className="block text-xs text-muted-foreground">{t('account')}</span>
+            )}
+            <span dir="ltr" className="block truncate text-sm text-muted-foreground">
               {email}
             </span>
           </DropdownMenuLabel>

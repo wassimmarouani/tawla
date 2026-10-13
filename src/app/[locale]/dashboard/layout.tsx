@@ -62,7 +62,7 @@ async function DashboardFrame({ children }: { children: ReactNode }) {
               {t('nav.plan', { plan })}
             </Badge>
           ) : null}
-          <UserMenu email={claims?.email ?? ''} />
+          <UserMenu email={claims?.email ?? ''} name={claims?.user_metadata?.full_name} />
         </nav>
       </header>
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-gutter pb-safe pt-8 sm:pt-10">

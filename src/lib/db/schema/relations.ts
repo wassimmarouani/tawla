@@ -12,6 +12,14 @@ import {
   subscriptions,
   featureOverrides,
   auditLogs,
+  media,
+  categories,
+  products,
+  optionGroups,
+  options,
+  productOptionGroups,
+  priceHistory,
+  translationGlossary,
 } from './schema';
 
 export const profilesRelations = relations(profiles, ({ one }) => ({
@@ -31,6 +39,7 @@ export const usersInAuthRelations = relations(usersInAuth, ({ many }) => ({
   auditLogs_impersonatedBy: many(auditLogs, {
     relationName: 'auditLogs_impersonatedBy_usersInAuth_id',
   }),
+  priceHistories: many(priceHistory),
 }));
 
 export const restaurantsRelations = relations(restaurants, ({ one, many }) => ({
@@ -43,6 +52,14 @@ export const restaurantsRelations = relations(restaurants, ({ one, many }) => ({
   subscriptions: many(subscriptions),
   featureOverrides: many(featureOverrides),
   auditLogs: many(auditLogs),
+  media: many(media),
+  categories: many(categories),
+  products: many(products),
+  optionGroups: many(optionGroups),
+  options: many(options),
+  productOptionGroups: many(productOptionGroups),
+  priceHistories: many(priceHistory),
+  translationGlossaries: many(translationGlossary),
 }));
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
@@ -106,6 +123,101 @@ export const auditLogsRelations = relations(auditLogs, ({ one }) => ({
   }),
   restaurant: one(restaurants, {
     fields: [auditLogs.restaurantId],
+    references: [restaurants.id],
+  }),
+}));
+
+export const mediaRelations = relations(media, ({ one, many }) => ({
+  restaurant: one(restaurants, {
+    fields: [media.restaurantId],
+    references: [restaurants.id],
+  }),
+  categories: many(categories),
+  products: many(products),
+}));
+
+export const categoriesRelations = relations(categories, ({ one, many }) => ({
+  restaurant: one(restaurants, {
+    fields: [categories.restaurantId],
+    references: [restaurants.id],
+  }),
+  media: one(media, {
+    fields: [categories.restaurantId],
+    references: [media.id],
+  }),
+  products: many(products),
+}));
+
+export const productsRelations = relations(products, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [products.restaurantId],
+    references: [categories.id],
+  }),
+  restaurant: one(restaurants, {
+    fields: [products.restaurantId],
+    references: [restaurants.id],
+  }),
+  media: one(media, {
+    fields: [products.restaurantId],
+    references: [media.id],
+  }),
+  productOptionGroups: many(productOptionGroups),
+  priceHistories: many(priceHistory),
+}));
+
+export const optionGroupsRelations = relations(optionGroups, ({ one, many }) => ({
+  restaurant: one(restaurants, {
+    fields: [optionGroups.restaurantId],
+    references: [restaurants.id],
+  }),
+  options: many(options),
+  productOptionGroups: many(productOptionGroups),
+}));
+
+export const optionsRelations = relations(options, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [options.restaurantId],
+    references: [restaurants.id],
+  }),
+  optionGroup: one(optionGroups, {
+    fields: [options.restaurantId],
+    references: [optionGroups.id],
+  }),
+}));
+
+export const productOptionGroupsRelations = relations(productOptionGroups, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [productOptionGroups.restaurantId],
+    references: [restaurants.id],
+  }),
+  optionGroup: one(optionGroups, {
+    fields: [productOptionGroups.restaurantId],
+    references: [optionGroups.id],
+  }),
+  product: one(products, {
+    fields: [productOptionGroups.restaurantId],
+    references: [products.id],
+  }),
+}));
+
+export const priceHistoryRelations = relations(priceHistory, ({ one }) => ({
+  usersInAuth: one(usersInAuth, {
+    fields: [priceHistory.changedBy],
+    references: [usersInAuth.id],
+  }),
+  restaurant: one(restaurants, {
+    fields: [priceHistory.restaurantId],
+    references: [restaurants.id],
+  }),
+  product: one(products, {
+    fields: [priceHistory.restaurantId],
+    references: [products.id],
+  }),
+}));
+
+export const translationGlossaryRelations = relations(translationGlossary, ({ one }) => ({
+  restaurant: one(restaurants, {
+    fields: [translationGlossary.restaurantId],
     references: [restaurants.id],
   }),
 }));

@@ -55,7 +55,7 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: next-build
           path: .next
@@ -137,7 +137,7 @@ jobs:
         if: always()
         run: pnpm db:stop
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: playwright-report

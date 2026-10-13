@@ -6,7 +6,8 @@ Route `/dashboard`. Desktop and tablet first, fully usable on phones. Measurable
 
 ## Guided onboarding
 
-1. **Venue info:** name, type (café, restaurant, tea room, pastry, fast food), address, phone, hours (schedule editor with overnight ranges).
+0. **Sign-up:** venue name and type plus the owner account (name, email, password ≥ 10 characters). Confirming the email creates the venue on an active Basic plan and opens `/dashboard` (ADR-0010 amendment 2026-10-13). The public slug is derived from the name (Latin transliteration; type-based fallback such as `cafe-k3x9` for Arabic names) and editable later.
+1. **Venue info:** address, phone, hours (schedule editor with overnight ranges).
 2. **Visual identity:** logo, main colour (suggested from the logo, ADR-0018; adjusted for AA contrast, ADR-0027), cover image.
 3. **Menu import:** manual entry, or **photo of the paper menu analysed by AI** (ADR-0025). The result is an editable draft table, never auto-published. CSV/Excel import arrives in Phase 2.
 4. **Tables:** number of tables, numbering, zones (zones UI gated by plan).

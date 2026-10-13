@@ -74,6 +74,14 @@ Constraints carried into Phase 2 (PIN login):
 2. **Verify rate limit.** Every mint calls `/verify` from our server IP. GoTrue limits verifications per IP (`token_verifications`, 30 per 5 min locally). Raise it on the hosted project and alert on HTTP 429 before the pilot grows; logins only happen at shift start, and refresh does not count.
 3. **Staff email domain.** `STAFF_EMAIL_DOMAIN` gets a null MX record (RFC 7505), so a public `signInWithOtp` on a shadow address delivers nothing. A "before user created" Auth hook rejects public sign-ups on that domain.
 
+## Amendment — 2026-10-13 (P0-11): owner sign-up and email links
+
+- **Server-side auth.** Sign-up, login, logout, password reset and the email-link exchanges run in Server Actions with `@supabase/ssr` cookies. `proxy.ts` refreshes the session on `/dashboard`, `/admin`, `/staff` and `/reset`, and redirects signed-out `/dashboard` and `/admin` requests to `/login?next=…` (same-origin paths under those surfaces only).
+- **Email links never act on GET.** The confirmation and recovery templates (`supabase/templates/*.html`, localized with the `locale` user metadata) link to `/signup/confirm` and `/reset/confirm` with `token_hash`. These pages only render a button; `verifyOtp` runs in the Server Action on click. Mail scanners that prefetch links therefore cannot burn the single-use token, and GET stays side-effect free (CLAUDE.md rule 14).
+- **Venue at sign-up.** The sign-up form also asks for the venue name and type, stored in `user_metadata`. Confirming the email creates organization + restaurant + owner membership + Basic subscription in one audited transaction (`src/server/admin/onboarding.ts`, idempotent per owner), then refreshes the session so the hook adds the membership claim. A signed-in user without a venue gets the same form on `/dashboard`.
+- **No account enumeration.** Sign-up (with confirmation on), resend and reset requests answer the same whether or not the address exists.
+- **Throttling.** Until `lib/rate-limit` lands (P1-09), auth relies on Supabase Auth limits. These are per IP and every call comes from our server, so P1-09 adds our own per-IP + per-email limits in front of the auth actions.
+
 ## Consequences
 
 - Staff login takes about 3 s, needs no email, and is bound to trusted hardware.

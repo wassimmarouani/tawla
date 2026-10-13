@@ -392,6 +392,7 @@
   - `POST /api/public/menu-views`;
   - `GET /api/public/availability`.
 - `lib/rate-limit` (Upstash adapter + in-memory adapter, same interface); cron jobs (auto-close sessions, aggregate views, unclaimed-request escalation) via pg_cron + `/api/cron/[job]`.
+- Wrap the P0-11 auth Server Actions (login, sign-up, resend, reset) with per-IP + per-email limits: Supabase Auth limits are per IP and every call comes from our server (ADR-0010 amendment 2026-10-13).
 
 **Acceptance criteria**
 

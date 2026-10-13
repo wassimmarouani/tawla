@@ -79,6 +79,11 @@ Demo entry points (seeded):
 
 All variables are validated at boot by `src/lib/env.ts`. A missing required server variable fails fast with a clear message.
 
+## Auth emails
+
+- **Local:** Supabase sends confirmation and recovery emails to Mailpit (`http://localhost:54324`) using `supabase/templates/*.html` (FR/AR/EN from the `locale` user metadata). Restart Supabase after editing a template.
+- **Hosted projects:** paste the same templates in Authentication → Email Templates (Confirm signup, Reset password), and add `https://<app-domain>/signup/confirm` and `https://<app-domain>/reset/confirm` to the redirect allow list. The links carry `token_hash`; our pages exchange it only when the user clicks (ADR-0010 amendment 2026-10-13).
+
 ## Windows notes
 
 - Use Git Bash or PowerShell. Scripts are cross-platform (no bash-only syntax in `package.json`).

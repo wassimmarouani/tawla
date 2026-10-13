@@ -21,6 +21,7 @@ One Next.js 16 application (TypeScript strict) on Vercel (`cdg1`) serves four su
   - one privileged module `src/server/admin/` for public writes, cron, session minting;
   - a `get_public_menu()` SQL function for menu reads (ADR-0003).
 - **Tenant context** (restaurant, role, flags) is loaded once per request in RSC (`cache()`) and passed explicitly. `proxy.ts` never queries the DB (ADR-0017).
+- **Feature indexes and the client bundle:** a barrel pulls every module it re-exports into the importer's graph. Client components import their own feature relatively. Server-only loaders (`getTenantContext`) are exported only from indexes that client code never imports; verified-session helpers live in `src/lib/auth` (`getSessionClaims`, `requireSessionClaims`, `safeNextPath`).
 
 ## Repository structure
 

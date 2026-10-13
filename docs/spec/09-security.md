@@ -34,6 +34,7 @@ The main risk is fraudulent ordering: from outside the venue, or for another tab
   - lockout 5 failures / 5 min per device+membership, and 20 / h per device.
   - PIN strength relies on device binding plus online throttling. This is stated explicitly.
 - Sessions: fixed devices until end of business day; mobile 12 h. Remote revocation.
+- Owners and managers: auth in Server Actions (`@supabase/ssr` cookies), session refreshed in `proxy.ts`, `?next=` restricted to same-origin authenticated paths. Email links (confirmation, recovery) land on a page with a button; the single-use token is exchanged only on that POST. No account enumeration on sign-up, resend or reset (ADR-0010 amendment 2026-10-13).
 
 ## Application security
 

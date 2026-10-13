@@ -92,7 +92,15 @@ export function buildSearchIndex(entries: readonly SearchEntry[]): SearchIndex {
   };
 }
 
+/**
+ * uFuzzy.IntraMode.SingleError. The enum is an ambient const enum that isolatedModules cannot
+ * reference, and typescript-eslint rejects any number assigned or asserted to it, so the value
+ * comes from the option object itself.
+ */
+const SINGLE_ERROR = { intraMode: 1 } as unknown as Pick<uFuzzy.Options, 'intraMode'>;
+
 const fuzzy = new uFuzzy({
+  ...SINGLE_ERROR,
   unicode: true,
   interSplit: String.raw`[^\p{L}\d']+`,
   intraSplit: String.raw`\p{Ll}\p{Lu}`,
@@ -100,8 +108,6 @@ const fuzzy = new uFuzzy({
   intraChars: String.raw`[\p{L}\d']`,
   intraContr: String.raw`'\p{L}{1,2}\b`,
   // One typo per term: insertion, substitution, transposition or omission.
-  // uFuzzy.IntraMode.SingleError; the ambient const enum is unreachable under isolatedModules.
-  intraMode: 1 as uFuzzy.IntraMode,
   intraIns: 1,
   intraSub: 1,
   intraTrn: 1,

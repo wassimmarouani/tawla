@@ -108,3 +108,17 @@
     display: none;
   }
 }
+
+/* Product sheet (native <dialog>, spec 02): capped height, page scroll locked while open. */
+@utility max-h-sheet {
+  max-block-size: 90dvh;
+}
+
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* Fixed bottom bars: clear the home indicator only. */
+@utility pb-home-indicator {
+  padding-block-end: env(safe-area-inset-bottom);
+}

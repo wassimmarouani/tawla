@@ -64,27 +64,43 @@ export interface SearchIndex {
 }
 
 /** One entry per product: its names and its category names in every language. */
-export function buildSearchIndex(menu: Pick<PublicMenu, 'categories'>): SearchIndex {
-  const ids: string[] = [];
-  const haystack: string[] = [];
-  const keys: string[][] = [];
-  for (const category of menu.categories) {
-    for (const product of category.products) {
-      const text = normalizeForSearch(product.search);
-      ids.push(product.id);
-      haystack.push(text);
-      keys.push(
-        text
-          .split(' ')
-          .filter((word) => LATIN_WORD.test(word))
-          .map(phoneticKey),
-      );
-    }
-  }
-  return { ids, haystack, keys };
+export interface SearchEntry {
+  id: string;
+  /** Every language of the product and category names (`get_public_menu` `search`). */
+  search: string;
 }
 
+/** Search entries of a menu, in menu order. */
+export function searchEntries(menu: Pick<PublicMenu, 'categories'>): SearchEntry[] {
+  return menu.categories.flatMap((category) =>
+    category.products.map((product) => ({ id: product.id, search: product.search })),
+  );
+}
+
+/** One index entry per product, built on the client when search opens. */
+export function buildSearchIndex(entries: readonly SearchEntry[]): SearchIndex {
+  const haystack = entries.map((entry) => normalizeForSearch(entry.search));
+  return {
+    ids: entries.map((entry) => entry.id),
+    haystack,
+    keys: haystack.map((text) =>
+      text
+        .split(' ')
+        .filter((word) => LATIN_WORD.test(word))
+        .map(phoneticKey),
+    ),
+  };
+}
+
+/**
+ * uFuzzy.IntraMode.SingleError. The enum is an ambient const enum that isolatedModules cannot
+ * reference, and typescript-eslint rejects any number assigned or asserted to it, so the value
+ * comes from the option object itself.
+ */
+const SINGLE_ERROR = { intraMode: 1 } as unknown as Pick<uFuzzy.Options, 'intraMode'>;
+
 const fuzzy = new uFuzzy({
+  ...SINGLE_ERROR,
   unicode: true,
   interSplit: String.raw`[^\p{L}\d']+`,
   intraSplit: String.raw`\p{Ll}\p{Lu}`,
@@ -92,8 +108,6 @@ const fuzzy = new uFuzzy({
   intraChars: String.raw`[\p{L}\d']`,
   intraContr: String.raw`'\p{L}{1,2}\b`,
   // One typo per term: insertion, substitution, transposition or omission.
-  // uFuzzy.IntraMode.SingleError; the ambient const enum is unreachable under isolatedModules.
-  intraMode: 1 as uFuzzy.IntraMode,
   intraIns: 1,
   intraSub: 1,
   intraTrn: 1,

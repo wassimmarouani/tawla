@@ -15,7 +15,10 @@ export async function undersizedTargets(page: Page, minSize = 44): Promise<strin
     ({ selector, radius }) => {
       const RADIUS = radius;
       const failures: string[] = [];
-      for (const element of document.querySelectorAll<HTMLElement>(selector)) {
+      // With a modal open, the page behind it is covered and inert: only the modal counts.
+      const scope =
+        document.querySelector('[aria-modal="true"], [role="dialog"], dialog:modal') ?? document;
+      for (const element of scope.querySelectorAll<HTMLElement>(selector)) {
         // elementFromPoint only sees the viewport: bring the control into view first.
         element.scrollIntoView({ block: 'center', inline: 'center' });
         const box = element.getBoundingClientRect();

@@ -1,8 +1,11 @@
-import { BookOpen } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { EmptyState } from '@/components/states';
+import { PageHeader } from '@/components/layout/page-header';
+import { buttonVariants } from '@/components/ui/button';
+import { OnboardingChecklist, loadOverviewFacts, onboardingChecklist } from '@/features/backoffice';
 import { getTenantContext } from '@/features/tenancy';
+import { getSessionClaims } from '@/lib/auth/session';
 import { env } from '@/lib/env';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -10,35 +13,47 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
+/** Overview (spec 04): venue, public address, menu size and the getting-started checklist. */
 export default async function DashboardHomePage() {
   const result = await getTenantContext();
+  const claims = await getSessionClaims();
   // The layout renders the no-restaurant and forbidden screens instead of this page.
-  if (result.kind !== 'ok') return null;
+  if (result.kind !== 'ok' || !claims) return null;
   const { restaurant } = result.context;
   const t = await getTranslations('dashboard.home');
+  const facts = await loadOverviewFacts(claims, restaurant.id);
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <p className="text-sm font-semibold tracking-label text-brand-text uppercase">
-          {t('eyebrow')}
-        </p>
-        <h1 className="text-3xl font-title tracking-heading text-balance break-words text-foreground sm:text-4xl">
-          {restaurant.name}
-        </h1>
-        <p className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
-          <span>{t('publicAddress')}</span>
-          <span dir="ltr" className="font-medium break-all text-foreground">
-            {env.APP_DOMAIN}/{restaurant.slug}
-          </span>
-        </p>
-      </div>
-      <EmptyState
-        icon={<BookOpen />}
-        title={t('emptyTitle')}
-        description={t('emptyDescription')}
-        className="bg-card py-16"
+      <PageHeader
+        eyebrow={t('eyebrow')}
+        title={restaurant.name}
+        description={
+          <p className="flex flex-wrap items-center gap-x-2">
+            <span>{t('publicAddress')}</span>
+            <span dir="ltr" className="font-medium break-all text-foreground">
+              {env.APP_DOMAIN}/{restaurant.slug}
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>
+              {t('products', { count: facts.products })},{' '}
+              {t('categories', { count: facts.categories })}
+            </span>
+          </p>
+        }
+        actions={
+          <a
+            href={`/${restaurant.slug}`}
+            target="_blank"
+            rel="noopener"
+            className={buttonVariants({ variant: 'outline' })}
+          >
+            {t('viewMenu')}
+            <ExternalLink aria-hidden="true" className="rtl:-scale-x-100" />
+          </a>
+        }
       />
+      <OnboardingChecklist checklist={onboardingChecklist(facts)} />
     </div>
   );
 }

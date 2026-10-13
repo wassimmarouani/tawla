@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { describe, expect, it } from 'vitest';
 import { rawDb } from '@/lib/db/client';
-import { buildSearchIndex, searchMenu } from '../services/search';
+import { buildSearchIndex, searchEntries, searchMenu } from '../services/search';
 import { publicMenuSchema, type PublicMenu } from './public-menu';
 
 /** Contract between SQL get_public_menu (P1-01) and the Zod schema, on the demo seed. */
@@ -30,7 +30,7 @@ describe('get_public_menu contract (demo seed)', () => {
 
   it('finds the ADR-0026 acceptance terms in the real menu, from any UI language', async () => {
     const menu = await publicMenu('cafe-el-bahja', 'ar');
-    const index = buildSearchIndex(menu);
+    const index = buildSearchIndex(searchEntries(menu));
     expect(slugsFor(menu, searchMenu(index, 'capucin'))[0]).toBe('capucin');
     expect(slugsFor(menu, searchMenu(index, 'kapsin'))).toContain('capucin');
     expect(slugsFor(menu, searchMenu(index, 'قهوة'))).toEqual(

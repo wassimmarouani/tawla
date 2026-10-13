@@ -6,7 +6,12 @@
     "open": "Open"
   },
   "search": {
-    "placeholder": "Search dishes and drinks…"
+    "placeholder": "Search dishes and drinks…",
+    "label": "Search the menu",
+    "close": "Close search",
+    "results": "{count, plural, =0 {No results} one {# result} other {# results}}",
+    "empty": "No dish matches. Try another word, in French, Arabic or English.",
+    "hint": "Type at least two letters."
   },
   "info": "Info",
   "wifi": "Wi-Fi",
@@ -44,5 +49,41 @@
     "description": "This venue is preparing its menu. Check back in a moment."
   },
   "logo": "{name} logo",
-  "loading": "Loading the menu…"
+  "loading": "Loading the menu…",
+  "allergenNames": {
+    "gluten": "Gluten",
+    "crustaceans": "Crustaceans",
+    "eggs": "Eggs",
+    "fish": "Fish",
+    "peanuts": "Peanuts",
+    "soy": "Soy",
+    "milk": "Milk",
+    "nuts": "Tree nuts",
+    "celery": "Celery",
+    "mustard": "Mustard",
+    "sesame": "Sesame",
+    "sulphites": "Sulphites",
+    "lupin": "Lupin",
+    "molluscs": "Molluscs"
+  },
+  "sheet": {
+    "close": "Close",
+    "allergens": "Allergens",
+    "noAllergens": "The venue declared no allergens.",
+    "allergenNote": "Not sure? Ask the waiter before ordering.",
+    "dietary": "Diet",
+    "required": "Required",
+    "optional": "Optional",
+    "chooseExactly": "{count, plural, one {Choose 1 option} other {Choose # options}}",
+    "chooseUpTo": "{count, plural, one {Up to 1 option} other {Up to # options}}",
+    "chooseBetween": "Between {min} and {max} options",
+    "delta": "+{price}",
+    "included": "Included",
+    "options": "Options"
+  },
+  "filters": {
+    "label": "Filter dishes",
+    "empty": "No dish matches these filters.",
+    "clear": "Clear filters"
+  }
 }

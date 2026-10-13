@@ -45,6 +45,7 @@ export const projectRestrictions = [
     rules: {
       'tawla/no-physical-direction-classes': 'error',
       'tawla/no-arbitrary-tailwind-values': 'error',
+      'tawla/client-module-exports': 'error',
       // Structured logging only (src/lib/log.ts, ADR-0020).
       'no-console': 'error',
       'no-restricted-imports': [

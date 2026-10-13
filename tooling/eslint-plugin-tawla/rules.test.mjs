@@ -99,3 +99,40 @@ ruleTester.run('todo-requires-issue', rules['todo-requires-issue'], {
     { code: '/* FIXME broken */ const a = 1;', errors: [{ messageId: 'missing' }] },
   ],
 });
+
+ruleTester.run('client-module-exports', rules['client-module-exports'], {
+  valid: [
+    {
+      code: `'use client';
+export function MenuSearch() {}
+export type Item = { id: string };`,
+    },
+    {
+      code: `'use client';
+export default function Panel() {}`,
+    },
+    {
+      code: `'use client';
+export function useFormErrors() {}`,
+    },
+    { code: `export const categoryAnchor = (id: string) => id;` },
+  ],
+  invalid: [
+    {
+      code: `'use client';
+export const categoryAnchor = (id: string) => id;`,
+      errors: [{ messageId: 'exported' }],
+    },
+    {
+      code: `'use client';
+export const MENU_FILTERS = ['a'] as const;`,
+      errors: [{ messageId: 'exported' }],
+    },
+    {
+      code: `'use client';
+function helper() {}
+export { helper };`,
+      errors: [{ messageId: 'exported' }],
+    },
+  ],
+});

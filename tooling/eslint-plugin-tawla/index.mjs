@@ -148,6 +148,60 @@ const noInvisibleCharacters = {
   },
 };
 
+/**
+ * A `'use client'` module imported by a Server Component turns every export into a client
+ * reference: calling a helper or reading a constant from it crashes at render time. Such modules
+ * may only export components (PascalCase), hooks, types, and a default export.
+ * @type {import('eslint').Rule.RuleModule}
+ */
+const clientModuleExports = {
+  meta: {
+    type: 'problem',
+    docs: { description: 'Only components may be exported from a "use client" module.' },
+    messages: {
+      exported:
+        '"{{name}}" is exported from a "use client" module. Server code importing it gets a client reference, not the value. Move it to a shared module.',
+    },
+    schema: [],
+  },
+  create(context) {
+    const body = context.sourceCode.ast.body;
+    const first = body[0];
+    const isClient =
+      first?.type === 'ExpressionStatement' &&
+      first.expression.type === 'Literal' &&
+      first.expression.value === 'use client';
+    if (!isClient) return {};
+    /** @param {any} node @param {string} name */
+    const check = (node, name) => {
+      // Components (PascalCase, not SCREAMING_CASE constants) and hooks are fine.
+      if (!/^([A-Z][a-z]|use[A-Z])/.test(name)) {
+        context.report({ node, messageId: 'exported', data: { name } });
+      }
+    };
+    return {
+      /** @param {any} node */
+      ExportNamedDeclaration(node) {
+        if (node.exportKind === 'type') return;
+        const declaration = node.declaration;
+        if (!declaration) {
+          for (const specifier of node.specifiers ?? []) {
+            if (specifier.exportKind !== 'type') check(specifier, specifier.exported.name);
+          }
+          return;
+        }
+        if (declaration.type === 'FunctionDeclaration' && declaration.id) {
+          check(declaration, declaration.id.name);
+        } else if (declaration.type === 'VariableDeclaration') {
+          for (const item of declaration.declarations) {
+            if (item.id.type === 'Identifier') check(item, item.id.name);
+          }
+        }
+      },
+    };
+  },
+};
+
 const plugin = {
   meta: { name: 'eslint-plugin-tawla', version: '0.0.0' },
   rules: {
@@ -177,6 +231,7 @@ const plugin = {
     }),
     'todo-requires-issue': todoRequiresIssue,
     'no-invisible-characters': noInvisibleCharacters,
+    'client-module-exports': clientModuleExports,
   },
 };
 

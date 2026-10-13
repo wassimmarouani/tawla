@@ -1,16 +1,6 @@
-import { z } from 'zod';
 import { brandCssVariables, resolveBrandTheme, type BrandTheme } from '@/lib/theme/brand';
 import { PALETTE } from '@/styles/tokens';
-
-/** `restaurants.theme` (jsonb, validated on read: CLAUDE.md rule 3). */
-export const restaurantThemeSchema = z
-  .object({
-    brand_color: z
-      .string()
-      .regex(/^#[0-9a-f]{6}$/i)
-      .optional(),
-  })
-  .catch({});
+import { restaurantThemeSchema } from '../schemas/restaurant-theme';
 
 function declarations(theme: BrandTheme): string {
   return Object.entries(brandCssVariables(theme))

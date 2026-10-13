@@ -29,7 +29,7 @@ function isFieldErrorKey(key: string): key is FieldErrorKey {
   return (FIELD_ERROR_KEYS as readonly string[]).includes(key);
 }
 
-export function isReasonKey(key: unknown): key is ReasonKey {
+function isReasonKey(key: unknown): key is ReasonKey {
   return typeof key === 'string' && (REASON_KEYS as readonly string[]).includes(key);
 }
 

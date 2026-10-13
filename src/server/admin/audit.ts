@@ -1,6 +1,7 @@
 import 'server-only';
 import { z } from 'zod';
-import { rawDb } from '@/lib/db/client';
+import { rawDb, type Database } from '@/lib/db/client';
+import type { DbTransaction } from '@/lib/db/rls';
 import { auditLogs } from '@/lib/db/schema/schema';
 
 /**
@@ -21,9 +22,13 @@ export const auditEntrySchema = z.object({
 
 export type AuditEntry = z.input<typeof auditEntrySchema>;
 
-export async function writeAudit(entry: AuditEntry): Promise<string> {
+/** Pass `db` to write the entry inside the caller's transaction (all-or-nothing with the action). */
+export async function writeAudit(
+  entry: AuditEntry,
+  db: Database | DbTransaction = rawDb(),
+): Promise<string> {
   const data = auditEntrySchema.parse(entry);
-  const [row] = await rawDb()
+  const [row] = await db
     .insert(auditLogs)
     .values({
       restaurantId: data.restaurantId,

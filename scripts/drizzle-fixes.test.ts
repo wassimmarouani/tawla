@@ -64,29 +64,38 @@ describe('pruneImports', () => {
 });
 
 describe('sortTables', () => {
-  it('keeps imports and enums first and sorts tables by name, whatever the input order', () => {
-    const enums = "import { pgTable } from 'x';\nexport const kind = pgEnum('kind', ['a']);\n";
-    const zebra = "export const zebra = pgTable('zebra', {});\n";
-    const apple = "export const apple = pgTable('apple', {});\n";
-    expect(sortTables(enums + zebra + apple)).toBe(enums + apple + zebra);
-    expect(sortTables(enums + apple + zebra)).toBe(enums + apple + zebra);
+  it('keeps imports and enums first, sorts tables, one blank line between blocks', () => {
+    const NL = String.fromCharCode(10);
+    const imports = `import { pgTable } from 'x';${NL}`;
+    const kind = `export const kind = pgEnum('kind', ['a']);${NL}`;
+    const zebra = `export const zebra = pgTable('zebra', {});${NL}`;
+    const apple = `export const apple = pgTable('apple', {});${NL}`;
+    const expected = [imports, kind, apple, zebra].map((part) => part.trimEnd()).join(NL + NL) + NL;
+    expect(sortTables(imports + kind + zebra + apple)).toBe(expected);
+    expect(sortTables(imports + kind + apple + zebra)).toBe(expected);
+    // The block emitted last never changes the spacing.
+    expect(sortTables(imports + kind + zebra + NL + apple)).toBe(expected);
   });
 });
 
 describe('fixSchema', () => {
+  const NL = String.fromCharCode(10);
+
   it('wraps SQL function defaults', () => {
-    expect(fixSchema('id: uuid().default(uuid_v7()),')).toBe('id: uuid().default(sql`uuid_v7()`),');
+    expect(fixSchema('id: uuid().default(uuid_v7()),')).toBe(
+      `id: uuid().default(sql\`uuid_v7()\`),${NL}`,
+    );
   });
 
   it('rebuilds mangled array defaults', () => {
     expect(
       fixSchema(`locales: text().array().default(["RAY['fr'::text", "'ar'::text", "'en'::tex"]),`),
-    ).toBe(`locales: text().array().default(['fr', 'ar', 'en']),`);
+    ).toBe(`locales: text().array().default(['fr', 'ar', 'en']),${NL}`);
     expect(fixSchema('features: text().array().default([""]),')).toBe(
-      'features: text().array().default([]),',
+      `features: text().array().default([]),${NL}`,
     );
     expect(fixSchema("features: text().array().default(['']),")).toBe(
-      'features: text().array().default([]),',
+      `features: text().array().default([]),${NL}`,
     );
   });
 

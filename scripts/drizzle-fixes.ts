@@ -118,11 +118,11 @@ export function sortTables(source: string): string {
   const parts = source.split(/(?=^export const \w+ = )/m);
   const isTable = (part: string) => /^export const \w+ = pgTable\(/.test(part);
   const name = (part: string) => /^export const (\w+)/.exec(part)?.[1] ?? '';
-  const tables = parts
-    .filter(isTable)
-    .map((part) => (part.endsWith('\n') ? part : `${part}\n`))
-    .sort((a, b) => name(a).localeCompare(name(b)));
-  return [...parts.filter((part) => !isTable(part)), ...tables].join('');
+  const tables = parts.filter(isTable).sort((a, b) => name(a).localeCompare(name(b)));
+  // One blank line between blocks, whichever table drizzle-kit happened to emit last.
+  return `${[...parts.filter((part) => !isTable(part)), ...tables]
+    .map((part) => part.trimEnd())
+    .join('\n\n')}\n`;
 }
 
 export function fixSchema(source: string): string {

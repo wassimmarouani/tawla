@@ -25,6 +25,7 @@ import {
 import { sql } from 'drizzle-orm';
 
 export const mediaKind = pgEnum('media_kind', ['product', 'cover', 'logo', 'category']);
+
 export const membershipRole = pgEnum('membership_role', [
   'owner',
   'manager',
@@ -32,8 +33,11 @@ export const membershipRole = pgEnum('membership_role', [
   'waiter',
   'station',
 ]);
+
 export const platformRole = pgEnum('platform_role', ['none', 'super_admin', 'support']);
+
 export const restaurantStatus = pgEnum('restaurant_status', ['active', 'read_only', 'suspended']);
+
 export const restaurantType = pgEnum('restaurant_type', [
   'cafe',
   'restaurant',
@@ -41,6 +45,7 @@ export const restaurantType = pgEnum('restaurant_type', [
   'pastry',
   'fast_food',
 ]);
+
 export const subscriptionStatus = pgEnum('subscription_status', [
   'trial',
   'active',
@@ -629,6 +634,7 @@ export const restaurants = pgTable(
       .where(sql`(deleted_at IS NULL)`),
   ],
 );
+
 export const slugRedirects = pgTable(
   'slug_redirects',
   {

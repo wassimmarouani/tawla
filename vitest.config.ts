@@ -46,6 +46,8 @@ export default defineConfig({
             APP_DOMAIN: 'localhost:3000',
             NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
             NEXT_PUBLIC_APP_NAME: 'Tawla',
+            NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
+            NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
           },
         },
       },
@@ -53,8 +55,15 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/features/*/services/**', 'src/lib/**', 'src/i18n/locales.ts'],
-      // src/lib/db is exercised by the integration suite (pnpm test:integration), not unit tests.
-      exclude: ['**/*.test.*', 'src/lib/env.ts', 'src/lib/db/**'],
+      // src/lib/db is exercised by the integration suite (pnpm test:integration); the Supabase
+      // cookie glue (src/lib/supabase, src/lib/auth/session.ts) by the E2E auth journeys.
+      exclude: [
+        '**/*.test.*',
+        'src/lib/env.ts',
+        'src/lib/db/**',
+        'src/lib/supabase/**',
+        'src/lib/auth/session.ts',
+      ],
       // CLAUDE.md rule 9: ≥ 90 % on business logic.
       thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },
     },

@@ -81,6 +81,9 @@ jobs:
       - name: Start local Supabase
         run: pnpm db:start
 
+      - name: Demo photos through the media pipeline
+        run: pnpm db:seed-media
+
       - name: pgTAP tests
         run: pnpm test:db
 
@@ -127,6 +130,9 @@ jobs:
       # Auth journeys need Supabase Auth, Postgres and Mailpit (P0-11).
       - name: Start local Supabase
         run: pnpm db:start
+
+      - name: Demo photos through the media pipeline
+        run: pnpm db:seed-media
 
       - name: Playwright
         run: pnpm test:e2e

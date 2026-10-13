@@ -21,11 +21,13 @@ for (const entry of await readdir(OUT, { withFileTypes: true })) {
   }
 }
 
-for (const file of ['schema.ts', 'relations.ts']) {
-  const target = path.join(OUT, file);
-  const source = (await readFile(target, 'utf8')).replace(HEADER, '');
-  await writeFile(target, HEADER + (file === 'schema.ts' ? fixSchema(source) : source));
-}
+// Queries use explicit joins under withRls (ADR-0003); the relational API is unused, and
+// drizzle-kit emits duplicate keys for tables linked twice (restaurant logo and cover).
+await rm(path.join(OUT, 'relations.ts'), { force: true });
+
+const target = path.join(OUT, 'schema.ts');
+const source = (await readFile(target, 'utf8')).replace(HEADER, '');
+await writeFile(target, HEADER + fixSchema(source));
 
 const prettier = path.resolve('node_modules/prettier/bin/prettier.cjs');
 const result = spawnSync(process.execPath, [prettier, '--write', OUT], { stdio: 'inherit' });

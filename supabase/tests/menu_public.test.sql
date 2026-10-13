@@ -70,7 +70,7 @@ select is(
   'products expose whitelisted keys only (no station, sort order, restaurant or timestamps)');
 select is(
   (select jsonb_agg(k order by k) from menu_fr, jsonb_object_keys(body -> 'restaurant') k),
-  '["currency", "default_locale", "locale", "locales", "manual_status", "manual_status_until", "name", "opening_schedule", "public_id", "slug", "status", "theme", "timezone", "type"]'::jsonb,
+  '["cover", "currency", "default_locale", "locale", "locales", "logo", "manual_status", "manual_status_until", "name", "opening_schedule", "public_id", "slug", "status", "theme", "timezone", "type"]'::jsonb,
   'the restaurant exposes whitelisted keys only (no id, organization or settings)');
 select is(
   (select p ->> 'search' from menu_fr, jsonb_array_elements(body -> 'categories' -> 0 -> 'products') p where p ->> 'slug' = 'capucin'),

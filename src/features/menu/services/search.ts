@@ -92,7 +92,8 @@ const fuzzy = new uFuzzy({
   intraChars: String.raw`[\p{L}\d']`,
   intraContr: String.raw`'\p{L}{1,2}\b`,
   // One typo per term: insertion, substitution, transposition or omission.
-  intraMode: 1,
+  // uFuzzy.IntraMode.SingleError; the ambient const enum is unreachable under isolatedModules.
+  intraMode: 1 as uFuzzy.IntraMode,
   intraIns: 1,
   intraSub: 1,
   intraTrn: 1,

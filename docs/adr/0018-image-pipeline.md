@@ -26,6 +26,16 @@
 5. Storage cache headers: `Cache-Control: public, max-age=31536000, immutable`.
 6. Logo brand colour is extracted with sharp stats + culori during the same processing step (used for theme suggestion, ADR-0027).
 
+## Amendment — 2026-10-14 (P1-03): implementation details
+
+- **Buckets** (migration `20261014120000_create_media_storage.sql`): private `uploads` (JPEG/PNG/WebP, 5 MB) and public `media` (AVIF/WebP/PNG). No client storage policies: signed upload URLs and every write go through `src/server/admin/media` with the secret key.
+- **Paths:** originals at `uploads/<restaurant id>/<uuid>` (processing refuses any path outside the restaurant's prefix and always deletes the original); renditions at `media/r/<restaurant id>/<sha-256 prefix>/<width>.<format>`. The same content keeps the same path and media row.
+- **`media.renditions`** stores `{ widths, formats }`; URLs are derived (`src/lib/media/urls.ts`). Widths never exceed the source (no upscaling). Category images use 320/640.
+- **Placeholder:** `<MenuImage>` decodes the thumbhash on the server into a data-URL background, so the blur needs no client JavaScript; the dominant colour is the fallback. CSP `img-src` allows the Supabase origin.
+- **Restaurant logo and cover:** `restaurants.logo_media_id` / `cover_media_id`, composite FKs to the restaurant's own media, exposed by `get_public_menu`.
+- **Demo photos:** `pnpm db:seed-media` (part of `db:reset` and CI) runs `supabase/seed-media` through the same pipeline.
+- **Drizzle:** the restaurants ↔ media FK cycle needs typed extras callbacks (`scripts/drizzle-fixes.ts`); the unused `relations.ts` is no longer generated (queries use explicit joins, ADR-0003).
+
 ## Consequences
 
 - Image cost is predictable and close to zero, with optimal formats. Processing takes about 1–2 s per upload, with progress shown in the UI.

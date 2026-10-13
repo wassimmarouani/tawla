@@ -17,8 +17,13 @@ export const publicMediaSchema = z.object({
   height: z.number().int().positive(),
   thumbhash: z.string().nullable(),
   dominant_color: z.string().nullable(),
-  renditions: z.record(z.string(), z.unknown()),
+  renditions: z.object({
+    widths: z.array(z.number().int().positive()).min(1),
+    formats: z.array(z.enum(['avif', 'webp', 'png'])).min(1),
+  }),
 });
+
+export type PublicMedia = z.infer<typeof publicMediaSchema>;
 
 export const publicOptionSchema = z.object({
   id: z.uuid(),
@@ -103,6 +108,8 @@ export const publicMenuSchema = z.object({
     manual_status: z.enum(['auto', 'open', 'closed']),
     manual_status_until: z.string().nullable(),
     theme: z.record(z.string(), z.unknown()),
+    logo: publicMediaSchema.nullable(),
+    cover: publicMediaSchema.nullable(),
   }),
   categories: z.array(publicCategorySchema),
 });

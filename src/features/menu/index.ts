@@ -7,6 +7,7 @@ export {
 } from './schemas/public-menu';
 export type {
   LocalizedText,
+  PublicMedia,
   PublicCategory,
   PublicMenu,
   PublicOption,

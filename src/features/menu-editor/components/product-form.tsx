@@ -8,11 +8,9 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
-import type { z } from 'zod';
 import { showUndoToast } from '@/components/feedback/undo-toast';
 import { FormField } from '@/components/forms/form-field';
 import { SubmitButton } from '@/components/forms/submit-button';
-import { useFormErrors } from '@/components/forms/use-form-errors';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -23,16 +21,29 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { Locale } from '@/i18n/locales';
-import type { EditorMedia } from '../queries/editor-menu';
-import { productFormSchema, type ProductForm as ProductFormValues } from '../schemas/menu-editor';
+import {
+  ALLERGENS,
+  BADGES,
+  DIETARY,
+  type Allergen,
+  type Badge,
+  type Dietary,
+} from '@/lib/menu/attributes';
+import type { EditorMedia, EditorOptionGroup } from '../queries/editor-menu';
+import {
+  productFormSchema,
+  type ProductForm as ProductFormValues,
+  type ProductFormOutput,
+} from '../schemas/menu-editor';
 import { toDraft } from '../schemas/i18n-text';
 import { removeProducts, saveProduct, undoRemoveProducts } from '../server/actions';
+import { AttributeChips } from './attribute-chips';
 import { LocalizedFields } from './localized-fields';
 import { ImageField } from './image-field';
+import { ProductOptionsField } from './product-options-field';
 import { SwitchRow } from './switch-row';
 import { useEditorAction } from './use-editor-action';
-
-type ProductFormOutput = z.output<typeof productFormSchema>;
+import { useFieldError } from './use-field-error';
 
 export interface ProductFormInitial {
   categoryId: string;
@@ -43,12 +54,27 @@ export interface ProductFormInitial {
   media: EditorMedia | null;
   isAvailable: boolean;
   isVisible: boolean;
+  badges: Badge[];
+  allergens: Allergen[];
+  dietary: Dietary[];
+  /** Links as edited: counts and prices as text, blank = the group's value. */
+  optionLinks: ProductFormValues['optionLinks'];
+}
+
+export interface AttributeLabels {
+  badges: Record<Badge, string>;
+  dietary: Record<Dietary, string>;
+  allergens: Record<Allergen, string>;
 }
 
 interface ProductFormProps {
   productId: string | null;
   initial: ProductFormInitial;
   categories: readonly { id: string; label: string }[];
+  optionGroups: readonly EditorOptionGroup[];
+  attributeLabels: AttributeLabels;
+  locale: Locale;
+  defaultLocale: Locale;
   locales: readonly Locale[];
   storageUrl: string;
 }
@@ -58,11 +84,15 @@ export function ProductForm({
   productId,
   initial,
   categories,
+  optionGroups,
+  attributeLabels,
+  locale,
+  defaultLocale,
   locales,
   storageUrl,
 }: ProductFormProps) {
   const t = useTranslations('menuEditor');
-  const { fieldError } = useFormErrors();
+  const fieldError = useFieldError();
   const router = useRouter();
   const { pending, run, perform } = useEditorAction();
   const [media, setMedia] = useState<EditorMedia | null>(initial.media);
@@ -77,6 +107,10 @@ export function ProductForm({
       mediaId: initial.media?.id ?? null,
       isAvailable: initial.isAvailable,
       isVisible: initial.isVisible,
+      badges: initial.badges,
+      allergens: initial.allergens,
+      dietary: initial.dietary,
+      optionLinks: initial.optionLinks,
     },
     mode: 'onTouched',
   });
@@ -87,9 +121,10 @@ export function ProductForm({
   const onSubmit = form.handleSubmit((values) => {
     run(
       () => saveProduct(productId, values),
-      () => {
+      ({ id }) => {
         toast.success(productId ? t('toast.saved') : t('toast.created'));
-        router.push('/dashboard/menu');
+        // The menu page opens this product in its live preview.
+        router.push(`/dashboard/menu?focus=${id}`);
       },
     );
   });
@@ -234,6 +269,61 @@ export function ProductForm({
             )}
           />
         </div>
+      </section>
+
+      <ProductOptionsField
+        control={form.control}
+        register={form.register}
+        errors={errors.optionLinks}
+        groups={optionGroups}
+        locale={locale}
+        defaultLocale={defaultLocale}
+      />
+
+      <section className="flex flex-col gap-5 rounded-md border border-border bg-card p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-sm font-semibold text-foreground">{t('attributes.title')}</h2>
+          <p className="text-sm text-muted-foreground">{t('attributes.hint')}</p>
+        </div>
+        <Controller
+          control={form.control}
+          name="badges"
+          render={({ field }) => (
+            <AttributeChips
+              label={t('attributes.badges')}
+              values={BADGES}
+              labels={attributeLabels.badges}
+              selected={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="dietary"
+          render={({ field }) => (
+            <AttributeChips
+              label={t('attributes.dietary')}
+              values={DIETARY}
+              labels={attributeLabels.dietary}
+              selected={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="allergens"
+          render={({ field }) => (
+            <AttributeChips
+              label={t('attributes.allergens')}
+              values={ALLERGENS}
+              labels={attributeLabels.allergens}
+              selected={field.value}
+              onChange={field.onChange}
+            />
+          )}
+        />
       </section>
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center">

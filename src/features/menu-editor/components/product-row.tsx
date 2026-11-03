@@ -81,6 +81,7 @@ export function ProductRow({
 
   return (
     <li
+      id={`product-${product.id}`}
       ref={attachNode}
       style={style}
       className={cn(

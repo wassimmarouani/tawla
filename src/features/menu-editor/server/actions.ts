@@ -18,18 +18,22 @@ import {
   type CategoryInput,
   type ProductInput,
 } from '../schemas/menu-editor';
+import { optionGroupInputSchema, type OptionGroupInput } from '../schemas/options';
 import type { PriceChange } from '../services/bulk-price';
 import {
   adjustProductPrices,
   createCategory,
   createProduct,
   deleteCategory,
+  deleteOptionGroup,
   deleteProducts,
   duplicateProducts,
   reorderCategories,
   reorderProducts,
   restoreCategory,
+  restoreOptionGroup,
   restoreProducts,
+  saveOptionGroup as writeOptionGroup,
   setCategoryVisibility,
   setProductAvailability,
   setProductPrices,
@@ -204,6 +208,32 @@ export async function restorePrices(input: {
   return runEditorAction('product.restore_prices', (scope) =>
     setProductPrices(scope, parsed.data.prices),
   );
+}
+
+export async function saveOptionGroup(
+  id: string | null,
+  input: OptionGroupInput,
+): Promise<ActionResult<{ id: string }>> {
+  const target = optionalIdSchema.safeParse(id);
+  if (!target.success) return validationError(target.error);
+  const parsed = optionGroupInputSchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  const groupId = target.data;
+  return runEditorAction('option_group.save', async (scope) => ({
+    id: await writeOptionGroup(scope, groupId, parsed.data),
+  }));
+}
+
+export async function removeOptionGroup(id: string): Promise<ActionResult<void>> {
+  const parsed = idSchema.safeParse(id);
+  if (!parsed.success) return validationError(parsed.error);
+  return runEditorAction('option_group.delete', (scope) => deleteOptionGroup(scope, parsed.data));
+}
+
+export async function undoRemoveOptionGroup(id: string): Promise<ActionResult<void>> {
+  const parsed = idSchema.safeParse(id);
+  if (!parsed.success) return validationError(parsed.error);
+  return runEditorAction('option_group.restore', (scope) => restoreOptionGroup(scope, parsed.data));
 }
 
 /** A one-time signed URL where the browser uploads the original image (ADR-0018). */

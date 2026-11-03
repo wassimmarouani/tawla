@@ -5,10 +5,18 @@ import { notFound, redirect } from 'next/navigation';
 import { PageHeader } from '@/components/layout/page-header';
 import { env } from '@/lib/env';
 import { millimesToDecimal } from '@/lib/money';
-import { loadEditorMenu, loadEditorProduct } from '../queries/editor-menu';
+import { ALLERGENS, BADGES, DIETARY } from '@/lib/menu/attributes';
+import {
+  loadEditorMenu,
+  loadEditorProduct,
+  loadOptionGroups,
+  loadProductOptionLinks,
+  type EditorOptionLink,
+} from '../queries/editor-menu';
 import { editorPageData } from '../server/page-data';
 import { displayText } from '../services/menu-text';
-import { ProductForm } from './product-form';
+import { MenuPreview } from './menu-preview';
+import { ProductForm, type AttributeLabels } from './product-form';
 
 interface ProductFormScreenProps {
   /** `null` creates a product. */
@@ -25,6 +33,7 @@ export async function ProductFormScreen({ productId, categoryId }: ProductFormSc
   if (!data) return null;
   if (!data.canEdit) redirect('/dashboard/menu');
   const t = await getTranslations('menuEditor.form');
+  const tClient = await getTranslations('client');
   const { claims, restaurant, locale } = data;
 
   const categories = await loadEditorMenu(claims, restaurant.id);
@@ -36,6 +45,21 @@ export async function ProductFormScreen({ productId, categoryId }: ProductFormSc
         ? await loadEditorProduct(claims, restaurant.id, productId)
         : null;
   if (productId !== null && !product) notFound();
+  const [optionGroups, links] = await Promise.all([
+    loadOptionGroups(claims, restaurant.id),
+    product ? loadProductOptionLinks(claims, restaurant.id, product.id) : [],
+  ]);
+  const attributeLabels: AttributeLabels = {
+    badges: Object.fromEntries(
+      BADGES.map((key) => [key, tClient(`badges.${key}`)]),
+    ) as AttributeLabels['badges'],
+    dietary: Object.fromEntries(
+      DIETARY.map((key) => [key, tClient(`dietary.${key}`)]),
+    ) as AttributeLabels['dietary'],
+    allergens: Object.fromEntries(
+      ALLERGENS.map((key) => [key, tClient(`allergenNames.${key}`)]),
+    ) as AttributeLabels['allergens'],
+  };
 
   const preselected =
     categories.find((category) => category.id === categoryId)?.id ?? categories[0]?.id ?? '';
@@ -55,24 +79,57 @@ export async function ProductFormScreen({ productId, categoryId }: ProductFormSc
         }
         title={product ? name || t('editTitle') : t('newTitle')}
       />
-      <ProductForm
-        productId={product?.id ?? null}
-        initial={{
-          categoryId: product?.categoryId ?? preselected,
-          name: product?.name ?? {},
-          description: product?.description ?? {},
-          priceText: product ? millimesToDecimal(product.price) : '',
-          media: product?.media ?? null,
-          isAvailable: product?.isAvailable ?? true,
-          isVisible: product?.isVisible ?? true,
-        }}
-        categories={categories.map((category) => ({
-          id: category.id,
-          label: displayText(category.name, locale, restaurant.defaultLocale),
-        }))}
-        locales={restaurant.locales}
-        storageUrl={env.NEXT_PUBLIC_SUPABASE_URL}
-      />
+      <div className="flex items-start gap-8">
+        <div className="min-w-0 flex-1">
+          <ProductForm
+            productId={product?.id ?? null}
+            initial={{
+              categoryId: product?.categoryId ?? preselected,
+              name: product?.name ?? {},
+              description: product?.description ?? {},
+              priceText: product ? millimesToDecimal(product.price) : '',
+              media: product?.media ?? null,
+              isAvailable: product?.isAvailable ?? true,
+              isVisible: product?.isVisible ?? true,
+              badges: product?.badges ?? [],
+              allergens: product?.allergens ?? [],
+              dietary: product?.dietary ?? [],
+              optionLinks: links.map(toFormLink),
+            }}
+            categories={categories.map((category) => ({
+              id: category.id,
+              label: displayText(category.name, locale, restaurant.defaultLocale),
+            }))}
+            optionGroups={optionGroups}
+            attributeLabels={attributeLabels}
+            locale={locale}
+            defaultLocale={restaurant.defaultLocale}
+            locales={restaurant.locales}
+            storageUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+          />
+        </div>
+        {product ? (
+          <MenuPreview
+            src={`/${restaurant.slug}?p=${encodeURIComponent(product.slug)}`}
+            version={0}
+          />
+        ) : null}
+      </div>
     </div>
   );
+}
+
+/** A stored link as the form edits it: counts and prices as text, blank = group value. */
+function toFormLink(link: EditorOptionLink) {
+  return {
+    optionGroupId: link.optionGroupId,
+    minSelect: link.minSelect === null ? '' : String(link.minSelect),
+    maxSelect: link.maxSelect === null ? '' : String(link.maxSelect),
+    priceOverrides: Object.fromEntries(
+      Object.entries(link.priceOverrides).map(([optionId, price]) => [
+        optionId,
+        millimesToDecimal(price),
+      ]),
+    ),
+  };
 }

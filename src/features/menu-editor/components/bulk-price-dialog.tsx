@@ -23,16 +23,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { Locale } from '@/i18n/locales';
-import { formatMoney } from '@/lib/money';
+import { ROUNDING_STEPS, formatMoney, type RoundingStep } from '@/lib/money';
 import { MAX_PRODUCT_PRICE } from '../schemas/menu-editor';
 import { adjustPrices, restorePrices } from '../server/actions';
-import {
-  DEFAULT_ROUNDING_STEP,
-  ROUNDING_STEPS,
-  parsePercent,
-  previewPriceChanges,
-  type RoundingStep,
-} from '../services/bulk-price';
+import { DEFAULT_ROUNDING_STEP, parsePercent, previewPriceChanges } from '../services/bulk-price';
 import { useEditorAction } from './use-editor-action';
 
 interface BulkPriceDialogProps {

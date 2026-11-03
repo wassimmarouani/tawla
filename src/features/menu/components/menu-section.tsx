@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { MenuImage } from '@/components/media/menu-image';
 import type { Locale } from '@/i18n/locales';
 import { formatMoney } from '@/lib/money';
+import { formatWeekdays, servingWindow } from '@/lib/schedule';
 import { classes as cn } from '@/lib/classes';
 import type { PublicCategory, PublicProduct } from '../schemas/public-menu';
 import { displayPrice } from '../services/pricing';
@@ -51,6 +52,32 @@ function Tags({ product, t }: { product: PublicProduct; t: Translator }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+/**
+ * Serving window of a category (ADR-0014), e.g. "Servi lun. – sam., 07:00–11:00". Static text,
+ * so the cached page stays the same all day; the product sheet and staff see live availability.
+ */
+function ServingHours({
+  category,
+  locale,
+  t,
+}: {
+  category: PublicCategory;
+  locale: Locale;
+  t: Translator;
+}) {
+  const window = category.availability ? servingWindow(category.availability) : null;
+  if (!window) return null;
+  return (
+    <p className="text-sm text-muted-foreground tabular-nums">
+      {t('servedHours', {
+        days: formatWeekdays(window.days, locale) ?? t('everyDay'),
+        from: window.from,
+        to: window.to,
+      })}
+    </p>
   );
 }
 
@@ -226,7 +253,7 @@ export async function MenuSection({ category, index, locale, priority }: MenuSec
       aria-labelledby={titleId}
       className="scroll-mt-16 pt-9 first:pt-6"
     >
-      <div className="mb-3 flex items-baseline gap-3 border-t border-border pt-3.5">
+      <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-border pt-3.5">
         <span
           aria-hidden="true"
           className="text-xs font-bold tracking-label text-brand-text tabular-nums"
@@ -239,6 +266,7 @@ export async function MenuSection({ category, index, locale, priority }: MenuSec
           as="h2"
           className="text-xl font-title tracking-heading text-foreground"
         />
+        <ServingHours category={category} locale={locale} t={t} />
       </div>
       {layout === 'cards' ? (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">

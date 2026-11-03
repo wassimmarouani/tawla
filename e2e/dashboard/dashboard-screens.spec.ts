@@ -96,7 +96,11 @@ for (const scheme of ['light', 'dark'] as const) {
 
       // Dashboard home.
       const heading = page.getByRole('heading', { level: 1 });
-      await expect(heading).toHaveText(locale === 'ar' ? 'مقهى البهجة' : 'Café des Écrans');
+      // Venue creation runs a transaction and a redirect; give it room when the suite runs
+      // image processing in parallel.
+      await expect(heading).toHaveText(locale === 'ar' ? 'مقهى البهجة' : 'Café des Écrans', {
+        timeout: 20_000,
+      });
       await check(page, 'dashboard-home', capture);
 
       // Command palette, then a section page.

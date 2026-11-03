@@ -6,8 +6,6 @@ export type I18nDraft = Record<Locale, string>;
 /** Multilingual text as stored: blank locales are dropped (`is_i18n_text` in SQL). */
 export type I18nText = Partial<Record<Locale, string>>;
 
-export const EMPTY_I18N: I18nDraft = { fr: '', ar: '', en: '' };
-
 /**
  * Edited multilingual text → stored shape. `required` demands at least one non-blank locale;
  * errors are message keys (`required`, `tooLong`) for the form's translator.
@@ -27,8 +25,8 @@ export function i18nTextSchema(maxLength: number, required: boolean) {
     .refine((text) => !required || Object.keys(text).length > 0, { message: 'required' });
 }
 
-/** Stored text → edited draft (missing locales become blank fields). */
-export function toDraft(text: I18nText): I18nDraft {
+/** Stored or partially edited text → draft (missing locales become blank fields). */
+export function toDraft(text: Partial<Record<Locale, string | undefined>>): I18nDraft {
   return { fr: text.fr ?? '', ar: text.ar ?? '', en: text.en ?? '' };
 }
 

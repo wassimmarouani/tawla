@@ -11,6 +11,7 @@ const FIELD_ERROR_KEYS = [
   'passwordTooLong',
   'passwordMismatch',
   'tooLong',
+  'priceInvalid',
 ] as const;
 type FieldErrorKey = (typeof FIELD_ERROR_KEYS)[number];
 

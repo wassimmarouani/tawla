@@ -36,6 +36,11 @@
 - **Demo photos:** `pnpm db:seed-media` (part of `db:reset` and CI) runs `supabase/seed-media` through the same pipeline.
 - **Drizzle:** the restaurants ↔ media FK cycle needs typed extras callbacks (`scripts/drizzle-fixes.ts`); the unused `relations.ts` is no longer generated (queries use explicit joins, ADR-0003).
 
+## Amendment — 2026-11-03 (P1-05)
+
+- The back-office (`app` surface) adds the Supabase origin to CSP `connect-src`: the browser PUTs originals to the one-time signed upload URL. Customer and marketing surfaces keep `connect-src 'self'` until realtime (P1-09).
+- Uploads are requested and processed by Server Actions that check `menu.edit` first; `SUPABASE_SECRET_KEY` is read only by `src/server/admin/env.ts`.
+
 ## Consequences
 
 - Image cost is predictable and close to zero, with optimal formats. Processing takes about 1–2 s per upload, with progress shown in the UI.

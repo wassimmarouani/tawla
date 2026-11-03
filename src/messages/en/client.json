@@ -85,5 +85,7 @@
     "label": "Filter dishes",
     "empty": "No dish matches these filters.",
     "clear": "Clear filters"
-  }
+  },
+  "servedHours": "Served {days}, {from}–{to}",
+  "everyDay": "every day"
 }

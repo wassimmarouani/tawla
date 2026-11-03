@@ -101,5 +101,6 @@
       "title": "Réglages",
       "description": "Horaires, langues, apparence et liens."
     }
-  }
+  },
+  "notifications": "Notifications"
 }

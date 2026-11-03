@@ -1,5 +1,5 @@
 import 'server-only';
-import { updateTag } from 'next/cache';
+import { refresh, updateTag } from 'next/cache';
 import { can } from '@/features/auth';
 import { menuCacheTags } from '@/features/menu';
 import { getTenantContext, type ActiveTenantRestaurant } from '@/features/tenancy';
@@ -49,7 +49,7 @@ export async function withEditorAccess<T>(
 
 /**
  * An editor write, then cache invalidation of the public menu (ADR-0017) so customers see the
- * change on their next request.
+ * change on their next request, and a refresh of the editor in the same round trip.
  */
 export async function runEditorAction<T>(
   operation: string,
@@ -58,6 +58,7 @@ export async function runEditorAction<T>(
   return withEditorAccess(operation, async ({ scope, restaurant }) => {
     const data = await write(scope);
     for (const tag of menuCacheTags(restaurant.slug, restaurant.publicId)) updateTag(tag);
+    refresh();
     return data;
   });
 }

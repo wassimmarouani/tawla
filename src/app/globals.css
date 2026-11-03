@@ -122,3 +122,19 @@ html:has(dialog[open]) {
 @utility pb-home-indicator {
   padding-block-end: env(safe-area-inset-bottom);
 }
+
+/* Height the back-office tab bar (h-16 + home indicator) takes on phones and tablets. */
+:root {
+  --tabbar-clearance: calc(4rem + env(safe-area-inset-bottom));
+}
+
+@media (width >= 64rem) {
+  :root {
+    --tabbar-clearance: 0px;
+  }
+}
+
+/* Floating bars that sit just above the tab bar (or the viewport edge from 1024 px). */
+@utility bottom-above-tabbar {
+  inset-block-end: calc(var(--tabbar-clearance) + var(--spacing) * 3);
+}

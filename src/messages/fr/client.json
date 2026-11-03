@@ -85,5 +85,7 @@
     "label": "Filtrer les plats",
     "empty": "Aucun plat ne correspond à ces filtres.",
     "clear": "Effacer les filtres"
-  }
+  },
+  "servedHours": "Servi {days}, {from}–{to}",
+  "everyDay": "tous les jours"
 }

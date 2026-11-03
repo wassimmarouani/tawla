@@ -1,0 +1,102 @@
+{
+  "page": {
+    "description": "Une table, un QR code unique. Imprimez les chevalets et posez-les sur les tables.",
+    "add": "Ajouter des tables",
+    "print": "Imprimer les chevalets",
+    "generalTitle": "QR général",
+    "generalHint": "Pour la vitrine et les réseaux sociaux : ouvre le menu sans table.",
+    "count": "{count, plural, one {# table} other {# tables}}"
+  },
+  "empty": {
+    "title": "Aucune table pour l’instant",
+    "description": "Créez vos tables en une fois, par exemple de 1 à 12, puis imprimez leurs chevalets.",
+    "action": "Créer des tables"
+  },
+  "table": {
+    "name": "Table {number}",
+    "actions": "Actions de la table {number}",
+    "edit": "Modifier",
+    "print": "Imprimer son chevalet",
+    "regenerate": "Nouveau QR code",
+    "delete": "Supprimer",
+    "noZone": "Sans zone"
+  },
+  "form": {
+    "addTitle": "Ajouter des tables",
+    "editTitle": "Modifier la table {number}",
+    "description": "Chaque table reçoit un QR code unique, impossible à deviner.",
+    "single": "Une table",
+    "range": "Plusieurs tables",
+    "mode": "Nombre de tables",
+    "number": "Numéro",
+    "label": "Nom (facultatif)",
+    "labelHint": "Ex. Terrasse, Bar, Salon.",
+    "from": "Du numéro",
+    "to": "Au numéro",
+    "zone": "Zone",
+    "noZone": "Aucune zone",
+    "summary": "{count, plural, one {# table} other {# tables}}, de {from} à {to}",
+    "taken": "Déjà utilisés : {numbers}",
+    "create": "Créer",
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "regenerate": {
+    "title": "Nouveau QR code pour la table {number} ?",
+    "description": "L’ancien QR code cesse de fonctionner immédiatement. Imprimez le nouveau chevalet et remplacez l’ancien.",
+    "confirm": "Générer un nouveau QR",
+    "cancel": "Annuler"
+  },
+  "zones": {
+    "title": "Zones",
+    "hint": "Regroupez les tables : terrasse, salle, étage.",
+    "add": "Ajouter une zone",
+    "name": "Nom de la zone",
+    "edit": "Renommer {name}",
+    "delete": "Supprimer {name}",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "createTitle": "Nouvelle zone",
+    "editTitle": "Renommer la zone",
+    "proOnly": "Les zones sont incluses dans la formule Pro."
+  },
+  "toast": {
+    "created": "{count, plural, one {Table créée} other {# tables créées}}",
+    "saved": "Table enregistrée",
+    "deleted": "{count, plural, one {Table supprimée} other {# tables supprimées}}",
+    "regenerated": "Nouveau QR code pour la table {number}. Pensez à réimprimer son chevalet.",
+    "zoneSaved": "Zone enregistrée",
+    "zoneDeleted": "Zone supprimée",
+    "undo": "Annuler",
+    "undone": "Action annulée",
+    "failed": "L’action n’a pas abouti. Réessayez."
+  },
+  "errors": {
+    "numberTaken": "Certains numéros sont déjà utilisés.",
+    "numberInvalid": "Un numéro entre 1 et 999.",
+    "rangeReversed": "Le dernier numéro doit suivre le premier.",
+    "rangeTooLarge": "30 tables au maximum à la fois.",
+    "planZones": "Les zones sont réservées à la formule Pro.",
+    "forbidden": "Vous n’avez pas accès à cette action.",
+    "notFound": "Cette table n’existe plus. La page a été actualisée.",
+    "readOnly": "Ce compte est en lecture seule."
+  },
+  "print": {
+    "title": "Chevalets à imprimer",
+    "back": "Tables",
+    "template": "Format",
+    "a6": "A6 : un chevalet par page",
+    "a4": "A4 : quatre chevalets à découper",
+    "print": "Imprimer ou enregistrer en PDF",
+    "hint": "Dans la fenêtre d’impression, choisissez « Enregistrer en PDF » pour garder un fichier. Taille réelle, sans marges.",
+    "count": "{count, plural, one {# chevalet} other {# chevalets}}",
+    "empty": "Aucune table à imprimer.",
+    "qrAlt": "QR code de {name}"
+  },
+  "tent": {
+    "table": "Table",
+    "menu": "Menu",
+    "scanMenu": "Scannez pour voir le menu",
+    "scanOrder": "Scannez pour commander"
+  }
+}

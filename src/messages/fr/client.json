@@ -87,5 +87,9 @@
     "clear": "Effacer les filtres"
   },
   "servedHours": "Servi {days}, {from}–{to}",
-  "everyDay": "tous les jours"
+  "everyDay": "tous les jours",
+  "tableNotFound": {
+    "title": "Ce QR code n’est plus valide",
+    "description": "Il a peut-être été remplacé. Demandez au personnel ou consultez le menu de l’établissement."
+  }
 }

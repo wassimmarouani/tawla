@@ -2,7 +2,7 @@ import 'server-only';
 import { and, count, eq, isNull } from 'drizzle-orm';
 import type { SessionClaims } from '@/lib/auth/claims';
 import { withRls } from '@/lib/db/rls';
-import { categories, memberships, products, restaurants } from '@/lib/db/schema/schema';
+import { categories, memberships, products, restaurants, tables } from '@/lib/db/schema/schema';
 import { restaurantThemeSchema } from '@/features/menu';
 import type { ChecklistFacts } from '../services/checklist';
 
@@ -28,6 +28,10 @@ export async function loadOverviewFacts(
       .select({ value: count() })
       .from(memberships)
       .where(and(eq(memberships.restaurantId, restaurantId), eq(memberships.isActive, true)));
+    const [tableRow] = await tx
+      .select({ value: count() })
+      .from(tables)
+      .where(and(eq(tables.restaurantId, restaurantId), isNull(tables.deletedAt)));
     const [restaurant] = await tx
       .select({ theme: restaurants.theme, logo: restaurants.logoMediaId })
       .from(restaurants)
@@ -40,8 +44,7 @@ export async function loadOverviewFacts(
       branded:
         Boolean(restaurant?.logo) ||
         restaurantThemeSchema.parse(restaurant?.theme).brand_color !== undefined,
-      // Tables arrive with P1-08; until then the step stays to do.
-      tables: 0,
+      tables: tableRow?.value ?? 0,
     };
   });
 }

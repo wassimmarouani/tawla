@@ -30,11 +30,12 @@ ADRs override `docs/spec/*`, which override the original `docs/cahier-des-charge
 | [0022](0022-pwa-and-service-worker.md)               | Own service worker on `serwist` core                                   | Accepted                        |
 | [0023](0023-primary-keys-uuidv7.md)                  | UUIDv7 via SQL function (PG 17)                                        | Accepted                        |
 | [0024](0024-hosting-environments-and-workflow.md)    | Regions, environments, keys, branching, budget                         | Accepted                        |
-| [0025](0025-ai-provider-and-quotas.md)               | AI provider, models, quotas                                            | Accepted                        |
+| [0025](0025-ai-provider-and-quotas.md)               | AI provider, models, quotas                                            | Accepted (§1–3 by 0030)         |
 | [0026](0026-i18n-money-and-search.md)                | i18n, money formatting, search                                         | Accepted                        |
 | [0027](0027-design-process-and-visual-direction.md)  | Design-in-code, three visual directions                                | Accepted (choice pending P0-06) |
 | [0028](0028-legal-and-compliance-open-items.md)      | Legal and compliance items                                             | Accepted                        |
 | [0029](0029-visual-direction-tawla-mix.md)           | Visual direction "Tawla" (A + B lists + C grid)                        | Accepted                        |
+| [0030](0030-gemini-provider.md)                      | Gemini as the AI provider (menu import, translation)                   | Accepted                        |
 
 ## Audit ID → ADR
 

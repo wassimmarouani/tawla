@@ -1,0 +1,52 @@
+{
+  "model": "gemini-2.5-flash",
+  "raw": {
+    "language": "fr",
+    "categories": [
+      {
+        "name": "Crêpes sucrées",
+        "items": [
+          {
+            "name": "Crêpe chocolat",
+            "description": null,
+            "price": "6 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Crêpe Nutella banane",
+            "description": null,
+            "price": "8,5 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Crêpe miel amandes",
+            "description": null,
+            "price": "7 DT",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "name": "Gaufres",
+        "items": [
+          {
+            "name": "Gaufre sucre",
+            "description": null,
+            "price": "4 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Gaufre chocolat",
+            "description": null,
+            "price": "6,5 DT",
+            "confidence": "high"
+          }
+        ]
+      }
+    ]
+  },
+  "usage": {
+    "inputTokens": 470,
+    "outputTokens": 547
+  }
+}

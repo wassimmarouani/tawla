@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   typedRoutes: true,
   poweredByHeader: false,
+  experimental: {
+    // AI menu import sends up to 6 photos, resized in the browser to ≤ 1 MB each (P1-13).
+    serverActions: { bodySizeLimit: '8mb' },
+  },
 };
 
 export default withNextIntl(nextConfig);

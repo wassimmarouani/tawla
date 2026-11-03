@@ -1,0 +1,76 @@
+{
+  "model": "gemini-2.5-flash",
+  "raw": {
+    "language": "fr",
+    "categories": [
+      {
+        "name": "Pizzas",
+        "items": [
+          {
+            "name": "Margherita",
+            "description": null,
+            "price": "12.000",
+            "confidence": "high"
+          },
+          {
+            "name": "Neptune",
+            "description": null,
+            "price": "15.000",
+            "confidence": "high"
+          },
+          {
+            "name": "Reine",
+            "description": null,
+            "price": "14.500",
+            "confidence": "high"
+          },
+          {
+            "name": "4 fromages",
+            "description": null,
+            "price": "17.000",
+            "confidence": "high"
+          },
+          {
+            "name": "Tunisienne",
+            "description": null,
+            "price": "16.000",
+            "confidence": "high"
+          },
+          {
+            "name": "Végétarienne",
+            "description": null,
+            "price": "13.500",
+            "confidence": "high"
+          },
+          {
+            "name": "Fruits de mer",
+            "description": null,
+            "price": "22.000",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "name": "Boissons",
+        "items": [
+          {
+            "name": "Boisson gazeuse 33 cl",
+            "description": null,
+            "price": "2.500",
+            "confidence": "high"
+          },
+          {
+            "name": "Eau 1 L",
+            "description": null,
+            "price": "1.500",
+            "confidence": "high"
+          }
+        ]
+      }
+    ]
+  },
+  "usage": {
+    "inputTokens": 470,
+    "outputTokens": 564
+  }
+}

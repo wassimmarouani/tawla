@@ -1,0 +1,52 @@
+{
+  "model": "gemini-2.5-flash",
+  "raw": {
+    "language": "mixed",
+    "categories": [
+      {
+        "name": "Entrées / مقبلات",
+        "items": [
+          {
+            "name": "Brik à l'œuf / بريك بالعظم",
+            "description": null,
+            "price": "3,5",
+            "confidence": "high"
+          },
+          {
+            "name": "Salade méchouia / سلطة مشوية",
+            "description": null,
+            "price": "6",
+            "confidence": "high"
+          },
+          {
+            "name": "Ojjja merguez / عجة مرقاز",
+            "description": null,
+            "price": "9,5",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "name": "Desserts / حلويات",
+        "items": [
+          {
+            "name": "Bambalouni / بمبالوني",
+            "description": null,
+            "price": "2",
+            "confidence": "high"
+          },
+          {
+            "name": "Assida zgougou / عصيدة زقوقو",
+            "description": null,
+            "price": "7,5",
+            "confidence": "high"
+          }
+        ]
+      }
+    ]
+  },
+  "usage": {
+    "inputTokens": 470,
+    "outputTokens": 472
+  }
+}

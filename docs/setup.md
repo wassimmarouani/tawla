@@ -104,4 +104,4 @@ In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so `/dashboard` is not rewritten i
 
 ## Operations (filled in at the end of Phase 1)
 
-Backups and monthly restore test, migration rollout, key rotation (PIN pepper, VAPID, cron secret), incident checklist.
+Scheduled jobs that call the app (ADR-0009): `alter database postgres set app.settings.cron_base_url = 'https://<app domain>'` and `select vault.create_secret('<CRON_SECRET>', 'cron_secret')` on the hosted project. Backups and monthly restore test, migration rollout, key rotation (PIN pepper, VAPID, cron secret), incident checklist.

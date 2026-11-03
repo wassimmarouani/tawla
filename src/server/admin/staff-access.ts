@@ -148,6 +148,8 @@ export interface PairedDevice {
   restaurantId: string;
   restaurantName: string;
   restaurantSlug: string;
+  restaurantPublicId: string;
+  defaultLocale: string;
   timeZone: string;
   dayCutoffMinutes: number;
 }
@@ -163,6 +165,8 @@ export async function deviceForToken(token: string | undefined): Promise<PairedD
       restaurantId: staffDevices.restaurantId,
       restaurantName: restaurants.name,
       restaurantSlug: restaurants.slug,
+      restaurantPublicId: restaurants.publicId,
+      defaultLocale: restaurants.defaultLocale,
       timeZone: restaurants.timezone,
       dayCutoff: restaurants.dayCutoff,
     })

@@ -13,3 +13,5 @@ export { StaffHomeScreen, StaffLoginScreen, StaffPairScreen } from './components
 export { acceptInvite } from './server/staff-actions';
 export { staffContext } from './server/context';
 export { ServiceWorkerRegistration } from './components/service-worker-registration';
+export { listAvailability, setAvailability } from './server/availability';
+export type { AvailabilityItem } from './server/availability';

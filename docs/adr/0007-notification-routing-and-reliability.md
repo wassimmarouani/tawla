@@ -34,3 +34,10 @@
 
 - "Lost order" becomes a measurable, alerting condition instead of an assumption.
 - A small table write per ack. Negligible at expected volumes, prunable after 30 days.
+
+## Amendment — 2026-11-03 (P1-12): Basic service requests
+
+- **Recipients on Basic:** every active member's devices (no zones). Realtime goes to `r:{restaurant}:requests`; Web Push goes to every subscription of the venue after the customer's response (`after()`), tagged with the request id so a replayed request replaces its notification.
+- **Acks:** the live screen acks every request it renders (`POST /api/staff/acks`, batched every 500 ms). The E2E journey asserts call → first ack < 2 s.
+- **Claim / done:** conditional updates (`where status = 'open'` / `in ('open', 'claimed')`); the loser gets 409 `ORDER_STATE_CONFLICT` with `reason` and the claimer's name, and the request leaves that screen. A done bill request closes the table session on Basic (the table's phones get the feedback card).
+- **Escalation:** `POST /api/cron/escalations` (bearer `CRON_SECRET`), called every 15 s by `public.call_app_job('escalations')` through pg_net when `app.settings.cron_base_url` and the Vault secret `cron_secret` are set. It creates `unclaimed` (2 min) and `no_ack` (15 s) incidents once each and pushes owners and managers. Handling a request resolves its incidents.

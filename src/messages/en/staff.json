@@ -16,11 +16,65 @@
     "description": "Device “{device}” of {venue}.",
     "submit": "Sign in"
   },
-  "home": {
-    "title": "Ready for service",
-    "description": "Signed in on “{device}” as {role}.",
-    "next": "The service screen (calls, bills, availability) comes here.",
+  "push": {
+    "title": "Table {number}",
+    "waiter": "Waiter call",
+    "billCash": "Bill · cash",
+    "billCard": "Bill · card",
+    "escalated": "Call unanswered for 2 minutes"
+  },
+  "start": {
+    "title": "Start service",
+    "description": "One tap turns on sound, keeps the screen awake and checks notifications.",
+    "button": "Start service",
+    "iosHint": "On iPhone: Share → “Add to Home Screen”, then open Tawla from the icon to get notifications."
+  },
+  "live": {
+    "tabs": {
+      "requests": "Requests",
+      "availability": "Availability"
+    },
+    "connection": {
+      "online": "Online",
+      "reconnecting": "Reconnecting…",
+      "offline": "Offline: refreshing every 10 s"
+    },
+    "notifications": {
+      "on": "Notifications on",
+      "denied": "Notifications blocked: allow them in the browser settings",
+      "unavailable": "Notifications unavailable on this device",
+      "off": "Notifications not configured"
+    },
+    "empty": {
+      "title": "No requests",
+      "description": "Waiter calls and bill requests appear here with a sound."
+    },
+    "kinds": {
+      "waiter": "Waiter call",
+      "bill": "Bill"
+    },
+    "payment": {
+      "cash": "Cash",
+      "card": "Card"
+    },
+    "table": "Table {number}",
+    "age": "{minutes, plural, =0 {Just now} one {# min ago} other {# min ago}}",
+    "claim": "I’m on it",
+    "done": "Done",
+    "mine": "You’re on it",
+    "alreadyClaimed": "Already taken by {name}.",
+    "alreadyDone": "This request is already handled.",
+    "failed": "That didn’t work. Try again.",
+    "count": "{count, plural, =0 {No requests} one {# request} other {# requests}}",
+    "availability": {
+      "description": "One tap marks a product sold out for customers.",
+      "available": "{name} available",
+      "empty": "No products on the menu.",
+      "saved": "{name}: {state}",
+      "on": "available",
+      "off": "sold out"
+    },
     "logout": "Sign out",
-    "until": "Session until {time}"
+    "signedIn": "{device} · {role}"
   }
 }

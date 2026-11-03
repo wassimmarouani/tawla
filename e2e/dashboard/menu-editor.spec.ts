@@ -54,7 +54,7 @@ async function addProduct(page: Page, name: string, price: string, photo = false
   await page.getByRole('textbox', { name: 'Nom (Français)' }).fill(name);
   await page.getByLabel('Prix').fill(price);
   await page.getByRole('button', { name: 'Ajouter le plat' }).click();
-  await expect(page).toHaveURL(/\/dashboard\/menu$/);
+  await expect(page).toHaveURL(/\/dashboard\/menu\?focus=/);
   await expect(page.getByRole('link', { name: new RegExp(name) })).toBeVisible();
 }
 

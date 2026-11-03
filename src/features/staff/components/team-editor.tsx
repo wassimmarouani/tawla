@@ -118,7 +118,10 @@ export function TeamEditor({ data }: { data: TeamData }) {
             : t('members.seats', { count: data.seatsLeft })
         }
         action={
+          // Primary action at the top of the page: on short phones a lower button would sit
+          // under the fixed tab bar (WCAG 2.5.8 target size).
           <Button
+            className="max-sm:order-first max-sm:w-full"
             onClick={() => {
               setInviting(true);
             }}

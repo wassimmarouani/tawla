@@ -486,6 +486,8 @@
 - The eval run (manual, real API) reports price accuracy and item recall. The owner reviews the numbers before the feature ships.
 - Quota exhaustion shows the friendly state. `ai_usage` rows have the correct cost maths. No customer data in prompts (unit test on prompt builders).
 
+**Note (2026-11-03):** built on Gemini (ADR-0030, supersedes the provider part of ADR-0025) at the owner's request. Eval on the 6 fixture menus (`pnpm ai:eval`, gemini-2.5-flash): item recall 97.4 %, millime-exact prices 97.4 % of found items, 34 millimes for all six. Fixtures are rendered menus (printed FR, printed AR, bilingual, handwritten-style, chalkboard, dense); photos of real pilot menus are added when the pilots provide them. E2E and CI run with `AI_RECORDED_RESPONSES=true` (recorded answers, no network; ignored in production). Translation suggestions are reviewed in a dialog; the glossary is read but edited later (P1-14 settings).
+
 ### P1-14 — Onboarding wizard and settings · L
 
 **Deliverables**

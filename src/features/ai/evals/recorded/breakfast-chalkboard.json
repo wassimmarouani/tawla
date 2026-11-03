@@ -1,0 +1,47 @@
+{
+  "model": "gemini-2.5-flash",
+  "raw": {
+    "language": "fr",
+    "categories": [
+      {
+        "name": "Petit-déjeuner",
+        "items": [
+          {
+            "name": "Petit-déjeuner",
+            "description": null,
+            "price": null,
+            "confidence": "high"
+          },
+          {
+            "name": "Formule petit-déjeuner",
+            "description": null,
+            "price": "9.900",
+            "confidence": "high"
+          },
+          {
+            "name": "Croissant",
+            "description": null,
+            "price": "1.5",
+            "confidence": "high"
+          },
+          {
+            "name": "Pain au chocolat",
+            "description": null,
+            "price": "1.8",
+            "confidence": "high"
+          },
+          {
+            "name": "Omelette fromage",
+            "description": null,
+            "price": "5.5",
+            "confidence": "high"
+          }
+        ]
+      }
+    ]
+  },
+  "usage": {
+    "inputTokens": 470,
+    "outputTokens": 522
+  }
+}

@@ -75,6 +75,44 @@ export const tableSessionStatus = pgEnum('table_session_status', [
   'closed',
 ]);
 
+export const aiUsage = pgTable(
+  'ai_usage',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    feature: text().notNull(),
+    model: text().notNull(),
+    inputTokens: integer('input_tokens').notNull(),
+    outputTokens: integer('output_tokens').notNull(),
+    costMillimes: integer('cost_millimes').notNull(),
+    units: integer().default(1).notNull(),
+    createdBy: uuid('created_by'),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.createdBy],
+      foreignColumns: [users.id],
+      name: 'ai_usage_created_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'ai_usage_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('ai_usage_restaurant_month_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.createdAt.desc().nullsFirst().op('timestamptz_ops'),
+    ),
+  ],
+);
+
 export const auditLogs = pgTable(
   'audit_logs',
   {

@@ -239,5 +239,54 @@
     "reload": "Refresh the preview",
     "open": "Open the menu in a new tab",
     "hint": "Updated on every save. Hidden items are not shown."
+  },
+  "ai": {
+    "importLink": "Import from a photo",
+    "translateButton": "Translate the menu",
+    "import": {
+      "title": "Import your paper menu",
+      "description": "Take photos of your menu (up to 6 pages). AI prepares a draft: you check it, fix it, then import.",
+      "pick": "Choose photos",
+      "photos": "{count, plural, one {# photo} other {# photos}} (6 at most)",
+      "remove": "Remove photo {index}",
+      "analyze": "Read the menu",
+      "analyzing": "Reading the menu… this takes 10 to 40 seconds.",
+      "left": "{count, plural, =0 {No imports left this month} one {# import left this month} other {# imports left this month}}",
+      "tips": "Tips: daylight, whole page, sharp and straight.",
+      "reviewTitle": "Check the draft",
+      "reviewDescription": "Nothing is published until you import. Untick what should not be on the menu.",
+      "category": "Category",
+      "product": "Dish",
+      "price": "Price",
+      "descriptionLabel": "Description",
+      "include": "Import {name}",
+      "check": "Check",
+      "priceInvalid": "Unreadable price: type it in.",
+      "printed": "Read: {text}",
+      "submit": "{count, plural, =0 {Nothing to import} one {Import # dish} other {Import # dishes}}",
+      "restart": "Start over",
+      "done": "{count, plural, one {# dish imported.} other {# dishes imported.}} Add photos and translations from the menu.",
+      "toMenu": "Go to the menu"
+    },
+    "translate": {
+      "title": "Translate the menu",
+      "description": "AI suggests the missing languages. Check them and untick what you don’t want.",
+      "loading": "Preparing translations…",
+      "nothing": "Everything is already translated into your menu’s languages.",
+      "source": "Original",
+      "accept": "Accept",
+      "apply": "{count, plural, =0 {No translations} one {Apply # translation} other {Apply # translations}}",
+      "cancel": "Close",
+      "applied": "{count, plural, one {# translation applied.} other {# translations applied.}}"
+    },
+    "errors": {
+      "quota": "Monthly AI quota reached for your plan. It renews on the 1st, or upgrade to Pro.",
+      "notConfigured": "AI is not enabled on this installation yet.",
+      "refused": "The photo could not be read. Try another, sharper photo, or type the menu in.",
+      "invalid": "The AI result was incomplete. Try again.",
+      "unavailable": "The AI service is not responding. Try again in a moment.",
+      "photos": "Add 1 to 6 JPEG, PNG or WebP photos.",
+      "failed": "That didn’t work. Try again."
+    }
   }
 }

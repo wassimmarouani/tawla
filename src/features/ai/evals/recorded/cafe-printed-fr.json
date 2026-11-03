@@ -1,0 +1,76 @@
+{
+  "model": "gemini-2.5-flash",
+  "raw": {
+    "language": "fr",
+    "categories": [
+      {
+        "name": "Boissons chaudes",
+        "items": [
+          {
+            "name": "Express",
+            "description": null,
+            "price": "1,800 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Capucin",
+            "description": null,
+            "price": "2,200 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Café direct",
+            "description": null,
+            "price": "2,800 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Thé à la menthe",
+            "description": null,
+            "price": "2,000 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Thé aux pignons",
+            "description": null,
+            "price": "5,500 DT",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "name": "Boissons fraîches",
+        "items": [
+          {
+            "name": "Citronnade",
+            "description": null,
+            "price": "3,500 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Jus d'orange pressé",
+            "description": null,
+            "price": "4,500 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Eau minérale",
+            "description": "0,5 L",
+            "price": "1,200 DT",
+            "confidence": "high"
+          },
+          {
+            "name": "Soda",
+            "description": null,
+            "price": "2,500 DT",
+            "confidence": "high"
+          }
+        ]
+      }
+    ]
+  },
+  "usage": {
+    "inputTokens": 470,
+    "outputTokens": 877
+  }
+}

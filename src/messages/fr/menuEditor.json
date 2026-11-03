@@ -239,5 +239,54 @@
     "reload": "Actualiser l’aperçu",
     "open": "Ouvrir le menu dans un onglet",
     "hint": "Mis à jour à chaque enregistrement. Les éléments masqués n’y figurent pas."
+  },
+  "ai": {
+    "importLink": "Importer depuis une photo",
+    "translateButton": "Traduire le menu",
+    "import": {
+      "title": "Importer votre menu papier",
+      "description": "Prenez en photo votre carte (jusqu’à 6 pages). L’IA prépare un brouillon : vous vérifiez, corrigez, puis importez.",
+      "pick": "Choisir des photos",
+      "photos": "{count, plural, one {# photo} other {# photos}} (6 au maximum)",
+      "remove": "Retirer la photo {index}",
+      "analyze": "Analyser le menu",
+      "analyzing": "Lecture du menu… cela prend 10 à 40 secondes.",
+      "left": "{count, plural, =0 {Plus d’import ce mois-ci} one {Encore # import ce mois-ci} other {Encore # imports ce mois-ci}}",
+      "tips": "Conseils : lumière du jour, page entière, photo nette et droite.",
+      "reviewTitle": "Vérifiez le brouillon",
+      "reviewDescription": "Rien n’est publié tant que vous n’importez pas. Décochez ce qui ne doit pas figurer au menu.",
+      "category": "Catégorie",
+      "product": "Plat",
+      "price": "Prix",
+      "descriptionLabel": "Description",
+      "include": "Importer {name}",
+      "check": "À vérifier",
+      "priceInvalid": "Prix illisible : saisissez-le.",
+      "printed": "Lu : {text}",
+      "submit": "{count, plural, =0 {Aucun plat à importer} one {Importer # plat} other {Importer # plats}}",
+      "restart": "Recommencer",
+      "done": "{count, plural, one {# plat importé.} other {# plats importés.}} Ajoutez photos et traductions depuis le menu.",
+      "toMenu": "Voir le menu"
+    },
+    "translate": {
+      "title": "Traduire le menu",
+      "description": "L’IA propose les langues manquantes. Vérifiez et décochez ce que vous ne voulez pas.",
+      "loading": "Préparation des traductions…",
+      "nothing": "Tout est déjà traduit dans les langues de votre menu.",
+      "source": "Original",
+      "accept": "Accepter",
+      "apply": "{count, plural, =0 {Aucune traduction} one {Appliquer # traduction} other {Appliquer # traductions}}",
+      "cancel": "Fermer",
+      "applied": "{count, plural, one {# traduction appliquée.} other {# traductions appliquées.}}"
+    },
+    "errors": {
+      "quota": "Quota IA du mois atteint pour votre formule. Il se renouvelle le 1er du mois, ou passez à Pro.",
+      "notConfigured": "L’IA n’est pas encore activée sur cette installation.",
+      "refused": "La photo n’a pas pu être lue. Essayez une autre photo, plus nette, ou saisissez le menu à la main.",
+      "invalid": "Le résultat de l’IA était incomplet. Réessayez.",
+      "unavailable": "Le service IA ne répond pas. Réessayez dans un instant.",
+      "photos": "Ajoutez 1 à 6 photos JPEG, PNG ou WebP.",
+      "failed": "L’action n’a pas abouti. Réessayez."
+    }
   }
 }

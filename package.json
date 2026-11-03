@@ -11,6 +11,7 @@
     "dev": "tsx scripts/build-sw.ts && next dev",
     "build": "tsx scripts/build-sw.ts && next build",
     "build:sw": "tsx scripts/build-sw.ts",
+    "ai:eval": "tsx --env-file=.env.local scripts/ai-eval.ts",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit && tsc --noEmit -p src/sw",
     "lint": "eslint --max-warnings=0 .",

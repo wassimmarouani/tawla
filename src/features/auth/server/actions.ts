@@ -95,10 +95,15 @@ export async function confirmRecovery(tokenHash: string): Promise<ActionResult> 
 export async function updatePassword(input: PasswordUpdate): Promise<ActionResult> {
   const parsed = passwordUpdateSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
-  if (!(await getSessionClaims())) redirect('/reset');
+  const claims = await getSessionClaims();
+  if (!claims) redirect('/reset');
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) return authFailure(error, 'password_update');
-  redirect('/dashboard');
+  // Invited counter/waiter staff work on the staff app, not the back-office.
+  const managesSomething = claims.memberships.some(
+    (membership) => membership.role === 'owner' || membership.role === 'manager',
+  );
+  redirect(claims.memberships.length > 0 && !managesSomething ? '/staff' : '/dashboard');
 }

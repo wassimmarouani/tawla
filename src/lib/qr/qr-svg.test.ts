@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import { describe, expect, it } from 'vitest';
-import { QR_QUIET_ZONE, qrSvg } from './qr';
+import { QR_QUIET_ZONE, qrSvg } from './qr-svg';
 
 describe('qrSvg', () => {
   it('draws every dark module once, inside the quiet zone', () => {

@@ -47,6 +47,17 @@ export async function withBackofficeAccess<T>(
   } catch (error) {
     if (error instanceof AppError) {
       const reason = typeof error.details?.reason === 'string' ? error.details.reason : undefined;
+      const fields = error.details?.fields;
+      if (fields && typeof fields === 'object') {
+        return {
+          ok: false,
+          error: {
+            code: error.code,
+            message: error.message,
+            details: { fields: fields as Record<string, string> },
+          },
+        };
+      }
       return actionError(error.code, error.message, reason);
     }
     log.error('backoffice.action_failed', { operation, cause: String(error) });

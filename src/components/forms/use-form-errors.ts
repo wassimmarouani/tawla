@@ -12,6 +12,9 @@ const FIELD_ERROR_KEYS = [
   'passwordMismatch',
   'tooLong',
   'priceInvalid',
+  'pairingCodeInvalid',
+  'alreadyInvited',
+  'alreadyRegistered',
 ] as const;
 type FieldErrorKey = (typeof FIELD_ERROR_KEYS)[number];
 
@@ -22,6 +25,8 @@ const REASON_KEYS = [
   'passwordWeak',
   'passwordSame',
   'linkExpired',
+  'notMember',
+  'invitationExpired',
   'unexpected',
 ] as const;
 export type ReasonKey = (typeof REASON_KEYS)[number];

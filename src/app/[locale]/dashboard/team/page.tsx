@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { SectionPlaceholder } from '@/features/backoffice';
+import { TeamScreen } from '@/features/staff';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('dashboard.sections.team');
@@ -8,5 +8,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function DashboardTeamPage() {
-  return <SectionPlaceholder section="team" />;
+  return <TeamScreen />;
 }

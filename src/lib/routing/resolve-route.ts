@@ -13,6 +13,7 @@ export const APP_SEGMENTS = [
   'login',
   'signup',
   'reset',
+  'invite',
   'dashboard',
   'staff',
   'admin',

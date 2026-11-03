@@ -29,7 +29,10 @@
       "passwordTooLong": "Mot de passe trop long.",
       "passwordMismatch": "Les mots de passe ne correspondent pas.",
       "tooLong": "Texte trop long.",
-      "priceInvalid": "Prix invalide. Ex. 3,5 ou 3.500."
+      "priceInvalid": "Prix invalide. Ex. 3,5 ou 3.500.",
+      "pairingCodeInvalid": "Code inconnu, déjà utilisé ou expiré. Demandez-en un nouveau.",
+      "alreadyInvited": "Une invitation est déjà en attente pour cette adresse.",
+      "alreadyRegistered": "Cette adresse a déjà un compte Tawla. Invitez une autre adresse pour le moment."
     },
     "pending": "Patientez…"
   }

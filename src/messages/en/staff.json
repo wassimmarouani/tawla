@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "pair": "Pair this device",
+    "login": "Staff sign-in",
+    "home": "Service"
+  },
+  "pair": {
+    "title": "Pair this device",
+    "description": "Enter the 8-character code shown in the dashboard, under Team.",
+    "code": "Pairing code",
+    "submit": "Pair device",
+    "help": "No code? Ask the manager to create one: it is valid for 10 minutes."
+  },
+  "login": {
+    "title": "Sign in",
+    "description": "Device “{device}” of {venue}.",
+    "submit": "Sign in"
+  },
+  "home": {
+    "title": "Ready for service",
+    "description": "Signed in on “{device}” as {role}.",
+    "next": "The service screen (calls, bills, availability) comes here.",
+    "logout": "Sign out",
+    "until": "Session until {time}"
+  }
+}

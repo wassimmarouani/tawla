@@ -4,8 +4,12 @@
  */
 export const ERROR_HTTP_STATUS = {
   VALIDATION_FAILED: 400,
+  /** Unknown, used or expired device pairing code. */
+  PAIRING_CODE_INVALID: 400,
   UNAUTHENTICATED: 401,
   SESSION_EXPIRED: 401,
+  /** Staff device cookie missing, unknown or revoked: back to /staff/pair (ADR-0010). */
+  DEVICE_NOT_PAIRED: 401,
   FORBIDDEN: 403,
   /** Bot check required before retrying (Turnstile, ADR-0011 §3). */
   CHALLENGE_REQUIRED: 403,

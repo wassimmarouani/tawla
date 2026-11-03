@@ -28,6 +28,7 @@ export default async function DashboardLayout({ children }: LayoutProps<'/[local
     'menuEditor',
     'onboarding',
     'tables',
+    'team',
   ]);
   const t = await getTranslations('dashboard');
   return (

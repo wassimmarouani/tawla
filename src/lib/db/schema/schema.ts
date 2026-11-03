@@ -26,6 +26,8 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
+export const deviceMode = pgEnum('device_mode', ['fixed', 'mobile']);
+
 export const mediaKind = pgEnum('media_kind', ['product', 'cover', 'logo', 'category']);
 
 export const membershipRole = pgEnum('membership_role', [
@@ -204,6 +206,52 @@ export const clientSessions = pgTable(
       table.tableSessionId.asc().nullsLast().op('uuid_ops'),
     ),
     unique('client_sessions_restaurant_id_id_key').on(table.id, table.restaurantId),
+  ],
+);
+
+export const devicePairingCodes = pgTable(
+  'device_pairing_codes',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    codeHash: text('code_hash').notNull(),
+    label: text().notNull(),
+    mode: deviceMode().notNull(),
+    createdBy: uuid('created_by'),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }).notNull(),
+    usedAt: timestamp('used_at', { withTimezone: true, mode: 'string' }),
+    deviceId: uuid('device_id'),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.createdBy],
+      foreignColumns: [users.id],
+      name: 'device_pairing_codes_created_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId, table.deviceId],
+      foreignColumns: [staffDevices.id, staffDevices.restaurantId],
+      name: 'device_pairing_codes_restaurant_id_device_id_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'device_pairing_codes_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('device_pairing_codes_expiry_idx').using(
+      'btree',
+      table.expiresAt.asc().nullsLast().op('timestamptz_ops'),
+    ),
+    unique('device_pairing_codes_restaurant_id_id_key').on(table.id, table.restaurantId),
+    uniqueIndex('device_pairing_codes_live_key')
+      .using('btree', table.codeHash.asc().nullsLast().op('text_ops'))
+      .where(sql`(used_at IS NULL)`),
   ],
 );
 
@@ -803,6 +851,50 @@ export const profiles = pgTable(
   ],
 );
 
+export const pushSubscriptions = pgTable(
+  'push_subscriptions',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    membershipId: uuid('membership_id').notNull(),
+    deviceId: uuid('device_id'),
+    endpoint: text().notNull(),
+    p256Dh: text().notNull(),
+    auth: text().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    lastSuccessAt: timestamp('last_success_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId, table.deviceId],
+      foreignColumns: [staffDevices.id, staffDevices.restaurantId],
+      name: 'push_subscriptions_restaurant_id_device_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.membershipId],
+      foreignColumns: [memberships.id, memberships.restaurantId],
+      name: 'push_subscriptions_restaurant_id_membership_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'push_subscriptions_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('push_subscriptions_membership_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.membershipId.asc().nullsLast().op('uuid_ops'),
+    ),
+    unique('push_subscriptions_endpoint_key').on(table.endpoint),
+    unique('push_subscriptions_restaurant_id_id_key').on(table.id, table.restaurantId),
+  ],
+);
+
 export const reservedSlugs = pgTable(
   'reserved_slugs',
   {
@@ -964,6 +1056,155 @@ export const slugRedirects = pgTable(
       table.restaurantId.asc().nullsLast().op('uuid_ops'),
     ),
     unique('slug_redirects_old_slug_key').on(table.oldSlug),
+  ],
+);
+
+export const staffDevices = pgTable(
+  'staff_devices',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    label: text().notNull(),
+    mode: deviceMode().default('mobile').notNull(),
+    tokenHash: text('token_hash').notNull(),
+    createdBy: uuid('created_by'),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true, mode: 'string' }),
+    revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'string' }),
+    revokedBy: uuid('revoked_by'),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.createdBy],
+      foreignColumns: [users.id],
+      name: 'staff_devices_created_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'staff_devices_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.revokedBy],
+      foreignColumns: [users.id],
+      name: 'staff_devices_revoked_by_fkey',
+    }).onDelete('set null'),
+    index('staff_devices_restaurant_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.createdAt.desc().nullsFirst().op('uuid_ops'),
+    ),
+    unique('staff_devices_restaurant_id_id_key').on(table.id, table.restaurantId),
+    unique('staff_devices_token_hash_key').on(table.tokenHash),
+  ],
+);
+
+export const staffInvitations = pgTable(
+  'staff_invitations',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    email: text().notNull(),
+    role: membershipRole().notNull(),
+    invitedBy: uuid('invited_by'),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' })
+      .default(sql`(now() + '7 days'::interval)`)
+      .notNull(),
+    acceptedAt: timestamp('accepted_at', { withTimezone: true, mode: 'string' }),
+    revokedAt: timestamp('revoked_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.invitedBy],
+      foreignColumns: [users.id],
+      name: 'staff_invitations_invited_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'staff_invitations_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('staff_invitations_email_idx')
+      .using('btree', table.email.asc().nullsLast().op('text_ops'))
+      .where(sql`((accepted_at IS NULL) AND (revoked_at IS NULL))`),
+    unique('staff_invitations_restaurant_id_id_key').on(table.id, table.restaurantId),
+    uniqueIndex('staff_invitations_pending_key')
+      .using(
+        'btree',
+        table.restaurantId.asc().nullsLast().op('uuid_ops'),
+        table.email.asc().nullsLast().op('text_ops'),
+      )
+      .where(sql`((accepted_at IS NULL) AND (revoked_at IS NULL))`),
+  ],
+);
+
+export const staffSessions = pgTable(
+  'staff_sessions',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    membershipId: uuid('membership_id').notNull(),
+    deviceId: uuid('device_id').notNull(),
+    userId: uuid('user_id').notNull(),
+    authSessionId: uuid('auth_session_id'),
+    startedAt: timestamp('started_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'string' }).notNull(),
+    endedAt: timestamp('ended_at', { withTimezone: true, mode: 'string' }),
+    endedBy: uuid('ended_by'),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.endedBy],
+      foreignColumns: [users.id],
+      name: 'staff_sessions_ended_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId, table.deviceId],
+      foreignColumns: [staffDevices.id, staffDevices.restaurantId],
+      name: 'staff_sessions_restaurant_id_device_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId, table.membershipId],
+      foreignColumns: [memberships.id, memberships.restaurantId],
+      name: 'staff_sessions_restaurant_id_membership_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'staff_sessions_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: 'staff_sessions_user_id_fkey',
+    }).onDelete('cascade'),
+    index('staff_sessions_active_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.endedAt.asc().nullsLast().op('uuid_ops'),
+      table.expiresAt.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('staff_sessions_device_idx')
+      .using('btree', table.deviceId.asc().nullsLast().op('uuid_ops'))
+      .where(sql`(ended_at IS NULL)`),
+    index('staff_sessions_user_idx').using('btree', table.userId.asc().nullsLast().op('uuid_ops')),
+    unique('staff_sessions_restaurant_id_id_key').on(table.id, table.restaurantId),
   ],
 );
 

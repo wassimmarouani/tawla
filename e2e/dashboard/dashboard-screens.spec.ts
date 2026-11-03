@@ -41,6 +41,8 @@ const COPY = {
 
 async function check(page: Page, name: string, capture: string | null) {
   await page.evaluate(() => document.fonts.ready);
+  // Metadata streams with the page (Cache Components): axe needs the final <title>.
+  await expect(page).toHaveTitle(/\S/);
   expect(await horizontalOverflow(page), `${name} horizontal overflow`).toBe(0);
   const viewport = page.viewportSize();
   if (viewport && viewport.width < 1024) {

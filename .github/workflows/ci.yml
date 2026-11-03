@@ -56,11 +56,16 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # A tarball keeps .next/node_modules symlinks (Next.js links external packages such as
+      # sharp into the pnpm store); upload-artifact would turn them into copies without their
+      # dependencies.
+      - name: Pack build
+        run: tar -cf next-build.tar .next
+
       - uses: actions/upload-artifact@v6
         with:
           name: next-build
-          path: .next
-          include-hidden-files: true
+          path: next-build.tar
           retention-days: 1
 
   database:
@@ -123,7 +128,9 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: next-build
-          path: .next
+
+      - name: Unpack build
+        run: tar -xf next-build.tar
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium webkit

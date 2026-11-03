@@ -3,8 +3,6 @@
 import { z } from 'zod';
 import { AppError, validationError, type ActionResult } from '@/lib/errors';
 import { storageConfig } from '@/server/admin/env';
-import { MediaRejectedError } from '@/server/admin/media/process-image';
-import { createUploadTicket, processUpload } from '@/server/admin/media/storage';
 import { loadEditorMedia, type EditorMedia } from '../queries/editor-menu';
 import {
   availabilitySchema,
@@ -44,6 +42,22 @@ import { runEditorAction, withEditorAccess } from './scope';
 /* Menu editor Server Actions (P1-05, spec 04). Each validates its input with Zod (rule 3). */
 
 const idSchema = z.uuid();
+
+/**
+ * The media pipeline loads sharp, a native module: imported on demand so that a failure there
+ * only affects photo uploads, never the rest of the editor.
+ */
+async function loadMediaPipeline() {
+  const [storage, processing] = await Promise.all([
+    import('@/server/admin/media/storage'),
+    import('@/server/admin/media/process-image'),
+  ]);
+  return {
+    createUploadTicket: storage.createUploadTicket,
+    processUpload: storage.processUpload,
+    MediaRejectedError: processing.MediaRejectedError,
+  };
+}
 const optionalIdSchema = idSchema.nullable();
 
 export async function saveCategory(
@@ -199,6 +213,7 @@ export async function requestImageUpload(
   const parsed = uploadKindSchema.safeParse(kind);
   if (!parsed.success) return validationError(parsed.error);
   return withEditorAccess('media.ticket', async ({ restaurant }) => {
+    const { createUploadTicket } = await loadMediaPipeline();
     const ticket = await createUploadTicket(storageConfig(), restaurant.id);
     return { path: ticket.path, signedUrl: ticket.signedUrl };
   });
@@ -212,6 +227,7 @@ export async function processImage(input: {
   const parsed = processUploadSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
   return withEditorAccess('media.process', async ({ scope, restaurant }) => {
+    const { processUpload, MediaRejectedError } = await loadMediaPipeline();
     let mediaId: string;
     try {
       mediaId = await processUpload(

@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { parseMoneyInput } from '@/lib/money';
+import { ROUNDING_STEPS, parseMoneyInput } from '@/lib/money';
 import { scheduleSchema } from '@/lib/schedule';
-import { ROUNDING_STEPS } from '../services/bulk-price';
 import { i18nTextSchema } from './i18n-text';
 
 /** Database ceiling for a product price: 10 000 DT in millimes (catches typos). */

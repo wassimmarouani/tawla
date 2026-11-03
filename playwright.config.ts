@@ -48,6 +48,8 @@ export default defineConfig({
       NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
       DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
+      // The local Supabase CLI's fixed development key (not a secret).
+      SUPABASE_SECRET_KEY: 'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz',
     },
   },
 });

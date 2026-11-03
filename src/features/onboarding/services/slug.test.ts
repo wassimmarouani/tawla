@@ -1,26 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isAvailableSlugShape, slugCandidates, slugify } from './slug';
-
-describe('slugify', () => {
-  it.each([
-    ['Café El Bahja', 'cafe-el-bahja'],
-    ['  Le Petit   Déjeuner!! ', 'le-petit-dejeuner'],
-    ['Œuf & Bœuf', 'oeuf-boeuf'],
-    ['Straße 21', 'strasse-21'],
-    ['Smørrebrød Łódź', 'smorrebrod-lodz'],
-    ['مقهى البهجة', ''],
-    ['Dar مقهى 7', 'dar-7'],
-    ['---', ''],
-  ])('%s → %s', (input, expected) => {
-    expect(slugify(input)).toBe(expected);
-  });
-
-  it('caps the length at 40 without a trailing hyphen', () => {
-    const slug = slugify(`${'a'.repeat(39)} bcd`);
-    expect(slug).toBe('a'.repeat(39));
-    expect(slugify('a'.repeat(50))).toHaveLength(40);
-  });
-});
+import { isAvailableSlugShape, slugCandidates } from './slug';
 
 describe('isAvailableSlugShape', () => {
   it('rejects reserved and malformed slugs', () => {

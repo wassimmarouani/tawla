@@ -2,6 +2,7 @@ export { DEFAULT_DAY_CUTOFF_MINUTES, businessDate } from './services/business-da
 export { selectActiveRestaurant } from './services/active-restaurant';
 export type { ActiveRestaurant, MembershipRef } from './services/active-restaurant';
 export type {
+  ActiveTenantRestaurant,
   TenantContext,
   TenantContextResult,
   TenantRestaurant,

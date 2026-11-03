@@ -26,8 +26,29 @@
   },
   "unavailable": "Unavailable",
   "service": {
-    "callWaiter": "Call waiter",
-    "bill": "Bill, please"
+    "region": "Table service",
+    "callWaiter": "Call the waiter",
+    "callAgain": "Call again",
+    "bill": "The bill",
+    "sending": "Sending…",
+    "waiterWaiting": "Staff notified",
+    "waiterClaimed": "Waiter on the way",
+    "billWaiting": "Bill requested",
+    "billClaimed": "Bill on the way",
+    "statusWaiterWaiting": "The staff have been notified. A waiter will be with you shortly.",
+    "statusWaiterClaimed": "A waiter took your call and is on the way.",
+    "statusBillWaiting": "Bill requested ({method}). The staff have been notified.",
+    "statusBillClaimed": "A waiter is bringing your bill ({method}).",
+    "retryIn": "Call again in {time}",
+    "payQuestion": "How would you like to pay?",
+    "cash": "Cash",
+    "card": "Card",
+    "cancel": "Cancel",
+    "offline": "No connection. Check the Wi-Fi or mobile data, then try again.",
+    "failed": "That didn’t go through. Try again in a moment.",
+    "cooldown": "Already requested for this table. You can try again in {time}.",
+    "challenge": "The security check failed. Reload the page, then try again.",
+    "blocked": "Requests are paused on this phone. Please ask the staff."
   },
   "meta": {
     "title": "{name} · Menu",
@@ -91,5 +112,20 @@
   "tableNotFound": {
     "title": "This QR code is no longer valid",
     "description": "It may have been replaced. Ask the staff, or look at the venue’s menu."
+  },
+  "feedback": {
+    "title": "How was your visit?",
+    "rating": "Your rating",
+    "star": "{count, plural, one {# star out of 5} other {# stars out of 5}}",
+    "comment": "A word for the team? (optional)",
+    "commentHint": "Only the management reads it.",
+    "send": "Send",
+    "sending": "Sending…",
+    "later": "Later",
+    "thanks": "Thank you for your feedback!",
+    "review": "Leave a Google review",
+    "reviewHint": "Enjoyed it? A Google review really helps the venue.",
+    "failed": "That didn’t go through. Try again.",
+    "close": "Close"
   }
 }

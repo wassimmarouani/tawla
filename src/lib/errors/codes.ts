@@ -7,6 +7,8 @@ export const ERROR_HTTP_STATUS = {
   UNAUTHENTICATED: 401,
   SESSION_EXPIRED: 401,
   FORBIDDEN: 403,
+  /** Bot check required before retrying (Turnstile, ADR-0011 §3). */
+  CHALLENGE_REQUIRED: 403,
   ORDERING_DISABLED: 403,
   PLAN_LIMIT_REACHED: 403,
   NOT_FOUND: 404,

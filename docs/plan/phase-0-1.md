@@ -425,6 +425,8 @@
   - a call shows the claimed state when staff claims it.
 - DoD screenshots, axe, reduced-motion check.
 
+**Note (2026-11-03):** staff claims are simulated in SQL in the E2E journeys until the staff screen (P1-12) can claim. The customer table lookup (`getPublicTable`, `TableNotFound`) moved from `features/tables` to `features/table-service`: importing the back-office tables feature put its editor in the customer bundle (309 KB → 145 KB). The demo seed adds 12 tables to Café El Bahja with fixed tokens (`pnpm demo:info`).
+
 ### P1-11 — Device pairing, staff accounts (Basic), push plumbing, SW · M
 
 **Deliverables**

@@ -1,9 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { scheduleSchema } from '@/lib/schedule';
-import { DEMO_ACCOUNTS, DEMO_PASSWORD, DEMO_RESTAURANTS } from './demo';
+import { DEMO_ACCOUNTS, DEMO_PASSWORD, DEMO_RESTAURANTS, DEMO_TABLES } from './demo';
 
 const seed = readFileSync(new URL('../../supabase/seed.sql', import.meta.url), 'utf8');
+const tablesSeed = readFileSync(
+  new URL('../../supabase/seeds/30_tables_el_bahja.sql', import.meta.url),
+  'utf8',
+);
 
 describe('demo seed', () => {
   it('matches the constants used by scripts and tests', () => {
@@ -14,6 +18,10 @@ describe('demo seed', () => {
     for (const [slug, restaurant] of Object.entries(DEMO_RESTAURANTS)) {
       expect(seed).toContain(`'${slug}', '${restaurant.publicId}', '${restaurant.name}'`);
     }
+    DEMO_TABLES['cafe-el-bahja'].forEach((token, index) => {
+      expect(token).toMatch(/^[A-Za-z0-9_-]{22}$/);
+      expect(tablesSeed).toContain(`${String(index + 1)}, '${token}')`);
+    });
   });
 
   it('seeds opening schedules that pass the shared schedule schema', () => {

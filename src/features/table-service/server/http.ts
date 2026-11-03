@@ -2,9 +2,11 @@ import 'server-only';
 import { NextResponse, type NextRequest } from 'next/server';
 import type { z } from 'zod';
 import { clientIp } from '@/lib/http/client-ip';
+import { env } from '@/lib/env';
 import { AppError, toErrorBody } from '@/lib/errors';
 import { log } from '@/lib/log';
 import { RATE_RULES, rateLimiter, type RateRule } from '@/lib/rate-limit';
+import { verifyTurnstile } from '@/lib/security/turnstile';
 import {
   CLIENT_SESSION_COOKIE,
   verifyClientSession,
@@ -15,6 +17,23 @@ import {
  * Shared plumbing of the public Route Handlers (ADR-0016): per-IP limits, Zod-validated
  * bodies, the signed session cookie and the `{ code, message, details? }` error contract.
  */
+
+/**
+ * Anomaly heuristic (ADR-0011 §3): past a softer per-IP rate, opening a session needs a
+ * verified Turnstile token. A normal café never sees the challenge.
+ */
+export async function requireHumanOnAnomaly(
+  request: NextRequest,
+  turnstileToken: string | undefined,
+): Promise<void> {
+  const ip = clientIp(request.headers);
+  const result = await rateLimiter().hit(RATE_RULES.sessionAnomaly, ip);
+  if (result.ok) return;
+  const verified =
+    turnstileToken !== undefined &&
+    (await verifyTurnstile(env.TURNSTILE_SECRET_KEY, turnstileToken, ip === 'unknown' ? null : ip));
+  if (!verified) throw new AppError('CHALLENGE_REQUIRED', 'Turnstile token required');
+}
 
 /** Per-IP limits; a café shares one IP, so these only stop floods. */
 export async function limitByIp(

@@ -116,7 +116,7 @@ test('20 tables print as tents whose QR codes open each table; regenerating kill
   expect(await sessions()).toBe(1);
   const call = (key: string) =>
     page.request.post('/api/public/service-requests', {
-      data: { kind: 'waiter' },
+      data: { token, kind: 'waiter' },
       headers: { 'Idempotency-Key': key },
     });
   const first = await call('e2e-key-0001');

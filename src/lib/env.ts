@@ -21,6 +21,11 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
     /** Scales every rate limit; E2E suites log in hundreds of times from one IP. */
     RATE_LIMIT_MULTIPLIER: z.coerce.number().int().min(1).max(1000).default(1),
+    /**
+     * Cloudflare Turnstile, asked only when the anomaly heuristic fires (ADR-0011 §3). Defaults
+     * are Cloudflare's public test keys (always pass); hosted envs set real ones (P1-17).
+     */
+    TURNSTILE_SECRET_KEY: z.string().min(1).default('1x0000000000000000000000000000000AA'),
     ENABLE_DEV_ROUTES: z
       .enum(['true', 'false'])
       .default('false')
@@ -32,6 +37,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: z.url(),
     /** Publishable (formerly anon) key: safe in the browser, RLS applies (ADR-0024). */
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().startsWith('sb_publishable_'),
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1).default('1x00000000000000000000BB'),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -41,11 +47,13 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     RATE_LIMIT_MULTIPLIER: process.env.RATE_LIMIT_MULTIPLIER,
+    TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     ENABLE_DEV_ROUTES: process.env.ENABLE_DEV_ROUTES,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },
   emptyStringAsUndefined: true,
   skipValidation: process.env.SKIP_ENV_VALIDATION === 'true',

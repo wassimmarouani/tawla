@@ -15,6 +15,8 @@ export const RATE_RULES = {
   publicIp: { name: 'public.ip', limit: 120, windowSeconds: 60 },
   /** Session opens per IP (QR scans that actually interact). */
   sessionOpen: { name: 'public.session', limit: 30, windowSeconds: 60 },
+  /** Anomaly heuristic: past this, opening a session needs a Turnstile token (ADR-0011 §3). */
+  sessionAnomaly: { name: 'public.session.anomaly', limit: 20, windowSeconds: 60 },
   /** Auth Server Actions per IP and per email (Supabase sees only our server's IP). */
   authIp: { name: 'auth.ip', limit: 30, windowSeconds: 600 },
   authEmail: { name: 'auth.email', limit: 8, windowSeconds: 600 },

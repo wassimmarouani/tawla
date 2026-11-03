@@ -1,4 +1,21 @@
 export {
+  barReducer,
+  formatCountdown,
+  initialBarState,
+  needsLiveUpdates,
+  secondsLeft,
+} from './services/service-bar';
+export type {
+  BarAction,
+  BarState,
+  KindState,
+  PaymentMethod,
+  RequestKind,
+  RequestSnapshot,
+  RequestStatus,
+  SessionState,
+} from './services/service-bar';
+export {
   FEEDBACK_PER_SESSION,
   REQUEST_COOLDOWN_SECONDS,
   cooldownRemaining,
@@ -13,6 +30,7 @@ export {
   menuViewSchema,
   openSessionSchema,
   serviceRequestSchema,
+  sessionQuerySchema,
   tableTokenSchema,
 } from './schemas/table-service';
 export type { ServiceRequestInput } from './schemas/table-service';
@@ -26,4 +44,14 @@ export {
   verifyClientSession,
 } from './server/client-cookie';
 export type { ClientSessionClaims } from './server/client-cookie';
-export { errorResponse, limitByIp, readJson, requireClientSession } from './server/http';
+export {
+  errorResponse,
+  limitByIp,
+  readJson,
+  requireClientSession,
+  requireHumanOnAnomaly,
+} from './server/http';
+export { TableServiceBar } from './components/table-service-bar';
+export { TableNotFound } from './components/table-not-found';
+export { getPublicTable } from './queries/public-table';
+export type { PublicTable } from './queries/public-table';

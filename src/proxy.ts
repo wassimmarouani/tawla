@@ -10,6 +10,10 @@ import { refreshProxySession, type ProxySession } from '@/lib/supabase/proxy';
 
 const handleMarketing = createIntlMiddleware(routing);
 const SUPABASE_ORIGIN = new URL(env.NEXT_PUBLIC_SUPABASE_URL).origin;
+/** Realtime websockets (ADR-0008): ws:// locally, wss:// in hosted envs. */
+const REALTIME_ORIGIN = SUPABASE_ORIGIN.replace(/^http/, 'ws');
+/** Turnstile script and challenge frame, customer menu only (ADR-0011 §3). */
+const TURNSTILE_ORIGIN = 'https://challenges.cloudflare.com';
 
 /** Surfaces whose Supabase session is refreshed here (ADR-0017). */
 const SESSION_SEGMENTS: ReadonlySet<string> = new Set(['dashboard', 'admin', 'staff', 'reset']);
@@ -59,9 +63,12 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
     isHttps: env.NEXT_PUBLIC_APP_URL.startsWith('https://'),
     // Menu images are served by Supabase Storage (ADR-0018).
     imageSources: [SUPABASE_ORIGIN],
-    // The back-office uploads photo originals to signed Storage URLs (ADR-0018). Realtime
-    // websockets are added with the first subscriber (P1-09).
-    connectSources: decision.surface === 'app' ? [SUPABASE_ORIGIN] : [],
+    // The back-office uploads photo originals to signed Storage URLs (ADR-0018); staff and
+    // customers receive Realtime broadcasts (ADR-0008).
+    connectSources: decision.surface === 'marketing' ? [] : [SUPABASE_ORIGIN, REALTIME_ORIGIN],
+    ...(decision.surface === 'customer'
+      ? { scriptSources: [TURNSTILE_ORIGIN], frameSources: [TURNSTILE_ORIGIN] }
+      : {}),
   });
   for (const [name, value] of Object.entries(headers)) response.headers.set(name, value);
   return response;

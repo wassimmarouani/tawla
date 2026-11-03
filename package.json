@@ -43,6 +43,7 @@
     "@dnd-kit/utilities": "3.2.2",
     "@hookform/resolvers": "5.9.1",
     "@leeoniya/ufuzzy": "1.0.19",
+    "@supabase/realtime-js": "2.118.0",
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.118.0",
     "@t3-oss/env-nextjs": "0.13.11",

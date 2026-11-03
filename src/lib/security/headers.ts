@@ -9,6 +9,10 @@ export interface SecurityHeaderOptions {
   connectSources?: readonly string[];
   /** Extra origins images may load from (Supabase Storage). */
   imageSources?: readonly string[];
+  /** Extra script origins (Turnstile on the customer menu). */
+  scriptSources?: readonly string[];
+  /** Origins allowed in frames (Turnstile's challenge iframe). */
+  frameSources?: readonly string[];
 }
 
 /**
@@ -23,7 +27,7 @@ export interface SecurityHeaderOptions {
 export function buildSecurityHeaders(options: SecurityHeaderOptions): Record<string, string> {
   const { isHttps, isProduction, surface } = options;
   const connect = ["'self'", ...(options.connectSources ?? [])];
-  const scripts = ["'self'", "'unsafe-inline'"];
+  const scripts = ["'self'", "'unsafe-inline'", ...(options.scriptSources ?? [])];
   if (!isProduction) {
     // React development builds use eval for stack reconstruction; Turbopack HMR uses websockets.
     scripts.push("'unsafe-eval'");
@@ -37,6 +41,7 @@ export function buildSecurityHeaders(options: SecurityHeaderOptions): Record<str
     'img-src': ["'self'", 'data:', 'blob:', ...(options.imageSources ?? [])],
     'font-src': ["'self'"],
     'connect-src': connect,
+    'frame-src': ["'self'", ...(options.frameSources ?? [])],
     'manifest-src': ["'self'"],
     'worker-src': ["'self'"],
     'object-src': ["'none'"],

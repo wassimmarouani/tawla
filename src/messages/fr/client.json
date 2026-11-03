@@ -26,8 +26,29 @@
   },
   "unavailable": "Indisponible",
   "service": {
+    "region": "Service à table",
     "callWaiter": "Appeler le serveur",
-    "bill": "L’addition"
+    "callAgain": "Rappeler le serveur",
+    "bill": "L’addition",
+    "sending": "Envoi…",
+    "waiterWaiting": "Serveur prévenu",
+    "waiterClaimed": "Le serveur arrive",
+    "billWaiting": "Addition demandée",
+    "billClaimed": "L’addition arrive",
+    "statusWaiterWaiting": "Le personnel est prévenu. Un serveur arrive dans un instant.",
+    "statusWaiterClaimed": "Un serveur a pris votre appel, il arrive.",
+    "statusBillWaiting": "Addition demandée ({method}). Le personnel est prévenu.",
+    "statusBillClaimed": "Un serveur vous apporte l’addition ({method}).",
+    "retryIn": "Nouvel appel dans {time}",
+    "payQuestion": "Comment souhaitez-vous payer ?",
+    "cash": "Espèces",
+    "card": "Carte bancaire",
+    "cancel": "Annuler",
+    "offline": "Pas de connexion. Vérifiez le Wi-Fi ou les données mobiles, puis réessayez.",
+    "failed": "L’envoi n’a pas abouti. Réessayez dans un instant.",
+    "cooldown": "Déjà demandé pour cette table. Nouvel essai possible dans {time}.",
+    "challenge": "La vérification de sécurité a échoué. Rechargez la page, puis réessayez.",
+    "blocked": "Les demandes sont suspendues sur ce téléphone. Adressez-vous au personnel."
   },
   "meta": {
     "title": "{name} · Menu",
@@ -91,5 +112,20 @@
   "tableNotFound": {
     "title": "Ce QR code n’est plus valide",
     "description": "Il a peut-être été remplacé. Demandez au personnel ou consultez le menu de l’établissement."
+  },
+  "feedback": {
+    "title": "Comment s’est passé votre moment ?",
+    "rating": "Votre note",
+    "star": "{count, plural, one {# étoile sur 5} other {# étoiles sur 5}}",
+    "comment": "Un mot pour l’équipe ? (facultatif)",
+    "commentHint": "Lu uniquement par la gérance.",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "later": "Plus tard",
+    "thanks": "Merci pour votre avis !",
+    "review": "Laisser un avis sur Google",
+    "reviewHint": "Vous avez aimé ? Un avis Google aide beaucoup l’établissement.",
+    "failed": "L’envoi n’a pas abouti. Réessayez.",
+    "close": "Fermer"
   }
 }

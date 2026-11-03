@@ -126,6 +126,7 @@ function ProductCard({
       className="relative flex flex-col rounded-md bg-card p-1.5 shadow-sm has-focus-visible:ring-2 has-focus-visible:ring-ring"
       data-available={available}
       data-product=""
+      data-product-id={product.id}
       data-tags={filterTags(product)}
     >
       <div className="relative aspect-square overflow-hidden rounded-sm bg-muted">
@@ -203,6 +204,7 @@ function ProductRow({
       className="relative py-3 has-focus-visible:ring-2 has-focus-visible:ring-ring"
       data-available={available}
       data-product=""
+      data-product-id={product.id}
       data-tags={filterTags(product)}
     >
       <div className="flex items-end gap-2">

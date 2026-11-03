@@ -11,23 +11,32 @@ test.beforeEach(async ({ context }, testInfo) => {
   await context.addCookies([{ name: 'NEXT_LOCALE', value: 'fr', domain: 'localhost', path: '/' }]);
 });
 
-async function logInAsOwner(page: Page) {
+async function logInAsOwner(page: Page, account: 'owner' | 'pizzeriaOwner' = 'owner') {
   await page.goto('/login');
-  await page.getByLabel('Adresse e-mail', { exact: true }).fill(DEMO_ACCOUNTS.owner.email);
+  await page.getByLabel('Adresse e-mail', { exact: true }).fill(DEMO_ACCOUNTS[account].email);
   await page.getByLabel('Mot de passe', { exact: true }).fill(DEMO_PASSWORD);
   await page.getByRole('button', { name: 'Se connecter' }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Café El Bahja' })).toBeVisible();
+  const venue = account === 'owner' ? 'Café El Bahja' : 'Pizzeria Test';
+  await expect(page.getByRole('heading', { level: 1, name: venue })).toBeVisible();
 }
 
 test('the overview shows the menu size and the getting-started checklist', async ({ page }) => {
-  await logInAsOwner(page);
+  // Pizzeria Test has a menu but no tables yet: the checklist is still open.
+  await logInAsOwner(page, 'pizzeriaOwner');
   await expect(page.getByRole('heading', { level: 2, name: 'Mise en route' })).toBeVisible();
   await expect(page.getByRole('progressbar', { name: 'Mise en route' })).toBeVisible();
   await expect(page.getByText(/\d+ plats?, \d+ catégories?/)).toBeVisible();
   await expect(page.getByRole('link', { name: /Voir le menu/ })).toHaveAttribute(
     'href',
-    '/cafe-el-bahja',
+    '/pizzeria-test',
   );
+});
+
+test('a fully set-up venue no longer shows the checklist', async ({ page }) => {
+  // Café El Bahja has its menu, branding and tables (demo seed).
+  await logInAsOwner(page);
+  await expect(page.getByText(/\d+ plats?, \d+ catégories?/)).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: 'Mise en route' })).toHaveCount(0);
 });
 
 test('the visible section navigation reaches every section and marks the current one', async ({

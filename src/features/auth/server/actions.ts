@@ -17,15 +17,18 @@ import {
   type PasswordUpdate,
 } from '../schemas/auth';
 import { authFailure } from './auth-errors';
+import { authThrottle } from '@/lib/auth/throttle';
 
 /**
- * Owner/manager authentication (ADR-0010 §1, P0-11). Auth requests are throttled by Supabase
- * Auth's own limits until lib/rate-limit lands (P1-09).
+ * Owner/manager authentication (ADR-0010 §1, P0-11). Attempts are limited per IP and per email
+ * before reaching Supabase Auth (authThrottle, P1-09).
  */
 
 export async function logIn(input: LogIn, next?: string): Promise<ActionResult> {
   const parsed = logInSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
+  const throttled = await authThrottle(parsed.data.email);
+  if (throttled) return throttled;
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
@@ -43,6 +46,8 @@ export async function logOut(): Promise<void> {
 export async function resendConfirmation(email: string): Promise<ActionResult> {
   const parsed = emailSchema.safeParse(email);
   if (!parsed.success) return validationError(parsed.error);
+  const throttled = await authThrottle(parsed.data);
+  if (throttled) return throttled;
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.resend({
@@ -60,6 +65,8 @@ export async function resendConfirmation(email: string): Promise<ActionResult> {
 export async function requestPasswordReset(input: PasswordResetRequest): Promise<ActionResult> {
   const parsed = passwordResetRequestSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
+  const throttled = await authThrottle(parsed.data.email);
+  if (throttled) return throttled;
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {

@@ -22,6 +22,8 @@ env:
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
   DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
   SUPABASE_SECRET_KEY: sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
+  # Test-only signing key for the customer session cookie (not a production secret).
+  CLIENT_SESSION_SECRET: local-development-client-session-secret-0123456789
   NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:

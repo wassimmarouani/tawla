@@ -100,6 +100,36 @@ test('20 tables print as tents whose QR codes open each table; regenerating kill
   await expect(page.getByText('Table 1', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { level: 1, name: 'Café QR' })).toBeVisible();
 
+  // ADR-0011: opening the table menu (GET) creates no session.
+  const token = new URL(url ?? '').pathname.split('/').at(-1) ?? '';
+  const { apiUrl, secretKey } = localSupabase();
+  const admin = createClient(apiUrl, secretKey, { auth: { persistSession: false } });
+  const sessions = async () => {
+    const { data } = await admin.from('tables').select('id, table_sessions(id)').eq('token', token);
+    return data?.[0]?.table_sessions.length ?? -1;
+  };
+  expect(await sessions()).toBe(0);
+
+  // Public API (P1-09): join the table, call the waiter once per key, then the cooldown.
+  const opened = await page.request.post('/api/public/sessions', { data: { token } });
+  expect(opened.status()).toBe(201);
+  expect(await sessions()).toBe(1);
+  const call = (key: string) =>
+    page.request.post('/api/public/service-requests', {
+      data: { kind: 'waiter' },
+      headers: { 'Idempotency-Key': key },
+    });
+  const first = await call('e2e-key-0001');
+  const replay = await call('e2e-key-0001');
+  expect(first.status()).toBe(201);
+  expect(((await replay.json()) as { id: string }).id).toBe(
+    ((await first.json()) as { id: string }).id,
+  );
+  const throttled = await call('e2e-key-0002');
+  expect(throttled.status()).toBe(429);
+  expect(Number(throttled.headers()['retry-after'])).toBeGreaterThan(0);
+  expect(((await throttled.json()) as { code: string }).code).toBe('RATE_LIMITED');
+
   // A new QR for table 1: the old URL fails at once.
   await page.goto('/dashboard/tables');
   await page.getByRole('button', { name: 'Actions de la table 1', exact: true }).click();

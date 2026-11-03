@@ -407,6 +407,8 @@
   - tenant isolation on all new tables.
 - Realtime: a request creation reaches a subscribed staff client.
 
+**Note (2026-11-03):** two parts move with their first consumer. The Turnstile challenge on anomaly ships with the customer UI that renders the widget (P1-10). The unclaimed-request escalation route needs Web Push and ships with P1-11/P1-12. `notification_receipts` and `notification_incidents` exist from P1-09.
+
 ### P1-10 — Customer service-request UI, feedback, live availability · M
 
 **Deliverables**

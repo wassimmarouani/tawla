@@ -1,12 +1,19 @@
 import 'server-only';
-import { and, eq, inArray, isNull, max, ne, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull, max, ne, sql } from 'drizzle-orm';
 import type { z } from 'zod';
 import type { SessionClaims } from '@/lib/auth/claims';
 import { withRls, type DbTransaction } from '@/lib/db/rls';
-import { categories, productOptionGroups, products } from '@/lib/db/schema/schema';
+import {
+  categories,
+  optionGroups,
+  options,
+  productOptionGroups,
+  products,
+} from '@/lib/db/schema/schema';
 import { AppError } from '@/lib/errors';
 import type { RoundingStep } from '@/lib/money';
 import type { categoryInputSchema, productInputSchema } from '../schemas/menu-editor';
+import type { optionGroupInputSchema } from '../schemas/options';
 import { MAX_PRODUCT_PRICE } from '../schemas/menu-editor';
 import { previewPriceChanges, type PriceChange } from '../services/bulk-price';
 import { productSlug, sortOrders } from '../services/menu-text';
@@ -23,6 +30,7 @@ export interface EditorScope {
 
 type CategoryValues = z.output<typeof categoryInputSchema>;
 type ProductValues = z.output<typeof productInputSchema>;
+type OptionGroupValues = z.output<typeof optionGroupInputSchema>;
 
 const ORDER_STEP = 10;
 
@@ -191,10 +199,14 @@ export async function createProduct(scope: EditorScope, values: ProductValues): 
         mediaId: values.mediaId,
         isAvailable: values.isAvailable,
         isVisible: values.isVisible,
+        badges: values.badges,
+        allergens: values.allergens,
+        dietary: values.dietary,
         sortOrder: (last?.value ?? 0) + ORDER_STEP,
       })
       .returning({ id: products.id });
     if (!row) throw new AppError('INTERNAL', 'Product insert returned no row');
+    await replaceOptionLinks(tx, scope, row.id, values.optionLinks);
     return row.id;
   });
 }
@@ -216,10 +228,14 @@ export async function updateProduct(
         mediaId: values.mediaId,
         isAvailable: values.isAvailable,
         isVisible: values.isVisible,
+        badges: values.badges,
+        allergens: values.allergens,
+        dietary: values.dietary,
       })
       .where(activeProduct(scope, [id]))
       .returning({ id: products.id });
     expectAll(rows.length, 1, 'Product');
+    await replaceOptionLinks(tx, scope, id, values.optionLinks);
   });
 }
 
@@ -319,7 +335,9 @@ export async function adjustProductPrices(
       .from(products)
       .where(activeProduct(scope, ids));
     expectAll(current.length, ids.length, 'Product');
-    const changes = previewPriceChanges(current, basisPoints, step, MAX_PRODUCT_PRICE).filter(
+    // Report changes in the order the caller listed them (the UI's order).
+    const ordered = ids.flatMap((id) => current.filter((row) => row.id === id));
+    const changes = previewPriceChanges(ordered, basisPoints, step, MAX_PRODUCT_PRICE).filter(
       (change) => change.after !== change.before,
     );
     for (const change of changes) {
@@ -423,8 +441,205 @@ export async function duplicateProducts(
 }
 
 // ---------------------------------------------------------------------------
+// Option groups (ADR-0014)
+// ---------------------------------------------------------------------------
+
+/**
+ * Creates or updates a reusable option group with its options in the given order: known ids
+ * are updated, new ones inserted, missing ones soft-deleted.
+ */
+export async function saveOptionGroup(
+  scope: EditorScope,
+  id: string | null,
+  values: OptionGroupValues,
+): Promise<string> {
+  return withRls(scope.claims, async (tx) => {
+    let groupId: string;
+    if (id === null) {
+      const [row] = await tx
+        .insert(optionGroups)
+        .values({
+          restaurantId: scope.restaurantId,
+          name: values.name,
+          minSelect: values.minSelect,
+          maxSelect: values.maxSelect,
+        })
+        .returning({ id: optionGroups.id });
+      if (!row) throw new AppError('INTERNAL', 'Option group insert returned no row');
+      groupId = row.id;
+    } else {
+      const rows = await tx
+        .update(optionGroups)
+        .set({ name: values.name, minSelect: values.minSelect, maxSelect: values.maxSelect })
+        .where(activeOptionGroup(scope, id))
+        .returning({ id: optionGroups.id });
+      expectAll(rows.length, 1, 'Option group');
+      groupId = id;
+    }
+
+    const existing = await tx
+      .select({ id: options.id })
+      .from(options)
+      .where(
+        and(
+          eq(options.restaurantId, scope.restaurantId),
+          eq(options.optionGroupId, groupId),
+          isNull(options.deletedAt),
+        ),
+      );
+    const known = new Set(existing.map((row) => row.id));
+    const kept = new Set<string>();
+    for (const [index, option] of values.options.entries()) {
+      const fields = {
+        name: option.name,
+        priceDelta: option.priceDelta,
+        isAvailable: option.isAvailable,
+        sortOrder: (index + 1) * ORDER_STEP,
+      };
+      if (option.id === null) {
+        await tx
+          .insert(options)
+          .values({ ...fields, restaurantId: scope.restaurantId, optionGroupId: groupId });
+        continue;
+      }
+      if (!known.has(option.id)) throw notFound('Option');
+      kept.add(option.id);
+      const rows = await tx
+        .update(options)
+        .set(fields)
+        .where(and(eq(options.restaurantId, scope.restaurantId), eq(options.id, option.id)))
+        .returning({ id: options.id });
+      expectAll(rows.length, 1, 'Option');
+    }
+    const removed = [...known].filter((optionId) => !kept.has(optionId));
+    if (removed.length > 0) {
+      const now = await transactionNow(tx);
+      await tx
+        .update(options)
+        .set({ deletedAt: now })
+        .where(and(eq(options.restaurantId, scope.restaurantId), inArray(options.id, removed)));
+    }
+    return groupId;
+  });
+}
+
+/** Soft-deletes a group: products keep their links, the public menu stops showing it. */
+export async function deleteOptionGroup(scope: EditorScope, id: string): Promise<void> {
+  await withRls(scope.claims, async (tx) => {
+    const now = await transactionNow(tx);
+    const rows = await tx
+      .update(optionGroups)
+      .set({ deletedAt: now })
+      .where(activeOptionGroup(scope, id))
+      .returning({ id: optionGroups.id });
+    expectAll(rows.length, 1, 'Option group');
+  });
+}
+
+export async function restoreOptionGroup(scope: EditorScope, id: string): Promise<void> {
+  await withRls(scope.claims, async (tx) => {
+    const rows = await tx
+      .update(optionGroups)
+      .set({ deletedAt: null })
+      .where(
+        and(
+          eq(optionGroups.restaurantId, scope.restaurantId),
+          eq(optionGroups.id, id),
+          isNotNull(optionGroups.deletedAt),
+        ),
+      )
+      .returning({ id: optionGroups.id });
+    expectAll(rows.length, 1, 'Option group');
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+function activeOptionGroup(scope: EditorScope, id: string) {
+  return and(
+    eq(optionGroups.restaurantId, scope.restaurantId),
+    eq(optionGroups.id, id),
+    isNull(optionGroups.deletedAt),
+  );
+}
+
+/**
+ * Replaces a product's option links (order = display order). Overrides must leave the
+ * effective rules valid (max ≥ min); price overrides of unknown options are dropped.
+ */
+async function replaceOptionLinks(
+  tx: DbTransaction,
+  scope: EditorScope,
+  productId: string,
+  links: ProductValues['optionLinks'],
+): Promise<void> {
+  const groupIds = links.map((link) => link.optionGroupId);
+  const groups =
+    groupIds.length === 0
+      ? []
+      : await tx
+          .select({
+            id: optionGroups.id,
+            minSelect: optionGroups.minSelect,
+            maxSelect: optionGroups.maxSelect,
+          })
+          .from(optionGroups)
+          .where(
+            and(
+              eq(optionGroups.restaurantId, scope.restaurantId),
+              inArray(optionGroups.id, groupIds),
+              isNull(optionGroups.deletedAt),
+            ),
+          );
+  expectAll(groups.length, groupIds.length, 'Option group');
+  const optionRows =
+    groupIds.length === 0
+      ? []
+      : await tx
+          .select({ id: options.id, groupId: options.optionGroupId })
+          .from(options)
+          .where(
+            and(
+              eq(options.restaurantId, scope.restaurantId),
+              inArray(options.optionGroupId, groupIds),
+              isNull(options.deletedAt),
+            ),
+          );
+
+  await tx
+    .delete(productOptionGroups)
+    .where(
+      and(
+        eq(productOptionGroups.restaurantId, scope.restaurantId),
+        eq(productOptionGroups.productId, productId),
+      ),
+    );
+  for (const [index, link] of links.entries()) {
+    const group = groups.find((candidate) => candidate.id === link.optionGroupId);
+    if (!group) throw notFound('Option group');
+    if ((link.maxSelect ?? group.maxSelect) < (link.minSelect ?? group.minSelect)) {
+      throw new AppError('VALIDATION_FAILED', 'Overrides leave max below min', {
+        reason: 'minAboveMax',
+      });
+    }
+    const known = new Set(
+      optionRows.filter((row) => row.groupId === group.id).map((row) => row.id),
+    );
+    await tx.insert(productOptionGroups).values({
+      restaurantId: scope.restaurantId,
+      productId,
+      optionGroupId: group.id,
+      sortOrder: (index + 1) * ORDER_STEP,
+      minSelect: link.minSelect,
+      maxSelect: link.maxSelect,
+      priceOverrides: Object.fromEntries(
+        Object.entries(link.priceOverrides).filter(([optionId]) => known.has(optionId)),
+      ),
+    });
+  }
+}
 
 function activeCategory(scope: EditorScope, ids: readonly string[]) {
   return and(

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ALLERGENS, BADGES, DIETARY } from '@/lib/menu/attributes';
 import { LOCALES } from '@/i18n/locales';
 import { scheduleSchema } from '@/lib/schedule';
 
@@ -45,25 +46,6 @@ export const publicOptionGroupSchema = z.object({
   options: z.array(publicOptionSchema),
 });
 export type PublicOptionGroup = z.infer<typeof publicOptionGroupSchema>;
-
-export const BADGES = ['new', 'popular', 'house', 'seasonal'] as const;
-export const ALLERGENS = [
-  'gluten',
-  'crustaceans',
-  'eggs',
-  'fish',
-  'peanuts',
-  'soy',
-  'milk',
-  'nuts',
-  'celery',
-  'mustard',
-  'sesame',
-  'sulphites',
-  'lupin',
-  'molluscs',
-] as const;
-export const DIETARY = ['vegetarian', 'vegan', 'gluten_free', 'spicy'] as const;
 
 export const publicProductSchema = z.object({
   id: z.uuid(),

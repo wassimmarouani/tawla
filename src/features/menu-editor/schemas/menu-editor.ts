@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import { ROUNDING_STEPS, parseMoneyInput } from '@/lib/money';
 import { scheduleSchema } from '@/lib/schedule';
+import { ALLERGENS, BADGES, DIETARY } from '@/lib/menu/attributes';
 import { i18nTextSchema } from './i18n-text';
+import { optionLinkFormSchema, optionLinkInputSchema, optionLinksSchema } from './options';
 
 /** Database ceiling for a product price: 10 000 DT in millimes (catches typos). */
 export const MAX_PRODUCT_PRICE = 10_000_000;
@@ -15,6 +17,13 @@ const idListSchema = z
   .min(1)
   .max(MAX_BATCH)
   .refine((ids) => new Set(ids).size === ids.length, { message: 'duplicate' });
+
+function uniqueList<T extends z.ZodType<string>>(item: T) {
+  return z
+    .array(item)
+    .max(20)
+    .refine((values) => new Set(values).size === values.length, { message: 'duplicate' });
+}
 
 export const categoryInputSchema = z.object({
   name: i18nTextSchema(80, true),
@@ -35,6 +44,11 @@ export const productInputSchema = z.object({
   mediaId: idSchema.nullable(),
   isAvailable: z.boolean(),
   isVisible: z.boolean(),
+  badges: uniqueList(z.enum(BADGES)),
+  allergens: uniqueList(z.enum(ALLERGENS)),
+  dietary: uniqueList(z.enum(DIETARY)),
+  /** Option groups in display order, with product-level overrides (ADR-0014 §2). */
+  optionLinks: optionLinksSchema(optionLinkInputSchema),
 });
 export type ProductInput = z.input<typeof productInputSchema>;
 
@@ -53,7 +67,10 @@ export const priceTextSchema = z.string().transform((value, context) => {
 });
 
 /** Product form values: same as the input, with the price as typed. */
-export const productFormSchema = productInputSchema.extend({ price: priceTextSchema });
+export const productFormSchema = productInputSchema.extend({
+  price: priceTextSchema,
+  optionLinks: optionLinksSchema(optionLinkFormSchema),
+});
 export type ProductForm = z.input<typeof productFormSchema>;
 
 export const idsSchema = z.object({ ids: idListSchema });

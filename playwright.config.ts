@@ -50,6 +50,9 @@ export default defineConfig({
       DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',
       // The local Supabase CLI's fixed development key (not a secret).
       SUPABASE_SECRET_KEY: 'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz',
+      CLIENT_SESSION_SECRET: 'local-development-client-session-secret-0123456789',
+      // Hundreds of logins from one IP per run.
+      RATE_LIMIT_MULTIPLIER: '100',
     },
   },
 });

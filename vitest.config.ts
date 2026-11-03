@@ -53,6 +53,7 @@ export default defineConfig({
             NEXT_PUBLIC_APP_NAME: 'Tawla',
             NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
             NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
+            CLIENT_SESSION_SECRET: 'local-development-client-session-secret-0123456789',
           },
         },
       },
@@ -68,6 +69,9 @@ export default defineConfig({
         'src/lib/db/**',
         'src/lib/supabase/**',
         'src/lib/auth/session.ts',
+        // Adapter selection from env; the adapters themselves are unit-tested.
+        'src/lib/rate-limit/index.ts',
+        'src/lib/auth/throttle.ts',
       ],
       // CLAUDE.md rule 9: ≥ 90 % on business logic.
       thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },

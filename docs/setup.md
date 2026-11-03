@@ -74,6 +74,7 @@ Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or 
 | `CRON_SECRET`                                                          | server + Supabase Vault             | random 32 bytes                                                                 |
 | `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`                                   | server                              | random 32 bytes base64                                                          |
 | `UPSTASH_REDIS_REST_URL` / `_TOKEN`                                    | server                              | empty locally → in-memory limiter adapter (same interface)                      |
+| `RATE_LIMIT_MULTIPLIER`                                                | server                              | `1` (default); Playwright uses `100` (hundreds of logins from one IP)           |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | public / server                     | `pnpm dlx web-push generate-vapid-keys`                                         |
 | `ANTHROPIC_API_KEY`                                                    | server                              | developer's own key, low spend limit; AI tests use recorded fixtures by default |
 | `AI_MODEL_EXTRACT` / `AI_MODEL_TRANSLATE`                              | server                              | `claude-sonnet-5-5` / `claude-haiku-5-5`                                        |

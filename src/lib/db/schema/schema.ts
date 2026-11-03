@@ -6,6 +6,7 @@ import { authUsers as users } from 'drizzle-orm/supabase';
 export { users as usersInAuth };
 import {
   boolean,
+  date,
   foreignKey,
   index,
   inet,
@@ -14,6 +15,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   smallint,
   text,
   timestamp,
@@ -34,6 +36,8 @@ export const membershipRole = pgEnum('membership_role', [
   'station',
 ]);
 
+export const paymentMethod = pgEnum('payment_method', ['cash', 'card']);
+
 export const platformRole = pgEnum('platform_role', ['none', 'super_admin', 'support']);
 
 export const restaurantStatus = pgEnum('restaurant_status', ['active', 'read_only', 'suspended']);
@@ -46,12 +50,27 @@ export const restaurantType = pgEnum('restaurant_type', [
   'fast_food',
 ]);
 
+export const serviceRequestKind = pgEnum('service_request_kind', ['waiter', 'bill']);
+
+export const serviceRequestStatus = pgEnum('service_request_status', [
+  'open',
+  'claimed',
+  'done',
+  'cancelled',
+]);
+
 export const subscriptionStatus = pgEnum('subscription_status', [
   'trial',
   'active',
   'past_due',
   'suspended',
   'cancelled',
+]);
+
+export const tableSessionStatus = pgEnum('table_session_status', [
+  'open',
+  'bill_requested',
+  'closed',
 ]);
 
 export const auditLogs = pgTable(
@@ -150,6 +169,44 @@ export const categories = pgTable(
   ],
 );
 
+export const clientSessions = pgTable(
+  'client_sessions',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    tableSessionId: uuid('table_session_id').notNull(),
+    deviceId: text('device_id').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    lastSeenAt: timestamp('last_seen_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    blockedUntil: timestamp('blocked_until', { withTimezone: true, mode: 'string' }),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId, table.tableSessionId],
+      foreignColumns: [tableSessions.id, tableSessions.restaurantId],
+      name: 'client_sessions_restaurant_id_table_session_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'client_sessions_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('client_sessions_table_session_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.tableSessionId.asc().nullsLast().op('uuid_ops'),
+    ),
+    unique('client_sessions_restaurant_id_id_key').on(table.id, table.restaurantId),
+  ],
+);
+
 export const featureOverrides = pgTable(
   'feature_overrides',
   {
@@ -186,6 +243,68 @@ export const featureOverrides = pgTable(
       table.restaurantId,
       table.featureKey,
     ),
+  ],
+);
+
+export const feedbacks = pgTable(
+  'feedbacks',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    tableSessionId: uuid('table_session_id'),
+    rating: smallint().notNull(),
+    comment: text(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId, table.tableSessionId],
+      foreignColumns: [tableSessions.id, tableSessions.restaurantId],
+      name: 'feedbacks_restaurant_id_table_session_id_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'feedbacks_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('feedbacks_restaurant_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.createdAt.desc().nullsFirst().op('timestamptz_ops'),
+    ),
+  ],
+);
+
+export const idempotencyKeys = pgTable(
+  'idempotency_keys',
+  {
+    restaurantId: uuid('restaurant_id').notNull(),
+    scope: text().notNull(),
+    key: text().notNull(),
+    response: jsonb().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'idempotency_keys_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('idempotency_keys_created_idx').using(
+      'btree',
+      table.createdAt.asc().nullsLast().op('timestamptz_ops'),
+    ),
+    primaryKey({
+      columns: [table.restaurantId, table.scope, table.key],
+      name: 'idempotency_keys_pkey',
+    }),
   ],
 );
 
@@ -256,6 +375,125 @@ export const memberships = pgTable(
     index('memberships_user_id_idx').using('btree', table.userId.asc().nullsLast().op('uuid_ops')),
     unique('memberships_restaurant_id_id_key').on(table.id, table.restaurantId),
     unique('memberships_restaurant_id_user_id_key').on(table.restaurantId, table.userId),
+  ],
+);
+
+export const menuViewDaily = pgTable(
+  'menu_view_daily',
+  {
+    restaurantId: uuid('restaurant_id').notNull(),
+    day: date().notNull(),
+    views: integer().notNull(),
+    tableViews: integer('table_views').notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'menu_view_daily_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    primaryKey({ columns: [table.restaurantId, table.day], name: 'menu_view_daily_pkey' }),
+  ],
+);
+
+export const menuViews = pgTable(
+  'menu_views',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    tableId: uuid('table_id'),
+    viewedAt: timestamp('viewed_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId, table.tableId],
+      foreignColumns: [tables.id, tables.restaurantId],
+      name: 'menu_views_restaurant_id_table_id_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'menu_views_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('menu_views_restaurant_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.viewedAt.asc().nullsLast().op('timestamptz_ops'),
+    ),
+  ],
+);
+
+export const notificationIncidents = pgTable(
+  'notification_incidents',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    eventId: uuid('event_id').notNull(),
+    eventKind: text('event_kind').notNull(),
+    kind: text().notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    resolvedAt: timestamp('resolved_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'notification_incidents_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('notification_incidents_restaurant_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.createdAt.desc().nullsFirst().op('timestamptz_ops'),
+    ),
+    unique('notification_incidents_event_id_kind_key').on(table.eventId, table.kind),
+  ],
+);
+
+export const notificationReceipts = pgTable(
+  'notification_receipts',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    eventId: uuid('event_id').notNull(),
+    eventKind: text('event_kind').notNull(),
+    userId: uuid('user_id').notNull(),
+    deviceId: text('device_id').notNull(),
+    receivedAt: timestamp('received_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'notification_receipts_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: 'notification_receipts_user_id_fkey',
+    }).onDelete('cascade'),
+    index('notification_receipts_restaurant_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.receivedAt.asc().nullsLast().op('timestamptz_ops'),
+    ),
+    unique('notification_receipts_event_id_user_id_device_id_key').on(
+      table.eventId,
+      table.userId,
+      table.deviceId,
+    ),
   ],
 );
 
@@ -635,6 +873,73 @@ export const restaurants = pgTable(
   ],
 );
 
+export const serviceRequests = pgTable(
+  'service_requests',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    tableSessionId: uuid('table_session_id').notNull(),
+    clientSessionId: uuid('client_session_id'),
+    kind: serviceRequestKind().notNull(),
+    paymentMethod: paymentMethod('payment_method'),
+    status: serviceRequestStatus().default('open').notNull(),
+    claimedBy: uuid('claimed_by'),
+    claimedAt: timestamp('claimed_at', { withTimezone: true, mode: 'string' }),
+    doneAt: timestamp('done_at', { withTimezone: true, mode: 'string' }),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    version: integer().default(1).notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.claimedBy],
+      foreignColumns: [users.id],
+      name: 'service_requests_claimed_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId, table.clientSessionId],
+      foreignColumns: [clientSessions.id, clientSessions.restaurantId],
+      name: 'service_requests_restaurant_id_client_session_id_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId, table.tableSessionId],
+      foreignColumns: [tableSessions.id, tableSessions.restaurantId],
+      name: 'service_requests_restaurant_id_table_session_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'service_requests_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('service_requests_client_session_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.clientSessionId.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('service_requests_open_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('enum_ops'),
+      table.status.asc().nullsLast().op('uuid_ops'),
+      table.createdAt.asc().nullsLast().op('uuid_ops'),
+    ),
+    index('service_requests_session_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('enum_ops'),
+      table.tableSessionId.asc().nullsLast().op('enum_ops'),
+      table.kind.asc().nullsLast().op('enum_ops'),
+      table.createdAt.desc().nullsFirst().op('timestamptz_ops'),
+    ),
+    unique('service_requests_restaurant_id_id_key').on(table.id, table.restaurantId),
+  ],
+);
+
 export const slugRedirects = pgTable(
   'slug_redirects',
   {
@@ -748,6 +1053,62 @@ export const tables = pgTable(
         table.number.asc().nullsLast().op('uuid_ops'),
       )
       .where(sql`(deleted_at IS NULL)`),
+  ],
+);
+
+export const tableSessions = pgTable(
+  'table_sessions',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    tableId: uuid('table_id').notNull(),
+    publicId: text('public_id')
+      .default(sql`random_token()`)
+      .notNull(),
+    status: tableSessionStatus().default('open').notNull(),
+    openedAt: timestamp('opened_at', { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+    lastActivityAt: timestamp('last_activity_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    closedAt: timestamp('closed_at', { withTimezone: true, mode: 'string' }),
+    closedBy: uuid('closed_by'),
+    paymentMethod: paymentMethod('payment_method'),
+    version: integer().default(1).notNull(),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.closedBy],
+      foreignColumns: [users.id],
+      name: 'table_sessions_closed_by_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId, table.tableId],
+      foreignColumns: [tables.id, tables.restaurantId],
+      name: 'table_sessions_restaurant_id_table_id_fkey',
+    }).onDelete('cascade'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'table_sessions_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('table_sessions_activity_idx').using(
+      'btree',
+      table.status.asc().nullsLast().op('timestamptz_ops'),
+      table.lastActivityAt.asc().nullsLast().op('enum_ops'),
+    ),
+    index('table_sessions_restaurant_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('timestamptz_ops'),
+      table.openedAt.desc().nullsFirst().op('timestamptz_ops'),
+    ),
+    unique('table_sessions_public_id_key').on(table.publicId),
+    unique('table_sessions_restaurant_id_id_key').on(table.id, table.restaurantId),
+    uniqueIndex('table_sessions_one_open_key')
+      .using('btree', table.tableId.asc().nullsLast().op('uuid_ops'))
+      .where(sql`(status <> 'closed'::table_session_status)`),
   ],
 );
 

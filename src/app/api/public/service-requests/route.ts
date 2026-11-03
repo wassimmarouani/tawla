@@ -1,0 +1,34 @@
+import { NextResponse, type NextRequest } from 'next/server';
+import {
+  REQUEST_COOLDOWN_SECONDS,
+  errorResponse,
+  idempotencyKeySchema,
+  limitByIp,
+  readJson,
+  requireClientSession,
+  serviceRequestSchema,
+} from '@/features/table-service';
+import { AppError } from '@/lib/errors';
+import { createServiceRequest } from '@/server/admin/table-service';
+
+/** POST /api/public/service-requests: "Call waiter" / "Request bill" (idempotent, cooldowns). */
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  try {
+    await limitByIp(request);
+    const session = await requireClientSession(request);
+    const key = idempotencyKeySchema.safeParse(request.headers.get('idempotency-key'));
+    if (!key.success) throw new AppError('VALIDATION_FAILED', 'Idempotency-Key header required');
+    const input = await readJson(request, serviceRequestSchema);
+    const created = await createServiceRequest({
+      restaurantId: session.r,
+      clientSessionId: session.cs,
+      kind: input.kind,
+      paymentMethod: input.paymentMethod,
+      idempotencyKey: key.data,
+      cooldownSeconds: REQUEST_COOLDOWN_SECONDS,
+    });
+    return NextResponse.json(created, { status: 201, headers: { 'Cache-Control': 'no-store' } });
+  } catch (error) {
+    return errorResponse(error, 'service_requests.create');
+  }
+}

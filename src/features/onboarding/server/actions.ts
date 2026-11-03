@@ -4,6 +4,7 @@ import { randomInt } from 'node:crypto';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { authFailure, tokenHashSchema } from '@/features/auth';
+import { authThrottle } from '@/lib/auth/throttle';
 import { LOCALES } from '@/i18n/locales';
 import { getSessionClaims } from '@/lib/auth/session';
 import { env } from '@/lib/env';
@@ -20,6 +21,8 @@ export async function signUp(input: SignUp): Promise<ActionResult> {
   const parsed = signUpSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
   const { email, password, fullName, locale, venueName, venueType } = parsed.data;
+  const throttled = await authThrottle(email);
+  if (throttled) return throttled;
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.signUp({

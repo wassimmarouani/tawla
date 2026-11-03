@@ -14,6 +14,13 @@ export const env = createEnv({
     /** Postgres URL (Supavisor transaction pooler in hosted envs). Used by src/lib/db only. */
     DATABASE_URL: z.url(),
     /** Enables /dev/* design prototypes. Never set in staging or production. */
+    /** HS256 key of the customer session cookie (ADR-0011): 32+ random characters. */
+    CLIENT_SESSION_SECRET: z.string().min(32),
+    /** Rate limits (ADR-0011 §7); both empty locally → in-memory adapter. */
+    UPSTASH_REDIS_REST_URL: z.url().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().min(1).optional(),
+    /** Scales every rate limit; E2E suites log in hundreds of times from one IP. */
+    RATE_LIMIT_MULTIPLIER: z.coerce.number().int().min(1).max(1000).default(1),
     ENABLE_DEV_ROUTES: z
       .enum(['true', 'false'])
       .default('false')
@@ -30,6 +37,10 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     APP_DOMAIN: process.env.APP_DOMAIN,
     DATABASE_URL: process.env.DATABASE_URL,
+    CLIENT_SESSION_SECRET: process.env.CLIENT_SESSION_SECRET,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+    RATE_LIMIT_MULTIPLIER: process.env.RATE_LIMIT_MULTIPLIER,
     ENABLE_DEV_ROUTES: process.env.ENABLE_DEV_ROUTES,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,

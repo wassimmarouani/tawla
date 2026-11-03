@@ -21,6 +21,7 @@ env:
   NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
   DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+  SUPABASE_SECRET_KEY: sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
   NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:
@@ -55,11 +56,12 @@ jobs:
       - name: Build
         run: pnpm build
 
+
+
       - uses: actions/upload-artifact@v7
         with:
           name: next-build
-          path: .next
-          include-hidden-files: true
+          path: next-build.tar
           retention-days: 1
 
   database:
@@ -122,7 +124,9 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: next-build
-          path: .next
+
+      - name: Unpack build
+        run: tar -xf next-build.tar
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium webkit

@@ -59,6 +59,9 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
     isHttps: env.NEXT_PUBLIC_APP_URL.startsWith('https://'),
     // Menu images are served by Supabase Storage (ADR-0018).
     imageSources: [SUPABASE_ORIGIN],
+    // The back-office uploads photo originals to signed Storage URLs (ADR-0018). Realtime
+    // websockets are added with the first subscriber (P1-09).
+    connectSources: decision.surface === 'app' ? [SUPABASE_ORIGIN] : [],
   });
   for (const [name, value] of Object.entries(headers)) response.headers.set(name, value);
   return response;

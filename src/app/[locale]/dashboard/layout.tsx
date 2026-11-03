@@ -6,6 +6,7 @@ import { Logo } from '@/components/brand/logo';
 import { LoadingRegion } from '@/components/states/loading-region';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Toaster } from '@/components/ui/sonner';
 import { UserMenu, logOut } from '@/features/auth';
 import { CommandPalette, NavLinks, dashboardNavigation } from '@/features/backoffice';
 import { RestaurantSwitcher, getTenantContext, switchRestaurant } from '@/features/tenancy';
@@ -20,13 +21,26 @@ import { DashboardNoRestaurant } from './_components/dashboard-no-restaurant';
  * account), sidebar from 1024 px, bottom tab bar on phones and tablets.
  */
 export default async function DashboardLayout({ children }: LayoutProps<'/[locale]/dashboard'>) {
-  const messages = await clientMessages(['auth', 'common', 'dashboard', 'onboarding']);
+  const messages = await clientMessages([
+    'auth',
+    'common',
+    'dashboard',
+    'menuEditor',
+    'onboarding',
+  ]);
   const t = await getTranslations('dashboard');
   return (
     <NextIntlClientProvider messages={messages}>
       <Suspense fallback={<DashboardSkeleton label={t('loading')} />}>
         <DashboardFrame>{children}</DashboardFrame>
       </Suspense>
+      {/* Above the tab bar on phones and tablets (--tabbar-clearance, globals.css). */}
+      <Toaster
+        position="bottom-center"
+        containerAriaLabel={t('notifications')}
+        offset={{ bottom: 'calc(var(--tabbar-clearance) + 1rem)' }}
+        mobileOffset={{ bottom: 'calc(var(--tabbar-clearance) + 1rem)' }}
+      />
     </NextIntlClientProvider>
   );
 }

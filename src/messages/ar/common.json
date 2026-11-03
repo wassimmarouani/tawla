@@ -28,7 +28,8 @@
       "passwordTooShort": "10 أحرف على الأقل.",
       "passwordTooLong": "كلمة المرور طويلة جدًا.",
       "passwordMismatch": "كلمتا المرور غير متطابقتين.",
-      "tooLong": "النص طويل جدًا."
+      "tooLong": "النص طويل جدًا.",
+      "priceInvalid": "سعر غير صالح. مثلًا 3,5 أو 3.500."
     },
     "pending": "يرجى الانتظار…"
   }

@@ -28,7 +28,8 @@
       "passwordTooShort": "At least 10 characters.",
       "passwordTooLong": "Password too long.",
       "passwordMismatch": "Passwords do not match.",
-      "tooLong": "Text too long."
+      "tooLong": "Text too long.",
+      "priceInvalid": "Invalid price. E.g. 3.5 or 3,500."
     },
     "pending": "Please wait…"
   }

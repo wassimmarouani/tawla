@@ -101,5 +101,6 @@
       "title": "Settings",
       "description": "Hours, languages, appearance and links."
     }
-  }
+  },
+  "notifications": "Notifications"
 }

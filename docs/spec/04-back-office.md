@@ -38,7 +38,12 @@ A progress checklist stays on the dashboard until onboarding is complete. Steps 
 - **Live preview:** a mobile preview (iframe of the real customer menu, draft mode) next to the editor, updated as you type.
 - **Price history:** every change is kept (`price_history`). Orders keep the price at the time of purchase.
 - **AI translation:** translate missing languages in one click with the business glossary (monthly quota on Basic). Results shown as suggestions to accept.
-- Destructive actions can be undone for 5 seconds (toast "Undo") instead of a confirmation dialog.
+- Destructive actions can be undone for 5 seconds (toast "Undo") instead of a confirmation dialog. Exception: deleting a category, which removes its products too, asks first and then still offers undo.
+- **Editor (P1-05):** one page lists categories and products in menu order with three modes: _browse_ (edit, availability switch, actions menu), _select_ (bulk bar: price %, hide, show, duplicate, delete) and _reorder_ (drag handles; keyboard: Space, arrows, Space). Products open a full-page form (`/dashboard/menu/products/new|<id>`): photo, name and description per enabled language with a missing-translation dot, price as typed, category, available and visible switches.
+- **Bulk price change:** percentage from −90 % to +200 % (two decimals), rounded half-up to 0.010, 0.050, 0.100 (default), 0.500 or 1.000 DT, in integer millimes; a paid product never becomes free. The preview lists every new price before anything is saved.
+- **Product slugs** (`?p=` on the public menu) come from the French name, else English, else `item`, with `-2`, `-3`… when taken; a restored product whose slug was reused gets a new one.
+- **Deletion is soft** (`deleted_at`): a category and the products deleted with it share one timestamp, so undo restores exactly those.
+- **Serving hours** of a category show on the public menu next to its title ("Servi lun. – sam., 07:00–11:00").
 
 ## Tables and QR codes
 

@@ -2,6 +2,7 @@ import 'server-only';
 import { and, asc, eq, inArray, isNull } from 'drizzle-orm';
 import { z } from 'zod';
 import { can, type TenantRole } from '@/features/auth';
+import { LOCALES, isLocale, type Locale } from '@/i18n/locales';
 import type { SessionClaims } from '@/lib/auth/claims';
 import { withRls } from '@/lib/db/rls';
 import { featureOverrides, plans, restaurants, subscriptions } from '@/lib/db/schema/schema';
@@ -15,10 +16,18 @@ export interface TenantRestaurant {
   status: 'active' | 'read_only' | 'suspended';
 }
 
+/** The active restaurant, with what menu editing needs (cache tags, enabled languages). */
+export interface ActiveTenantRestaurant extends TenantRestaurant {
+  publicId: string;
+  defaultLocale: Locale;
+  /** Enabled menu languages, default first. */
+  locales: Locale[];
+}
+
 export interface TenantContext {
   userId: string;
   role: TenantRole;
-  restaurant: TenantRestaurant;
+  restaurant: ActiveTenantRestaurant;
   /** Restaurants the user can open in the back-office (restaurant switcher). */
   restaurants: TenantRestaurant[];
   planCode: string | null;
@@ -63,6 +72,9 @@ export async function loadTenantContext(
         slug: restaurants.slug,
         status: restaurants.status,
         settings: restaurants.settings,
+        publicId: restaurants.publicId,
+        defaultLocale: restaurants.defaultLocale,
+        locales: restaurants.locales,
       })
       .from(restaurants)
       .where(and(inArray(restaurants.id, eligibleIds), isNull(restaurants.deletedAt)))
@@ -110,13 +122,34 @@ export async function loadTenantContext(
       context: {
         userId: claims.sub,
         role: selection.role,
-        restaurant: { id: active.id, name: active.name, slug: active.slug, status: active.status },
+        restaurant: {
+          id: active.id,
+          name: active.name,
+          slug: active.slug,
+          status: active.status,
+          publicId: active.publicId,
+          ...menuLocales(active.defaultLocale, active.locales),
+        },
         restaurants: list,
         planCode: subscription?.code ?? null,
         flags,
       },
     };
   });
+}
+
+/** Enabled locales with the default first; unknown values are ignored, French as last resort. */
+function menuLocales(
+  defaultValue: string,
+  values: readonly string[],
+): { defaultLocale: Locale; locales: Locale[] } {
+  const enabled = LOCALES.filter((locale) => values.includes(locale));
+  const defaultLocale =
+    isLocale(defaultValue) && enabled.includes(defaultValue) ? defaultValue : (enabled[0] ?? 'fr');
+  return {
+    defaultLocale,
+    locales: [defaultLocale, ...enabled.filter((locale) => locale !== defaultLocale)],
+  };
 }
 
 function toDate(value: string | null): Date | null {

@@ -10,5 +10,9 @@ export async function openCommandPalette(page: Page) {
     if (!(await palette.isVisible())) await page.keyboard.press('Control+k');
     await expect(palette).toBeVisible({ timeout: 1_000 });
   }).toPass();
+  // Contrast checks must not run mid fade-in.
+  await palette.evaluate((element) =>
+    Promise.all(element.getAnimations({ subtree: true }).map((animation) => animation.finished)),
+  );
   return palette;
 }

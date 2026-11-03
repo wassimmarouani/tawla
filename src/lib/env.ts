@@ -30,7 +30,7 @@ export const env = createEnv({
     GEMINI_API_KEY: z.string().min(20).optional(),
     AI_MODEL_EXTRACT: z.string().min(1).default('gemini-2.5-flash'),
     AI_MODEL_TRANSLATE: z.string().min(1).default('gemini-2.5-flash'),
-    /** E2E and keyless local demos: recorded AI answers instead of the API. Ignored in production. */
+    /** E2E and keyless local demos: recorded AI answers instead of the API. Ignored over HTTPS. */
     AI_RECORDED_RESPONSES: z
       .enum(['true', 'false'])
       .default('false')

@@ -22,8 +22,11 @@ export interface AiScope {
   actorId: string;
 }
 
-/** Recorded answers (E2E, keyless demos) never apply in production. */
-const recorded = env.AI_RECORDED_RESPONSES && env.NODE_ENV !== 'production';
+/**
+ * Recorded answers (E2E, keyless demos) never apply to a hosted environment: those are served
+ * over HTTPS. E2E runs the production build on http://localhost, hence no NODE_ENV check.
+ */
+const recorded = env.AI_RECORDED_RESPONSES && !env.NEXT_PUBLIC_APP_URL.startsWith('https://');
 
 function provider(model: string) {
   if (recorded) return { apiKey: 'recorded', model, fetcher: recordedFetcher };

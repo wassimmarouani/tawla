@@ -27,6 +27,7 @@ export default async function DashboardLayout({ children }: LayoutProps<'/[local
     'dashboard',
     'menuEditor',
     'onboarding',
+    'tables',
   ]);
   const t = await getTranslations('dashboard');
   return (
@@ -64,8 +65,8 @@ async function DashboardFrame({ children }: { children: ReactNode }) {
   }));
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/90 pt-safe backdrop-blur-md">
+    <div className="flex min-h-dvh flex-col print:min-h-0">
+      <header className="sticky top-0 z-30 border-b border-border bg-background/90 pt-safe backdrop-blur-md print:hidden">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-gutter sm:gap-4">
           <Link
             href="/dashboard"
@@ -113,12 +114,12 @@ async function DashboardFrame({ children }: { children: ReactNode }) {
       </header>
 
       <div className="mx-auto flex w-full max-w-7xl flex-1">
-        <aside className="hidden w-60 shrink-0 border-e border-border px-4 py-8 lg:block">
+        <aside className="hidden w-60 shrink-0 border-e border-border px-4 py-8 lg:block print:hidden">
           <div className="sticky top-24">
             <NavLinks items={items} label={t('nav.sections')} variant="sidebar" />
           </div>
         </aside>
-        <main className="flex min-w-0 flex-1 flex-col px-gutter pt-8 pb-28 sm:pt-10 lg:px-10 lg:pb-12">
+        <main className="flex min-w-0 flex-1 flex-col px-gutter pt-8 pb-28 sm:pt-10 lg:px-10 lg:pb-12 print:p-0">
           {children}
         </main>
       </div>

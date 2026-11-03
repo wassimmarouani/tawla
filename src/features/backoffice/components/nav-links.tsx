@@ -31,7 +31,7 @@ export function NavLinks({ items, label, variant }: NavLinksProps) {
     return (
       <nav
         aria-label={label}
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 pb-home-indicator backdrop-blur-md lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 pb-home-indicator backdrop-blur-md lg:hidden print:hidden"
       >
         <ul className="mx-auto flex max-w-xl">
           {items.map((item) => {

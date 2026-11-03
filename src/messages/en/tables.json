@@ -1,0 +1,102 @@
+{
+  "page": {
+    "description": "One table, one unique QR code. Print the tents and place them on the tables.",
+    "add": "Add tables",
+    "print": "Print table tents",
+    "generalTitle": "General QR",
+    "generalHint": "For the shop window and social media: opens the menu without a table.",
+    "count": "{count, plural, one {# table} other {# tables}}"
+  },
+  "empty": {
+    "title": "No tables yet",
+    "description": "Create your tables in one go, for example 1 to 12, then print their tents.",
+    "action": "Create tables"
+  },
+  "table": {
+    "name": "Table {number}",
+    "actions": "Actions for table {number}",
+    "edit": "Edit",
+    "print": "Print its tent",
+    "regenerate": "New QR code",
+    "delete": "Delete",
+    "noZone": "No zone"
+  },
+  "form": {
+    "addTitle": "Add tables",
+    "editTitle": "Edit table {number}",
+    "description": "Each table gets a unique QR code that cannot be guessed.",
+    "single": "One table",
+    "range": "Several tables",
+    "mode": "Number of tables",
+    "number": "Number",
+    "label": "Name (optional)",
+    "labelHint": "E.g. Terrace, Bar, Lounge.",
+    "from": "From number",
+    "to": "To number",
+    "zone": "Zone",
+    "noZone": "No zone",
+    "summary": "{count, plural, one {# table} other {# tables}}, from {from} to {to}",
+    "taken": "Already used: {numbers}",
+    "create": "Create",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "regenerate": {
+    "title": "New QR code for table {number}?",
+    "description": "The old QR code stops working at once. Print the new tent and replace the old one.",
+    "confirm": "Generate a new QR",
+    "cancel": "Cancel"
+  },
+  "zones": {
+    "title": "Zones",
+    "hint": "Group tables: terrace, dining room, upstairs.",
+    "add": "Add a zone",
+    "name": "Zone name",
+    "edit": "Rename {name}",
+    "delete": "Delete {name}",
+    "save": "Save",
+    "cancel": "Cancel",
+    "createTitle": "New zone",
+    "editTitle": "Rename zone",
+    "proOnly": "Zones are included in the Pro plan."
+  },
+  "toast": {
+    "created": "{count, plural, one {Table created} other {# tables created}}",
+    "saved": "Table saved",
+    "deleted": "{count, plural, one {Table deleted} other {# tables deleted}}",
+    "regenerated": "New QR code for table {number}. Remember to reprint its tent.",
+    "zoneSaved": "Zone saved",
+    "zoneDeleted": "Zone deleted",
+    "undo": "Undo",
+    "undone": "Undone",
+    "failed": "That didn’t work. Try again."
+  },
+  "errors": {
+    "numberTaken": "Some numbers are already used.",
+    "numberInvalid": "A number from 1 to 999.",
+    "rangeReversed": "The last number must come after the first.",
+    "rangeTooLarge": "30 tables at most at once.",
+    "planZones": "Zones are part of the Pro plan.",
+    "forbidden": "You don’t have access to this action.",
+    "notFound": "This table no longer exists. The page was refreshed.",
+    "readOnly": "This account is read-only."
+  },
+  "print": {
+    "title": "Table tents to print",
+    "back": "Tables",
+    "template": "Format",
+    "a6": "A6: one tent per page",
+    "a4": "A4: four tents to cut out",
+    "print": "Print or save as PDF",
+    "hint": "In the print dialog, choose “Save as PDF” to keep a file. Actual size, no margins.",
+    "count": "{count, plural, one {# tent} other {# tents}}",
+    "empty": "No table to print.",
+    "qrAlt": "QR code for {name}"
+  },
+  "tent": {
+    "table": "Table",
+    "menu": "Menu",
+    "scanMenu": "Scan to see the menu",
+    "scanOrder": "Scan to order"
+  }
+}

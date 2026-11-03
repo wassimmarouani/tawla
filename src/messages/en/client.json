@@ -87,5 +87,9 @@
     "clear": "Clear filters"
   },
   "servedHours": "Served {days}, {from}–{to}",
-  "everyDay": "every day"
+  "everyDay": "every day",
+  "tableNotFound": {
+    "title": "This QR code is no longer valid",
+    "description": "It may have been replaced. Ask the staff, or look at the venue’s menu."
+  }
 }

@@ -700,6 +700,57 @@ export const subscriptions = pgTable(
   ],
 );
 
+export const tables = pgTable(
+  'tables',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    zoneId: uuid('zone_id'),
+    number: integer().notNull(),
+    label: text(),
+    token: text()
+      .default(sql`random_token()`)
+      .notNull(),
+    isActive: boolean('is_active').default(true).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId, table.zoneId],
+      foreignColumns: [zones.id, zones.restaurantId],
+      name: 'tables_restaurant_id_zone_id_fkey',
+    }).onDelete('set null'),
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'tables_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('tables_zone_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('uuid_ops'),
+      table.zoneId.asc().nullsLast().op('uuid_ops'),
+    ),
+    unique('tables_restaurant_id_id_key').on(table.id, table.restaurantId),
+    unique('tables_token_key').on(table.token),
+    uniqueIndex('tables_number_key')
+      .using(
+        'btree',
+        table.restaurantId.asc().nullsLast().op('int4_ops'),
+        table.number.asc().nullsLast().op('uuid_ops'),
+      )
+      .where(sql`(deleted_at IS NULL)`),
+  ],
+);
+
 export const translationGlossary = pgTable(
   'translation_glossary',
   {
@@ -728,5 +779,38 @@ export const translationGlossary = pgTable(
       sql`COALESCE(restaurant_id, '00000000-0000-0000-0000-000000000000':`,
       sql`lower(term)`,
     ),
+  ],
+);
+
+export const zones = pgTable(
+  'zones',
+  {
+    id: uuid()
+      .default(sql`uuid_v7()`)
+      .primaryKey()
+      .notNull(),
+    restaurantId: uuid('restaurant_id').notNull(),
+    name: jsonb().notNull(),
+    sortOrder: integer('sort_order').default(0).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
+      .defaultNow()
+      .notNull(),
+    deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'string' }),
+  },
+  (table): PgTableExtraConfigValue[] => [
+    foreignKey({
+      columns: [table.restaurantId],
+      foreignColumns: [restaurants.id],
+      name: 'zones_restaurant_id_fkey',
+    }).onDelete('cascade'),
+    index('zones_restaurant_sort_idx').using(
+      'btree',
+      table.restaurantId.asc().nullsLast().op('int4_ops'),
+      table.sortOrder.asc().nullsLast().op('int4_ops'),
+    ),
+    unique('zones_restaurant_id_id_key').on(table.id, table.restaurantId),
   ],
 );

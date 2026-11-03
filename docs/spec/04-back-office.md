@@ -55,6 +55,9 @@ A progress checklist stays on the dashboard until onboarding is complete. Steps 
 - **"Regenerate QR"**: the old token stops working immediately (audited).
 - **Print tents:** print-optimised page with logo, table number, QR and "Scan to order" in FR/AR/EN. A4 and A6 templates. "Save as PDF" through the browser.
 - General QR without a table (shop window, social media) → `/{slug}` read-only menu.
+- **Implementation (P1-08):** `/dashboard/tables` lists tables by number (grouped by zone on Pro), with "Add tables" (one, or a range of up to 30; taken numbers are flagged before saving), edit, print one tent, "New QR code" (confirmation, then the old URL shows "This QR code is no longer valid") and delete with undo. Tokens are assigned by the database and never chosen or edited by clients.
+- **Tents:** `/dashboard/tables/print?template=a6|a4[&ids=…][&general=1]`. A6 prints one tent per page (105 × 148 mm); A4 prints four tents to cut out. Each tent shows the venue and logo, "Table · طاولة", the number, an optional name, a 52 mm QR code (ECC M) and the call to action in FR, AR and EN ("scan to order" only when ordering is enabled). The sheet always previews and prints in the light theme.
+- **Table route:** `/t/{token}` is dynamic and `noindex`. It checks the token on every request and shows the cached public menu with a "Table N · name" badge.
 
 ## Staff and devices
 

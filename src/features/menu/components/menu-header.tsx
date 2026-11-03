@@ -12,7 +12,20 @@ import { OpenStatus } from './open-status';
  * Venue header (ADR-0029): cover photo, or a brand band with woven dots; an overlapping card
  * with the round logo (or monogram), the name and the open status.
  */
-export async function MenuHeader({ menu, locale }: { menu: PublicMenu; locale: Locale }) {
+export interface TableBadge {
+  number: number;
+  label: string | null;
+}
+
+export async function MenuHeader({
+  menu,
+  locale,
+  table,
+}: {
+  menu: PublicMenu;
+  locale: Locale;
+  table?: TableBadge | undefined;
+}) {
   const { restaurant } = menu;
   const t = await getTranslations('client');
   const languages = await getTranslations('common.languages');
@@ -66,6 +79,17 @@ export async function MenuHeader({ menu, locale }: { menu: PublicMenu; locale: L
             </span>
           )}
         </div>
+        {table ? (
+          <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-brand-subtle px-3 py-1 text-sm font-semibold text-brand-on-subtle">
+            <span className="tabular-nums">{t('table', { number: table.number })}</span>
+            {table.label ? (
+              <>
+                <span aria-hidden="true">·</span>
+                <span dir="auto">{table.label}</span>
+              </>
+            ) : null}
+          </p>
+        ) : null}
         <h1 className="text-2xl font-title tracking-title text-balance break-words text-foreground">
           {restaurant.name}
         </h1>

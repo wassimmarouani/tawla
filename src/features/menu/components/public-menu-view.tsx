@@ -6,7 +6,7 @@ import type { PublicMenu } from '../schemas/public-menu';
 import { BrandStyle } from './brand-style';
 import { CategoryNav } from './category-nav';
 import { Localized } from './localized';
-import { MenuHeader } from './menu-header';
+import { MenuHeader, type TableBadge } from './menu-header';
 import { MENU_FILTERS, type MenuFilter } from './filters';
 import { MenuFilters } from './menu-filters';
 import { MenuSearch, type SearchItem } from './menu-search';
@@ -15,7 +15,16 @@ import { formatMoney } from '@/lib/money';
 import { displayPrice } from '../services/pricing';
 
 /** The customer menu (spec 02, ADR-0029): header, sticky categories, sections. */
-export async function PublicMenuView({ menu, locale }: { menu: PublicMenu; locale: Locale }) {
+export async function PublicMenuView({
+  menu,
+  locale,
+  table,
+}: {
+  menu: PublicMenu;
+  locale: Locale;
+  /** Set on the table route (`/t/{token}`): shown in the header. */
+  table?: TableBadge | undefined;
+}) {
   const t = await getTranslations('client');
   const scope = menu.restaurant.public_id;
   // Photos above the fold only in the first photo section.
@@ -26,7 +35,7 @@ export async function PublicMenuView({ menu, locale }: { menu: PublicMenu; local
   return (
     <div data-tenant={scope} className="min-h-dvh bg-background pb-safe text-foreground">
       <BrandStyle theme={menu.restaurant.theme} scope={scope} />
-      <MenuHeader menu={menu} locale={locale} />
+      <MenuHeader menu={menu} locale={locale} table={table} />
       {menu.categories.length === 0 ? (
         <main className="mx-auto max-w-3xl px-gutter py-10">
           <EmptyState

@@ -9,3 +9,5 @@ export { onboardingChecklist } from './services/checklist';
 export type { Checklist, ChecklistFacts, ChecklistStep } from './services/checklist';
 export { NAV_KEYS, activeNavKey, dashboardNavigation } from './services/navigation';
 export type { NavItem, NavKey } from './services/navigation';
+export { withBackofficeAccess } from './server/access';
+export type { BackofficeAccess, BackofficeScope } from './server/access';

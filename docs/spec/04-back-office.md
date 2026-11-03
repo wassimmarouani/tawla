@@ -43,6 +43,9 @@ A progress checklist stays on the dashboard until onboarding is complete. Steps 
 - **Bulk price change:** percentage from −90 % to +200 % (two decimals), rounded half-up to 0.010, 0.050, 0.100 (default), 0.500 or 1.000 DT, in integer millimes; a paid product never becomes free. The preview lists every new price before anything is saved.
 - **Product slugs** (`?p=` on the public menu) come from the French name, else English, else `item`, with `-2`, `-3`… when taken; a restored product whose slug was reused gets a new one.
 - **Deletion is soft** (`deleted_at`): a category and the products deleted with it share one timestamp, so undo restores exactly those.
+- **Option groups (P1-06):** `/dashboard/menu/options` lists reusable groups with their rule ("Required · 1 choice"), options, extra prices and how many products use them. The group dialog edits one language at a time (dots mark missing translations), min/max with inline errors (max ≥ min, min ≤ number of options) and ordered options. Removed options and deleted groups are soft-deleted; deleting a group is undoable.
+- **Product options and details (P1-06):** the product form links groups in display order; "Adapt for this item" overrides min/max and each option's price for that product only (blank = the group's value). Badges, diets and the 14 allergens are toggle chips.
+- **Live preview (P1-06):** from 1280 px, a phone-sized frame of the real public menu sits beside the editor and the product form (same-origin framing only). It reloads after every save; after saving a product the menu page opens that product in the preview (`?focus=`). It shows what customers see, so hidden items are not in it.
 - **Serving hours** of a category show on the public menu next to its title ("Servi lun. – sam., 07:00–11:00").
 
 ## Tables and QR codes

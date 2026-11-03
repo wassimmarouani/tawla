@@ -1,12 +1,13 @@
 'use client';
 
-import { ArrowUpDown, CheckSquare, FolderPlus, UtensilsCrossed } from 'lucide-react';
+import { ArrowUpDown, CheckSquare, FolderPlus, ListPlus, UtensilsCrossed } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { showUndoToast } from '@/components/feedback/undo-toast';
 import { EmptyState } from '@/components/states/empty-state';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -33,6 +34,7 @@ import { BulkBar } from './bulk-bar';
 import { BulkPriceDialog } from './bulk-price-dialog';
 import { CategoryDialog } from './category-dialog';
 import { CategorySection } from './category-section';
+import { MenuPreview } from './menu-preview';
 import type { EditorMode, ProductActions } from './editor-types';
 import { SortableList } from './sortable';
 import { useEditorAction } from './use-editor-action';
@@ -43,6 +45,10 @@ interface MenuEditorProps {
   defaultLocale: Locale;
   locales: readonly Locale[];
   storageUrl: string;
+  /** Public menu path for the live preview, opening the focused product when there is one. */
+  previewSrc: string;
+  /** Product just saved in the form: scrolled into view. */
+  focusId: string | null;
 }
 
 type CategoryDialogState = { open: false } | { open: true; category: EditorCategory | null };
@@ -58,6 +64,8 @@ export function MenuEditor({
   defaultLocale,
   locales,
   storageUrl,
+  previewSrc,
+  focusId,
 }: MenuEditorProps) {
   const t = useTranslations('menuEditor');
   const { pending, run, perform } = useEditorAction();
@@ -70,10 +78,17 @@ export function MenuEditor({
   // Local order for instant drag-and-drop feedback, reset whenever the server sends new data.
   const [items, setItems] = useState(categories);
   const [source, setSource] = useState(categories);
+  // Each save refreshes the data, which reloads the live preview.
+  const [previewVersion, setPreviewVersion] = useState(0);
   if (source !== categories) {
     setSource(categories);
     setItems(categories);
+    setPreviewVersion((version) => version + 1);
   }
+
+  useEffect(() => {
+    if (focusId) document.getElementById(`product-${focusId}`)?.scrollIntoView({ block: 'center' });
+  }, [focusId]);
 
   const products = items.flatMap((category) => category.products);
   const selected = products.filter((product) => selection.has(product.id));
@@ -221,78 +236,87 @@ export function MenuEditor({
           {mode === 'reorder' ? t('page.done') : t('page.reorder')}
         </Button>
       ) : null}
+      <Link href="/dashboard/menu/options" className={buttonVariants({ variant: 'ghost' })}>
+        <ListPlus aria-hidden="true" />
+        {t('page.options')}
+      </Link>
     </div>
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      {toolbar}
-      {mode === 'reorder' ? (
-        <p className="text-sm text-muted-foreground">{t('page.reorderHint')}</p>
-      ) : null}
+    <div className="flex items-start gap-8">
+      <div className="flex min-w-0 flex-1 flex-col gap-6">
+        {toolbar}
+        {mode === 'reorder' ? (
+          <p className="text-sm text-muted-foreground">{t('page.reorderHint')}</p>
+        ) : null}
 
-      {items.length === 0 ? (
-        <EmptyState
-          icon={<UtensilsCrossed />}
-          title={t('empty.title')}
-          description={t('empty.description')}
-          className="bg-card py-16"
-          action={
-            <Button
-              onClick={() => {
-                setCategoryDialog({ open: true, category: null });
-              }}
+        {items.length === 0 ? (
+          <EmptyState
+            icon={<UtensilsCrossed />}
+            title={t('empty.title')}
+            description={t('empty.description')}
+            className="bg-card py-16"
+            action={
+              <Button
+                onClick={() => {
+                  setCategoryDialog({ open: true, category: null });
+                }}
+              >
+                <FolderPlus aria-hidden="true" />
+                {t('empty.action')}
+              </Button>
+            }
+          />
+        ) : (
+          <SortableList
+            ids={items.map((category) => category.id)}
+            labelOf={(id) => nameOf(items.find((category) => category.id === id)?.name ?? {})}
+            onReorder={reorderCategories}
+          >
+            <div
+              className={mode === 'select' ? 'flex flex-col gap-4 pb-24' : 'flex flex-col gap-4'}
             >
-              <FolderPlus aria-hidden="true" />
-              {t('empty.action')}
-            </Button>
-          }
-        />
-      ) : (
-        <SortableList
-          ids={items.map((category) => category.id)}
-          labelOf={(id) => nameOf(items.find((category) => category.id === id)?.name ?? {})}
-          onReorder={reorderCategories}
-        >
-          <div className={mode === 'select' ? 'flex flex-col gap-4 pb-24' : 'flex flex-col gap-4'}>
-            {items.map((category) => (
-              <CategorySection
-                key={category.id}
-                category={category}
-                mode={mode}
-                selection={selection}
-                onSelectionChange={(ids, isSelected) => {
-                  setSelection((current) => {
-                    const next = new Set(current);
-                    for (const id of ids) {
-                      if (isSelected) next.add(id);
-                      else next.delete(id);
-                    }
-                    return next;
-                  });
-                }}
-                onReorderProducts={(ids) => {
-                  reorderProducts(category.id, ids);
-                }}
-                onEdit={() => {
-                  setCategoryDialog({ open: true, category });
-                }}
-                onToggleVisible={() => {
-                  toggleCategory(category);
-                }}
-                onDelete={() => {
-                  setDeleting(category);
-                }}
-                actions={actions}
-                locale={locale}
-                defaultLocale={defaultLocale}
-                locales={locales}
-                storageUrl={storageUrl}
-              />
-            ))}
-          </div>
-        </SortableList>
-      )}
+              {items.map((category) => (
+                <CategorySection
+                  key={category.id}
+                  category={category}
+                  mode={mode}
+                  selection={selection}
+                  onSelectionChange={(ids, isSelected) => {
+                    setSelection((current) => {
+                      const next = new Set(current);
+                      for (const id of ids) {
+                        if (isSelected) next.add(id);
+                        else next.delete(id);
+                      }
+                      return next;
+                    });
+                  }}
+                  onReorderProducts={(ids) => {
+                    reorderProducts(category.id, ids);
+                  }}
+                  onEdit={() => {
+                    setCategoryDialog({ open: true, category });
+                  }}
+                  onToggleVisible={() => {
+                    toggleCategory(category);
+                  }}
+                  onDelete={() => {
+                    setDeleting(category);
+                  }}
+                  actions={actions}
+                  locale={locale}
+                  defaultLocale={defaultLocale}
+                  locales={locales}
+                  storageUrl={storageUrl}
+                />
+              ))}
+            </div>
+          </SortableList>
+        )}
+      </div>
+      <MenuPreview src={previewSrc} version={previewVersion} />
 
       {mode === 'select' && selected.length > 0 ? (
         <BulkBar

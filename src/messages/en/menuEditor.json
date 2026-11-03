@@ -7,7 +7,8 @@
     "reorder": "Reorder",
     "done": "Done",
     "reorderHint": "Drag the handles, or use the keyboard: Space to pick up, arrows to move, Space to drop.",
-    "readOnly": "This account is read-only: the menu cannot be changed."
+    "readOnly": "This account is read-only: the menu cannot be changed.",
+    "options": "Option groups"
   },
   "empty": {
     "title": "Your menu is empty",
@@ -157,5 +158,86 @@
     "dropped": "Dropped {name} in position {position} of {total}.",
     "cancelled": "Moving {name} cancelled.",
     "roleDescription": "sortable item"
+  },
+  "options": {
+    "title": "Option groups",
+    "description": "Sizes, extras, cooking… Create a group once, use it on several items.",
+    "back": "Menu",
+    "newGroup": "New group",
+    "emptyTitle": "No option groups",
+    "emptyDescription": "For example “Size” with Regular and Large (+1.500 DT), then link it to your drinks.",
+    "emptyAction": "Create a group",
+    "requiredSingle": "Required · 1 choice",
+    "optionalSingle": "Optional · up to 1 choice",
+    "requiredExact": "Required · {count} choices",
+    "requiredRange": "Required · {min} to {max} choices",
+    "optionalMulti": "Optional · up to {max} choices",
+    "usage": "{count, plural, =0 {Used by no item} one {Used by # item} other {Used by # items}}",
+    "included": "included",
+    "delta": "+{price}",
+    "unavailable": "Unavailable",
+    "actions": "Actions for group {name}",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleted": "Group “{name}” deleted",
+    "saved": "Group saved",
+    "created": "Group created"
+  },
+  "optionDialog": {
+    "createTitle": "New option group",
+    "editTitle": "Edit group",
+    "description": "Items using this group are updated.",
+    "language": "Editing language",
+    "name": "Group name",
+    "minSelect": "Minimum choices",
+    "maxSelect": "Maximum choices",
+    "rulesHint": "Minimum 0: optional. Maximum 1: a single choice.",
+    "options": "Options",
+    "optionName": "Option {index} name",
+    "optionPrice": "Option {index} extra price",
+    "optionAvailable": "Option {index} available",
+    "addOption": "Add an option",
+    "moveUp": "Move option {index} up",
+    "moveDown": "Move option {index} down",
+    "remove": "Remove option {index}",
+    "create": "Create",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "fieldErrors": {
+    "minAboveMax": "The maximum must be at least the minimum.",
+    "minAboveOptions": "The minimum exceeds the number of options.",
+    "noOptions": "Add at least one option.",
+    "countInvalid": "A number from 0 to 20."
+  },
+  "productOptions": {
+    "title": "Options",
+    "hint": "Add groups such as “Size” or “Sugar”. Rules and prices can be adapted to this item.",
+    "add": "Add a group",
+    "none": "No group on this item.",
+    "noGroups": "Create an option group first.",
+    "manage": "Manage groups",
+    "customize": "Adapt for this item",
+    "minSelect": "Minimum",
+    "maxSelect": "Maximum",
+    "groupDefault": "Group: {value}",
+    "priceFor": "Price of {name}",
+    "moveUp": "Move {name} up",
+    "moveDown": "Move {name} down",
+    "remove": "Remove {name}"
+  },
+  "attributes": {
+    "title": "Details",
+    "hint": "Shown on the item sheet and used by the filters.",
+    "badges": "Badges",
+    "dietary": "Diet",
+    "allergens": "Allergens"
+  },
+  "preview": {
+    "title": "Customer preview",
+    "frameTitle": "Preview of the menu as your customers see it",
+    "reload": "Refresh the preview",
+    "open": "Open the menu in a new tab",
+    "hint": "Updated on every save. Hidden items are not shown."
   }
 }

@@ -1,10 +1,4 @@
-export {
-  ALLERGENS,
-  BADGES,
-  DIETARY,
-  localizedTextSchema,
-  publicMenuSchema,
-} from './schemas/public-menu';
+export { localizedTextSchema, publicMenuSchema } from './schemas/public-menu';
 export type {
   LocalizedText,
   PublicMedia,

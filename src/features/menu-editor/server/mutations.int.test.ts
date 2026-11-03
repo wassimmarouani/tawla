@@ -57,6 +57,10 @@ const product = (categoryId: string, name: string, price: number) => ({
   mediaId: null,
   isAvailable: true,
   isVisible: true,
+  badges: [],
+  allergens: [],
+  dietary: [],
+  optionLinks: [],
 });
 
 async function cleanup() {

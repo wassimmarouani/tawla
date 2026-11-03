@@ -1,16 +1,12 @@
-/** Rounding steps offered for bulk price changes, in millimes (0.010 DT to 1 DT). */
-export const ROUNDING_STEPS = [10, 50, 100, 500, 1000] as const;
-export type RoundingStep = (typeof ROUNDING_STEPS)[number];
+import { applyPercentage, type RoundingStep } from '@/lib/money';
 
 /** Default step: 0.100 DT (spec 04). */
 export const DEFAULT_ROUNDING_STEP: RoundingStep = 100;
 
-const BASIS = 10_000;
-
 /**
- * A price changed by `basisPoints` (+1 000 = +10 %) and rounded half-up to `step`, in integer
- * millimes only (CLAUDE.md rule 1). A paid product never becomes free: a result below one step
- * keeps the smaller of the price and the step. `max` caps the result.
+ * A price changed by `basisPoints` (+1 000 = +10 %) with the ADR-0014 rounding
+ * (`applyPercentage`), plus the editor's guards: a paid product never becomes free (a result
+ * below one step keeps the smaller of the price and the step) and `max` caps the result.
  */
 export function adjustPrice(
   price: number,
@@ -19,11 +15,8 @@ export function adjustPrice(
   max: number,
 ): number {
   if (price === 0) return 0;
-  const scaled = price * (BASIS + basisPoints);
-  const unit = BASIS * step;
-  const rounded = Math.floor((2 * scaled + unit) / (2 * unit)) * step;
-  const floor = Math.min(price, step);
-  return Math.min(Math.max(rounded, floor), max);
+  const rounded = applyPercentage(price, basisPoints / 100, step);
+  return Math.min(Math.max(rounded, Math.min(price, step)), max);
 }
 
 export interface PriceChange {

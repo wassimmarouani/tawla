@@ -5,9 +5,10 @@ import type { SessionClaims } from '@/lib/auth/claims';
 import { withRls, type DbTransaction } from '@/lib/db/rls';
 import { categories, productOptionGroups, products } from '@/lib/db/schema/schema';
 import { AppError } from '@/lib/errors';
+import type { RoundingStep } from '@/lib/money';
 import type { categoryInputSchema, productInputSchema } from '../schemas/menu-editor';
 import { MAX_PRODUCT_PRICE } from '../schemas/menu-editor';
-import { previewPriceChanges, type PriceChange, type RoundingStep } from '../services/bulk-price';
+import { previewPriceChanges, type PriceChange } from '../services/bulk-price';
 import { productSlug, sortOrders } from '../services/menu-text';
 
 /**

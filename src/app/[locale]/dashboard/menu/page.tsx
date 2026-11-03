@@ -7,6 +7,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-export default function DashboardMenuPage() {
-  return <MenuEditorScreen />;
+export default async function DashboardMenuPage({
+  searchParams,
+}: PageProps<'/[locale]/dashboard/menu'>) {
+  const { focus } = await searchParams;
+  return <MenuEditorScreen focus={typeof focus === 'string' ? focus : undefined} />;
 }

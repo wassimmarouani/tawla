@@ -72,6 +72,7 @@ export const productFormSchema = productInputSchema.extend({
   optionLinks: optionLinksSchema(optionLinkFormSchema),
 });
 export type ProductForm = z.input<typeof productFormSchema>;
+export type ProductFormOutput = z.output<typeof productFormSchema>;
 
 export const idsSchema = z.object({ ids: idListSchema });
 

@@ -9,12 +9,16 @@ import { editorPageData } from '../server/page-data';
 import { MenuEditor } from './menu-editor';
 
 /** `/dashboard/menu` (P1-05): the menu editor, or a read-only notice. */
-export async function MenuEditorScreen() {
+export async function MenuEditorScreen({ focus }: { focus?: string | undefined }) {
   const data = await editorPageData();
   if (!data) return null;
   const t = await getTranslations('menuEditor');
   const tSection = await getTranslations('dashboard.sections.menu');
   const { restaurant } = data;
+  const categories = data.canEdit ? await loadEditorMenu(data.claims, restaurant.id) : [];
+  const focused = categories
+    .flatMap((category) => category.products)
+    .find((product) => product.id === focus && product.isVisible);
 
   return (
     <div className="flex flex-col gap-8">
@@ -35,7 +39,13 @@ export async function MenuEditorScreen() {
       />
       {data.canEdit ? (
         <MenuEditor
-          categories={await loadEditorMenu(data.claims, restaurant.id)}
+          categories={categories}
+          previewSrc={
+            focused
+              ? `/${restaurant.slug}?p=${encodeURIComponent(focused.slug)}`
+              : `/${restaurant.slug}`
+          }
+          focusId={focused?.id ?? null}
           locale={data.locale}
           defaultLocale={restaurant.defaultLocale}
           locales={restaurant.locales}

@@ -7,7 +7,8 @@
     "reorder": "Réorganiser",
     "done": "Terminé",
     "reorderHint": "Faites glisser les poignées, ou utilisez le clavier : Espace pour saisir, flèches pour déplacer, Espace pour déposer.",
-    "readOnly": "Ce compte est en lecture seule : le menu ne peut pas être modifié."
+    "readOnly": "Ce compte est en lecture seule : le menu ne peut pas être modifié.",
+    "options": "Groupes d’options"
   },
   "empty": {
     "title": "Votre carte est vide",
@@ -157,5 +158,86 @@
     "dropped": "{name} déposé en position {position} sur {total}.",
     "cancelled": "Déplacement de {name} annulé.",
     "roleDescription": "élément déplaçable"
+  },
+  "options": {
+    "title": "Groupes d’options",
+    "description": "Tailles, suppléments, cuissons… Créez un groupe une fois, utilisez-le sur plusieurs plats.",
+    "back": "Menu",
+    "newGroup": "Nouveau groupe",
+    "emptyTitle": "Aucun groupe d’options",
+    "emptyDescription": "Par exemple « Taille » avec Normal et Grand (+1,500 DT), puis liez-le à vos boissons.",
+    "emptyAction": "Créer un groupe",
+    "requiredSingle": "Obligatoire · 1 choix",
+    "optionalSingle": "Facultatif · 1 choix au plus",
+    "requiredExact": "Obligatoire · {count} choix",
+    "requiredRange": "Obligatoire · {min} à {max} choix",
+    "optionalMulti": "Facultatif · jusqu’à {max} choix",
+    "usage": "{count, plural, =0 {Utilisé par aucun plat} one {Utilisé par # plat} other {Utilisé par # plats}}",
+    "included": "inclus",
+    "delta": "+{price}",
+    "unavailable": "Indisponible",
+    "actions": "Actions du groupe {name}",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "deleted": "Groupe « {name} » supprimé",
+    "saved": "Groupe enregistré",
+    "created": "Groupe créé"
+  },
+  "optionDialog": {
+    "createTitle": "Nouveau groupe d’options",
+    "editTitle": "Modifier le groupe",
+    "description": "Les plats qui utilisent ce groupe sont mis à jour.",
+    "language": "Langue de saisie",
+    "name": "Nom du groupe",
+    "minSelect": "Choix minimum",
+    "maxSelect": "Choix maximum",
+    "rulesHint": "Minimum 0 : facultatif. Maximum 1 : un seul choix.",
+    "options": "Options",
+    "optionName": "Nom de l’option {index}",
+    "optionPrice": "Supplément de l’option {index}",
+    "optionAvailable": "Option {index} disponible",
+    "addOption": "Ajouter une option",
+    "moveUp": "Monter l’option {index}",
+    "moveDown": "Descendre l’option {index}",
+    "remove": "Retirer l’option {index}",
+    "create": "Créer",
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "fieldErrors": {
+    "minAboveMax": "Le maximum doit être supérieur ou égal au minimum.",
+    "minAboveOptions": "Le minimum dépasse le nombre d’options.",
+    "noOptions": "Ajoutez au moins une option.",
+    "countInvalid": "Un nombre entre 0 et 20."
+  },
+  "productOptions": {
+    "title": "Options",
+    "hint": "Ajoutez des groupes comme « Taille » ou « Sucre ». Les règles et les prix peuvent être adaptés à ce plat.",
+    "add": "Ajouter un groupe",
+    "none": "Aucun groupe sur ce plat.",
+    "noGroups": "Créez d’abord un groupe d’options.",
+    "manage": "Gérer les groupes",
+    "customize": "Adapter pour ce plat",
+    "minSelect": "Minimum",
+    "maxSelect": "Maximum",
+    "groupDefault": "Groupe : {value}",
+    "priceFor": "Prix de {name}",
+    "moveUp": "Monter {name}",
+    "moveDown": "Descendre {name}",
+    "remove": "Retirer {name}"
+  },
+  "attributes": {
+    "title": "Informations",
+    "hint": "Affichées sur la fiche du plat et utilisées par les filtres.",
+    "badges": "Badges",
+    "dietary": "Régime",
+    "allergens": "Allergènes"
+  },
+  "preview": {
+    "title": "Aperçu client",
+    "frameTitle": "Aperçu du menu tel que vos clients le voient",
+    "reload": "Actualiser l’aperçu",
+    "open": "Ouvrir le menu dans un onglet",
+    "hint": "Mis à jour à chaque enregistrement. Les éléments masqués n’y figurent pas."
   }
 }

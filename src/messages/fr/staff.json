@@ -16,11 +16,65 @@
     "description": "Appareil « {device} » de {venue}.",
     "submit": "Se connecter"
   },
-  "home": {
-    "title": "Prêt pour le service",
-    "description": "Connecté sur « {device} » en tant que {role}.",
-    "next": "L’écran du service (appels, additions, disponibilités) arrive ici.",
+  "push": {
+    "title": "Table {number}",
+    "waiter": "Appel serveur",
+    "billCash": "Addition · espèces",
+    "billCard": "Addition · carte",
+    "escalated": "Appel sans réponse depuis 2 minutes"
+  },
+  "start": {
+    "title": "Commencer le service",
+    "description": "Un appui active le son, garde l’écran allumé et vérifie les notifications.",
+    "button": "Commencer le service",
+    "iosHint": "Sur iPhone : Partager → « Sur l’écran d’accueil », puis ouvrez Tawla depuis l’icône pour recevoir les notifications."
+  },
+  "live": {
+    "tabs": {
+      "requests": "Demandes",
+      "availability": "Disponibilités"
+    },
+    "connection": {
+      "online": "En ligne",
+      "reconnecting": "Reconnexion…",
+      "offline": "Hors ligne : actualisation toutes les 10 s"
+    },
+    "notifications": {
+      "on": "Notifications activées",
+      "denied": "Notifications refusées : activez-les dans les réglages du navigateur",
+      "unavailable": "Notifications indisponibles sur cet appareil",
+      "off": "Notifications non configurées"
+    },
+    "empty": {
+      "title": "Aucune demande",
+      "description": "Les appels et les demandes d’addition apparaissent ici avec un son."
+    },
+    "kinds": {
+      "waiter": "Appel serveur",
+      "bill": "Addition"
+    },
+    "payment": {
+      "cash": "Espèces",
+      "card": "Carte"
+    },
+    "table": "Table {number}",
+    "age": "{minutes, plural, =0 {À l’instant} one {Il y a # min} other {Il y a # min}}",
+    "claim": "Je m’en occupe",
+    "done": "Terminé",
+    "mine": "Vous vous en occupez",
+    "alreadyClaimed": "Déjà pris en charge par {name}.",
+    "alreadyDone": "Cette demande est déjà traitée.",
+    "failed": "L’action n’a pas abouti. Réessayez.",
+    "count": "{count, plural, =0 {Aucune demande} one {# demande} other {# demandes}}",
+    "availability": {
+      "description": "Un appui marque un produit épuisé pour les clients.",
+      "available": "{name} disponible",
+      "empty": "Aucun produit dans le menu.",
+      "saved": "{name} : {state}",
+      "on": "disponible",
+      "off": "épuisé"
+    },
     "logout": "Se déconnecter",
-    "until": "Session jusqu’à {time}"
+    "signedIn": "{device} · {role}"
   }
 }

@@ -18,6 +18,7 @@ The staff app is a PWA under `/staff`, installed on the counter tablet and waite
 - **Sessions:** `fixed` = until end of business day; `mobile` = 12 h. Managers see active sessions and revoke them remotely.
 - A connection indicator (green / orange / red) is always visible.
 - **Implemented (P1-11):** `/staff` → `/staff/pair` (8-character code, or the QR link) → `/staff/login` (email + password of a member of the device's venue) → `/staff`. Revoking the device or ending the session from the back-office sends the device back to pairing or sign-in on its next request. Staff PWA manifest, apple-touch icon, service worker (push, notification click, offline shell).
+- **Implemented (P1-12):** `/staff` opens on "Start service" (audio unlock, Wake Lock on fixed devices, notification permission and push subscription, iPhone "Add to Home Screen" hint), then the live screen: tabs Requests / Availability, connection badge (online / reconnecting / offline with 10 s polling), cards with the table number at 72 px, type icon and label, payment method and age, "I'm on it" (optimistic, rolled back on conflict) then "Done". Distinct generated chimes per type and vibration. Availability: one switch per product (sold out for customers at once).
 
 ## "Start service" screen (ADR-0007)
 

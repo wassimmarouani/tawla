@@ -469,6 +469,8 @@
   - a claim from device 1 removes the request from device 2 immediately.
 - Staff screen DoD at 390 / 768 / 1024 (tablet) / 1440, with 48 px targets verified. Table number readable at 1 m: display token ≥ 56 px, checked in screenshots.
 
+**Note (2026-11-03):** hosted environments must set `app.settings.cron_base_url` (database setting) and the Vault secret `cron_secret` (same value as `CRON_SECRET`) for the 15-second escalation job; locally the job is a no-op and the integration suite calls the escalation directly. Listed in P1-17.
+
 ### P1-13 — AI menu import and translation · L · 👤 developer Anthropic API key (low spend limit)
 
 **Deliverables**

@@ -1,0 +1,82 @@
+{
+  "title": "Console",
+  "venues": "Venues",
+  "audit": "Audit log",
+  "logout": "Sign out",
+  "forbidden": {
+    "title": "Restricted access",
+    "description": "This console is for the Tawla team only."
+  },
+  "mfa": {
+    "title": "Two-factor authentication",
+    "enrolDescription": "Required for the console. Scan the QR code with an authenticator app (Google Authenticator, Authy…), then enter the 6-digit code.",
+    "verifyDescription": "Enter the 6-digit code from your authenticator app.",
+    "start": "Set up the app",
+    "qr": "Setup QR code",
+    "secret": "Or type this key:",
+    "code": "6-digit code",
+    "submit": "Verify"
+  },
+  "list": {
+    "search": "Search venues",
+    "searchButton": "Search",
+    "empty": "No venues.",
+    "name": "Venue",
+    "plan": "Plan",
+    "status": "Status",
+    "members": "Members",
+    "ai": "AI this month",
+    "created": "Created",
+    "noPlan": "None"
+  },
+  "statuses": {
+    "active": "Active",
+    "read_only": "Read-only",
+    "suspended": "Suspended"
+  },
+  "venue": {
+    "back": "All venues",
+    "open": "View menu",
+    "plan": "Plan",
+    "planSave": "Change plan",
+    "overrides": "Flag overrides",
+    "overridesHint": "Turn a feature on or off for this venue, with an end date.",
+    "key": "Feature",
+    "enabled": "On",
+    "disabled": "Off",
+    "expires": "Until (empty = no end)",
+    "reason": "Reason",
+    "add": "Add override",
+    "remove": "Remove",
+    "removeLabel": "Remove override {key}",
+    "noOverrides": "No overrides.",
+    "until": "until {date}",
+    "forever": "no end",
+    "aiTitle": "AI usage (last 6 months)",
+    "aiEmpty": "No AI usage.",
+    "month": "Month",
+    "imports": "Imports",
+    "items": "Items translated",
+    "cost": "Cost",
+    "activity": "Recent activity"
+  },
+  "auditPage": {
+    "filter": "Filter by action (e.g. platform., staff.)",
+    "filterButton": "Filter",
+    "when": "Date",
+    "action": "Action",
+    "actor": "By",
+    "venue": "Venue",
+    "entity": "Object",
+    "empty": "No entries."
+  },
+  "toast": {
+    "saved": "Saved.",
+    "failed": "That didn’t work."
+  },
+  "errors": {
+    "reasonRequired": "Give a reason (at least 3 characters).",
+    "dateInvalid": "Invalid date.",
+    "codeInvalid": "Invalid or expired code. Try again."
+  }
+}

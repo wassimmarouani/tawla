@@ -1,0 +1,82 @@
+{
+  "title": "Console",
+  "venues": "Établissements",
+  "audit": "Journal d’audit",
+  "logout": "Se déconnecter",
+  "forbidden": {
+    "title": "Accès réservé",
+    "description": "Cette console est réservée à l’équipe Tawla."
+  },
+  "mfa": {
+    "title": "Double authentification",
+    "enrolDescription": "Obligatoire pour la console. Scannez le QR code avec une application d’authentification (Google Authenticator, Authy…), puis saisissez le code à 6 chiffres.",
+    "verifyDescription": "Saisissez le code à 6 chiffres de votre application d’authentification.",
+    "start": "Configurer l’application",
+    "qr": "QR code de configuration",
+    "secret": "Ou saisissez cette clé :",
+    "code": "Code à 6 chiffres",
+    "submit": "Valider"
+  },
+  "list": {
+    "search": "Rechercher un établissement",
+    "searchButton": "Rechercher",
+    "empty": "Aucun établissement.",
+    "name": "Établissement",
+    "plan": "Formule",
+    "status": "Statut",
+    "members": "Membres",
+    "ai": "IA ce mois",
+    "created": "Créé le",
+    "noPlan": "Aucune"
+  },
+  "statuses": {
+    "active": "Actif",
+    "read_only": "Lecture seule",
+    "suspended": "Suspendu"
+  },
+  "venue": {
+    "back": "Tous les établissements",
+    "open": "Voir le menu",
+    "plan": "Formule",
+    "planSave": "Changer de formule",
+    "overrides": "Options forcées",
+    "overridesHint": "Activent ou désactivent une fonction pour cet établissement, avec une date de fin.",
+    "key": "Fonction",
+    "enabled": "Activée",
+    "disabled": "Désactivée",
+    "expires": "Jusqu’au (vide = sans fin)",
+    "reason": "Motif",
+    "add": "Ajouter l’option",
+    "remove": "Retirer",
+    "removeLabel": "Retirer l’option {key}",
+    "noOverrides": "Aucune option forcée.",
+    "until": "jusqu’au {date}",
+    "forever": "sans fin",
+    "aiTitle": "Usage IA (6 derniers mois)",
+    "aiEmpty": "Aucun usage IA.",
+    "month": "Mois",
+    "imports": "Imports",
+    "items": "Éléments traduits",
+    "cost": "Coût",
+    "activity": "Activité récente"
+  },
+  "auditPage": {
+    "filter": "Filtrer par action (ex. platform., staff.)",
+    "filterButton": "Filtrer",
+    "when": "Date",
+    "action": "Action",
+    "actor": "Par",
+    "venue": "Établissement",
+    "entity": "Objet",
+    "empty": "Aucune entrée."
+  },
+  "toast": {
+    "saved": "Enregistré.",
+    "failed": "L’action n’a pas abouti."
+  },
+  "errors": {
+    "reasonRequired": "Indiquez un motif (3 caractères au moins).",
+    "dateInvalid": "Date invalide.",
+    "codeInvalid": "Code invalide ou expiré. Réessayez."
+  }
+}

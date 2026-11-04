@@ -3,6 +3,8 @@ import type { NextRequest } from 'next/server';
 import { clientIp } from '@/lib/http/client-ip';
 import { env } from '@/lib/env';
 import { AppError } from '@/lib/errors';
+import { AppError, toErrorBody } from '@/lib/errors';
+import { log } from '@/lib/log';
 import { RATE_RULES, rateLimiter, type RateRule } from '@/lib/rate-limit';
 import { verifyTurnstile } from '@/lib/security/turnstile';
 import {

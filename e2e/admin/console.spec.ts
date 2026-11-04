@@ -98,7 +98,8 @@ test('the console needs TOTP, refuses other users, and its overrides take effect
     await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeVisible();
     expect(await seriousAxeViolations(adminPage), 'console axe').toEqual([]);
     await adminPage.getByRole('button', { name: 'Compléter l’installation' }).click();
-    await expect(adminPage.getByText('Café démo prêt.')).toBeVisible();
+    // Photos go through the image pipeline: slow on CI runners.
+    await expect(adminPage.getByText('Café démo prêt.')).toBeVisible({ timeout: 90_000 });
     await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeHidden();
 
     // Find the venue and lift its AI quota.

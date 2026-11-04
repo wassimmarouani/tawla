@@ -6,8 +6,11 @@ import { LOCAL, PASSWORD, database, newOwnerWithVenue } from '../fixtures/venue'
 
 /**
  * P1-15 acceptance: a platform user without `aal2` must enrol TOTP; a non-platform user gets
- * the 403 page; a flag override changes behaviour (AI quota lifted for a venue).
+ * the 403 page; a flag override changes behaviour (AI quota lifted for a venue); the demo café
+ * card completes an interrupted demo install.
  */
+
+const DEMO_RESTAURANT = 'b0000000-0000-4000-8000-000000000001';
 
 const FRENCH = [{ name: 'NEXT_LOCALE', value: 'fr', domain: 'localhost', path: '/' }];
 
@@ -81,7 +84,22 @@ test('the console needs TOTP, refuses other users, and its overrides take effect
     await expect(
       adminPage.getByRole('heading', { level: 1, name: 'Établissements' }),
     ).toBeVisible();
+    // The seeded demo café is complete: no install card.
+    await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeHidden();
+
+    // An interrupted demo install (a photo missing) shows the card, which completes it.
+    const demo = database();
+    try {
+      await demo`update public.products set media_id = null where restaurant_id = ${DEMO_RESTAURANT} and slug = 'ojja'`;
+    } finally {
+      await demo.end();
+    }
+    await adminPage.reload();
+    await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeVisible();
     expect(await seriousAxeViolations(adminPage), 'console axe').toEqual([]);
+    await adminPage.getByRole('button', { name: 'Compléter l’installation' }).click();
+    await expect(adminPage.getByText('Café démo prêt.')).toBeVisible();
+    await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeHidden();
 
     // Find the venue and lift its AI quota.
     await adminPage.getByLabel('Rechercher un établissement').fill(`Console ${stamp.slice(-4)}`);

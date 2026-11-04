@@ -78,5 +78,15 @@
     "reasonRequired": "Indiquez un motif (3 caractères au moins).",
     "dateInvalid": "Date invalide.",
     "codeInvalid": "Code invalide ou expiré. Réessayez."
+  },
+  "demo": {
+    "title": "Café démo",
+    "missing": "Installez le café démo « Café El Bahja » : menu complet en 3 langues, photos et 12 tables. Il apparaît sur la page d’accueil dès que DEMO_MENU_SLUG vaut cafe-el-bahja. Vous en serez le propriétaire.",
+    "partial": "Le café démo est installé mais certaines photos manquent. Relancez pour compléter.",
+    "install": "Installer le café démo",
+    "complete": "Compléter l’installation",
+    "installing": "Installation…",
+    "done": "Café démo prêt.",
+    "slugTaken": "Le lien cafe-el-bahja est déjà pris par un autre établissement."
   }
 }

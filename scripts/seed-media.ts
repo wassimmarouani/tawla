@@ -8,28 +8,18 @@ import path from 'node:path';
 import { and, eq } from 'drizzle-orm';
 import { rawDb } from '@/lib/db/client';
 import { products, restaurants } from '@/lib/db/schema/schema';
+import { DEMO_MEDIA_DIR, DEMO_PHOTOS, DEMO_VENUE } from '@/server/admin/demo-venue';
 import { processImage } from '@/server/admin/media/process-image';
 import { storeProcessedImage } from '@/server/admin/media/storage';
 import { localSupabase } from '../tooling/testing/local-supabase';
 
-const EL_BAHJA = 'b0000000-0000-4000-8000-000000000001';
-const SOURCE = path.resolve('supabase/seed-media');
-
-/** Photo → product slug, or the restaurant cover. */
-const PHOTOS: Readonly<Record<string, { product: string } | { cover: true }>> = {
-  'citronnade.jpg': { product: 'citronnade' },
-  'crepe-chocolat.jpg': { product: 'crepe-chocolat' },
-  'croissant.jpg': { product: 'croissant' },
-  'fricasse.jpg': { product: 'fricasse' },
-  'makroud.jpg': { product: 'makroudh' },
-  'ojja.jpg': { product: 'ojja' },
-  'cover-cafe-sidi-bou-said.jpg': { cover: true },
-};
+const EL_BAHJA = DEMO_VENUE.restaurantId;
+const SOURCE = path.resolve(DEMO_MEDIA_DIR);
 
 const config = localSupabase();
 const db = rawDb();
 
-for (const [file, target] of Object.entries(PHOTOS)) {
+for (const [file, target] of Object.entries(DEMO_PHOTOS)) {
   const kind = 'cover' in target ? 'cover' : 'product';
   const image = await processImage(await readFile(path.join(SOURCE, file)), kind);
   const mediaId = await storeProcessedImage(config, EL_BAHJA, kind, image);

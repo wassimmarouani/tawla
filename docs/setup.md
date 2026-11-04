@@ -77,7 +77,7 @@ Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or 
 | `RATE_LIMIT_MULTIPLIER`                                                | server                              | `1` (default); Playwright uses `100` (hundreds of logins from one IP)           |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | public / server                     | `pnpm dlx web-push generate-vapid-keys`                                         |
 | `GEMINI_API_KEY`                                                       | server                              | developer's own key, low spend limit; AI tests use recorded fixtures (ADR-0030) |
-| `DEMO_MENU_SLUG`                                                       | server                              | slug of the demo venue shown on the marketing pages (`cafe-el-bahja` locally)   |
+| `DEMO_MENU_SLUG`                                                       | server                              | slug of the demo venue shown on the marketing pages (`cafe-el-bahja`)           |
 | `CONTACT_WHATSAPP`                                                     | server                              | sales WhatsApp number, digits with country code (`216…`); hidden when unset     |
 | `AI_MODEL_EXTRACT` / `AI_MODEL_TRANSLATE`                              | server                              | `gemini-2.5-flash` (defaults)                                                   |
 | `RESEND_API_KEY` / `EMAIL_FROM`                                        | server                              | empty locally → emails logged to console / Mailpit                              |
@@ -105,5 +105,7 @@ In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so `/dashboard` is not rewritten i
 - Supabase local reaches the Next dev server for cron callbacks at `http://host.docker.internal:3000`.
 
 ## Operations (filled in at the end of Phase 1)
+
+First Super Admin on a hosted project: create the user in Supabase (Authentication → Users → Add user, auto-confirm), then run `update public.profiles set platform_role = 'super_admin' where id = (select id from auth.users where email = '<email>');` in the SQL editor. Sign in, enrol TOTP at `/admin/mfa`, then install the demo café from `/admin` and set `DEMO_MENU_SLUG=cafe-el-bahja`.
 
 Scheduled jobs that call the app (ADR-0009): `alter database postgres set app.settings.cron_base_url = 'https://<app domain>'` and `select vault.create_secret('<CRON_SECRET>', 'cron_secret')` on the hosted project. Backups and monthly restore test, migration rollout, key rotation (PIN pepper, VAPID, cron secret), incident checklist.

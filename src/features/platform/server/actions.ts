@@ -1,12 +1,14 @@
 'use server';
 
-import { refresh } from 'next/cache';
+import { refresh, updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import { menuCacheTags } from '@/features/menu';
 import { getSessionClaims } from '@/lib/auth/session';
 import { AppError, actionError, actionOk, validationError, type ActionResult } from '@/lib/errors';
 import { log } from '@/lib/log';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { DEMO_VENUE, installDemoVenue } from '@/server/admin/demo-venue';
 import { assignPlan as writePlan, removeOverride, setOverride } from '@/server/admin/platform';
 import {
   overrideInputSchema,
@@ -68,6 +70,16 @@ export async function deleteOverride(input: {
   return platformWrite('platform.override_remove', () =>
     removeOverride(claims, parsed.data.restaurantId, parsed.data.overrideId),
   );
+}
+
+/** Installs (or completes) the sales demo venue, owned by the calling Super Admin. */
+export async function installDemo(): Promise<ActionResult> {
+  const claims = await getSessionClaims();
+  return platformWrite('platform.demo_install', async () => {
+    await installDemoVenue(claims);
+    // A visit before the install cached the slug as unknown.
+    for (const tag of menuCacheTags(DEMO_VENUE.slug)) updateTag(tag);
+  });
 }
 
 /**

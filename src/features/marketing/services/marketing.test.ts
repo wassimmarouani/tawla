@@ -1,6 +1,8 @@
+import { readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { publicPlanSchema, type PublicPlan } from '../schemas/plans';
 import { MARKETING_PAGES, marketingHref, switchLocaleHref } from './paths';
+import { DEMO_PHOTO_CREDITS } from './photo-credits';
 import { planCards } from './pricing';
 
 const name = (label: string) => ({ fr: label, ar: label, en: label });
@@ -103,5 +105,16 @@ describe('marketing paths', () => {
     expect(switchLocaleHref('fr', '/pricing')).toBe('/fr/pricing');
     expect(switchLocaleHref('ar', '/legal/privacy')).toBe('/ar/legal/privacy');
     expect(MARKETING_PAGES).toContain('/pricing');
+  });
+});
+
+describe('demo photo credits', () => {
+  it('credit every photo of the demo café with its source and licence', () => {
+    const photos = readdirSync('supabase/seed-media').filter((file) => file.endsWith('.jpg'));
+    expect(DEMO_PHOTO_CREDITS.map((credit) => credit.file).toSorted()).toEqual(photos.toSorted());
+    for (const credit of DEMO_PHOTO_CREDITS) {
+      expect(credit.source).toMatch(/^https:\/\/commons\.wikimedia\.org\/wiki\/File:/);
+      expect(credit.licenceUrl).toMatch(/^https:\/\/creativecommons\.org\//);
+    }
   });
 });

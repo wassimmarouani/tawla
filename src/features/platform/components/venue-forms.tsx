@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { ActionResult } from '@/lib/errors';
 import { OVERRIDE_KEYS, type OverrideKey } from '../schemas/platform';
-import { assignPlan, deleteOverride, saveOverride } from '../server/actions';
+import { assignPlan, deleteOverride, installDemo, saveOverride } from '../server/actions';
 
 function useRun() {
   const t = useTranslations('admin.toast');
@@ -227,5 +227,28 @@ export function OverridesEditor({
         </Button>
       </form>
     </div>
+  );
+}
+
+/** Installs or completes the sales demo venue (Super Admin). */
+export function InstallDemoButton({ partial }: { partial: boolean }) {
+  const t = useTranslations('admin.demo');
+  const failed = useTranslations('admin.toast');
+  const [pending, startTransition] = useTransition();
+  return (
+    <Button
+      type="button"
+      disabled={pending}
+      onClick={() => {
+        startTransition(async () => {
+          const result = await installDemo();
+          if (result.ok) toast.success(t('done'));
+          else if (result.error.details?.reason === 'slug_taken') toast.error(t('slugTaken'));
+          else toast.error(failed('failed'));
+        });
+      }}
+    >
+      {pending ? t('installing') : partial ? t('complete') : t('install')}
+    </Button>
   );
 }

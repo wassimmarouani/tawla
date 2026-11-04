@@ -76,8 +76,8 @@ Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or 
 | `UPSTASH_REDIS_REST_URL` / `_TOKEN`                                    | server                              | empty locally → in-memory limiter adapter (same interface)                      |
 | `RATE_LIMIT_MULTIPLIER`                                                | server                              | `1` (default); Playwright uses `100` (hundreds of logins from one IP)           |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | public / server                     | `pnpm dlx web-push generate-vapid-keys`                                         |
-| `ANTHROPIC_API_KEY`                                                    | server                              | developer's own key, low spend limit; AI tests use recorded fixtures by default |
-| `AI_MODEL_EXTRACT` / `AI_MODEL_TRANSLATE`                              | server                              | `claude-sonnet-5-5` / `claude-haiku-5-5`                                        |
+| `GEMINI_API_KEY`                                                       | server                              | developer's own key, low spend limit; AI tests use recorded fixtures (ADR-0030) |
+| `AI_MODEL_EXTRACT` / `AI_MODEL_TRANSLATE`                              | server                              | `gemini-2.5-flash` (defaults)                                                   |
 | `RESEND_API_KEY` / `EMAIL_FROM`                                        | server                              | empty locally → emails logged to console / Mailpit                              |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`              | public / server                     | Cloudflare test keys                                                            |
 | `SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_AUTH_TOKEN`            | server / public / CI                | empty locally (disabled)                                                        |
@@ -104,4 +104,4 @@ In Git Bash, prefix with `MSYS_NO_PATHCONV=1` so `/dashboard` is not rewritten i
 
 ## Operations (filled in at the end of Phase 1)
 
-Backups and monthly restore test, migration rollout, key rotation (PIN pepper, VAPID, cron secret), incident checklist.
+Scheduled jobs that call the app (ADR-0009): `alter database postgres set app.settings.cron_base_url = 'https://<app domain>'` and `select vault.create_secret('<CRON_SECRET>', 'cron_secret')` on the hosted project. Backups and monthly restore test, migration rollout, key rotation (PIN pepper, VAPID, cron secret), incident checklist.

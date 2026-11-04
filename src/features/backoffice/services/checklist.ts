@@ -18,12 +18,13 @@ export interface Checklist {
   next: ChecklistStep | null;
 }
 
+/** Each step opens its part of the setup wizard (P1-14). */
 const HREF: Readonly<Record<ChecklistStep, `/dashboard${string}`>> = {
-  venue: '/dashboard/settings',
-  menu: '/dashboard/menu',
-  branding: '/dashboard/settings',
-  tables: '/dashboard/tables',
-  team: '/dashboard/team',
+  venue: '/dashboard/setup#venue',
+  menu: '/dashboard/setup#menu',
+  branding: '/dashboard/setup#branding',
+  tables: '/dashboard/setup#tables',
+  team: '/dashboard/setup#team',
 };
 
 /** Onboarding checklist (spec 04): shown on the overview until every step is done. */

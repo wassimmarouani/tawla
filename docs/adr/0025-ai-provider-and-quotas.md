@@ -1,6 +1,6 @@
 # ADR-0025 — AI provider, models, quotas and cost control
 
-- Status: Accepted
+- Status: Accepted; §1–3 (provider, models, refusals) superseded by ADR-0030 (Gemini)
 - Date: 2026-10-11
 - Audit refs: Q4, B3, spec §16.1
 

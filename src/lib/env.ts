@@ -26,6 +26,17 @@ export const env = createEnv({
      * are Cloudflare's public test keys (always pass); hosted envs set real ones (P1-17).
      */
     TURNSTILE_SECRET_KEY: z.string().min(1).default('1x0000000000000000000000000000000AA'),
+    /** AI menu import and translation (ADR-0030). Without a key the AI buttons explain why. */
+    GEMINI_API_KEY: z.string().min(20).optional(),
+    AI_MODEL_EXTRACT: z.string().min(1).default('gemini-2.5-flash'),
+    AI_MODEL_TRANSLATE: z.string().min(1).default('gemini-2.5-flash'),
+    /** E2E and keyless local demos: recorded AI answers instead of the API. Ignored over HTTPS. */
+    AI_RECORDED_RESPONSES: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
+    /** Bearer secret of /api/cron/* (ADR-0009), also stored in Supabase Vault as cron_secret. */
+    CRON_SECRET: z.string().min(32).optional(),
     ENABLE_DEV_ROUTES: z
       .enum(['true', 'false'])
       .default('false')
@@ -40,7 +51,6 @@ export const env = createEnv({
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1).default('1x00000000000000000000BB'),
     /** Web Push VAPID public key (ADR-0022); push is disabled when unset. */
     NEXT_PUBLIC_VAPID_PUBLIC_KEY: z.string().min(40).optional(),
-
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -51,6 +61,11 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     RATE_LIMIT_MULTIPLIER: process.env.RATE_LIMIT_MULTIPLIER,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
+    CRON_SECRET: process.env.CRON_SECRET,
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+    AI_MODEL_EXTRACT: process.env.AI_MODEL_EXTRACT,
+    AI_MODEL_TRANSLATE: process.env.AI_MODEL_TRANSLATE,
+    AI_RECORDED_RESPONSES: process.env.AI_RECORDED_RESPONSES,
     ENABLE_DEV_ROUTES: process.env.ENABLE_DEV_ROUTES,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
@@ -58,7 +73,6 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     NEXT_PUBLIC_VAPID_PUBLIC_KEY: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
-
   },
   emptyStringAsUndefined: true,
   skipValidation: process.env.SKIP_ENV_VALIDATION === 'true',

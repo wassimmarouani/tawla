@@ -63,7 +63,7 @@ test('pairs a device, signs in on it, then revoking it sends it back to pairing'
     await device.getByLabel('Adresse e-mail', { exact: true }).fill(email);
     await device.getByLabel('Mot de passe', { exact: true }).fill(PASSWORD);
     await device.getByRole('button', { name: 'Se connecter' }).click();
-    await expect(device.getByRole('heading', { name: 'Prêt pour le service' })).toBeVisible();
+    await expect(device.getByRole('heading', { name: 'Commencer le service' })).toBeVisible();
     expect((await device.request.get('/api/staff/me')).status()).toBe(200);
     expect(await seriousAxeViolations(device), 'staff home axe').toEqual([]);
 

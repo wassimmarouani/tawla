@@ -53,6 +53,8 @@ export default defineConfig({
       CLIENT_SESSION_SECRET: 'local-development-client-session-secret-0123456789',
       // Hundreds of logins from one IP per run.
       RATE_LIMIT_MULTIPLIER: '100',
+      // AI import and translation answer from recorded responses: CI never calls the API.
+      AI_RECORDED_RESPONSES: 'true',
     },
   },
 });

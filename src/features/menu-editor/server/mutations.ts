@@ -5,6 +5,7 @@ import type { SessionClaims } from '@/lib/auth/claims';
 import { withRls, type DbTransaction } from '@/lib/db/rls';
 import {
   categories,
+  restaurants,
   optionGroups,
   options,
   productOptionGroups,
@@ -711,4 +712,19 @@ async function transactionNow(tx: DbTransaction): Promise<string> {
   const [row] = await tx.execute<{ now: string }>(sql`select now()::text as now`);
   if (!row) throw new AppError('INTERNAL', 'now() returned no row');
   return row.now;
+}
+
+/** Links the venue logo and cover (P1-14); the media rows belong to the restaurant (FK). */
+export async function setVenueMedia(
+  scope: EditorScope,
+  values: { logoMediaId: string | null; coverMediaId: string | null },
+): Promise<void> {
+  await withRls(scope.claims, async (tx) => {
+    const rows = await tx
+      .update(restaurants)
+      .set({ logoMediaId: values.logoMediaId, coverMediaId: values.coverMediaId })
+      .where(eq(restaurants.id, scope.restaurantId))
+      .returning({ id: restaurants.id });
+    if (rows.length === 0) throw notFound('Restaurant');
+  });
 }

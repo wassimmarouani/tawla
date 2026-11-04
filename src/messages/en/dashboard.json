@@ -102,5 +102,17 @@
       "description": "Hours, languages, appearance and links."
     }
   },
-  "notifications": "Notifications"
+  "notifications": "Notifications",
+  "setup": {
+    "title": "Getting started",
+    "description": "Five steps to a menu ready to scan. Come back here anytime.",
+    "step": "Step {number}",
+    "importMenu": "Import from a photo",
+    "openEditor": "Open the menu editor",
+    "createTables": "Create tables",
+    "printTents": "Print the table tents",
+    "openTeam": "Invite the team and pair devices",
+    "allDone": "All set: your menu is live.",
+    "viewMenu": "View the menu"
+  }
 }

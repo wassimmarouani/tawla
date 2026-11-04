@@ -23,6 +23,12 @@ export const ERROR_HTTP_STATUS = {
   IDEMPOTENCY_CONFLICT: 409,
   RATE_LIMITED: 429,
   AI_QUOTA_EXCEEDED: 429,
+  /** The AI provider declined the content (ADR-0030 §4): manual entry instead. */
+  AI_REFUSED: 422,
+  /** The AI answer did not match the expected schema. */
+  AI_INVALID_OUTPUT: 502,
+  /** AI provider unreachable, overloaded or not configured. */
+  AI_UNAVAILABLE: 503,
   INTERNAL: 500,
 } as const satisfies Record<string, number>;
 

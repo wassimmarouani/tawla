@@ -45,6 +45,7 @@ A progress checklist stays on the dashboard until onboarding is complete. Steps 
 - **Deletion is soft** (`deleted_at`): a category and the products deleted with it share one timestamp, so undo restores exactly those.
 - **Option groups (P1-06):** `/dashboard/menu/options` lists reusable groups with their rule ("Required · 1 choice"), options, extra prices and how many products use them. The group dialog edits one language at a time (dots mark missing translations), min/max with inline errors (max ≥ min, min ≤ number of options) and ordered options. Removed options and deleted groups are soft-deleted; deleting a group is undoable.
 - **Product options and details (P1-06):** the product form links groups in display order; "Adapt for this item" overrides min/max and each option's price for that product only (blank = the group's value). Badges, diets and the 14 allergens are toggle chips.
+- **AI import and translation (P1-13, ADR-0030):** "Import from a photo" (`/dashboard/menu/import`): 1–6 photos resized in the browser → draft with every category and dish, prices parsed from the printed text (shown as "Read: 3,500 DT"), low-confidence rows flagged "Check", unreadable prices unticked → the owner edits, unticks and imports (existing categories with the same name are reused). "Translate the menu": suggestions for each missing enabled language, editable and untickable, applied without overwriting text typed in the meantime. Basic quota: 3 imports and 300 translated items per month, 3 DT cost cap; the friendly state appears when it is used up.
 - **Live preview (P1-06):** from 1280 px, a phone-sized frame of the real public menu sits beside the editor and the product form (same-origin framing only). It reloads after every save; after saving a product the menu page opens that product in the preview (`?focus=`). It shows what customers see, so hidden items are not in it.
 - **Serving hours** of a category show on the public menu next to its title ("Servi lun. – sam., 07:00–11:00").
 
@@ -75,6 +76,7 @@ A progress checklist stays on the dashboard until onboarding is complete. Steps 
 - **Customer menu theme:** main colour, light / dark / auto, card style (list or grid).
 - **Links:** Google reviews, Instagram, Facebook, TikTok, Wi-Fi.
 - **Price rounding step** for bulk changes.
+- **Implemented (P1-14):** `/dashboard/settings`, one form per section saved on its own (`settings.edit`); every save expires the public menu cache tags so customers see it on their next load. Logo and cover upload through the media pipeline and are linked at once. Card style is not offered (layout follows photo coverage, ADR-0027).
 
 ## Dashboard and statistics
 

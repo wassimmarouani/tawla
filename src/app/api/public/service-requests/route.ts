@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse, after, type NextRequest } from 'next/server';
 import {
   REQUEST_COOLDOWN_SECONDS,
   errorResponse,
@@ -9,6 +9,7 @@ import {
   serviceRequestSchema,
 } from '@/features/table-service';
 import { AppError } from '@/lib/errors';
+import { notifyStaffOfRequest } from '@/server/admin/staff-service';
 import { createServiceRequest } from '@/server/admin/table-service';
 
 /** POST /api/public/service-requests: "Call waiter" / "Request bill" (idempotent, cooldowns). */
@@ -28,6 +29,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       idempotencyKey: key.data,
       cooldownSeconds: REQUEST_COOLDOWN_SECONDS,
     });
+    // Web Push after the response: the realtime broadcast already reached open staff screens.
+    after(() => notifyStaffOfRequest({ restaurantId: session.r, requestId: created.id }));
     return NextResponse.json(created, { status: 201, headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return errorResponse(error, 'service_requests.create');

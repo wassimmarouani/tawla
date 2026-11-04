@@ -1,4 +1,5 @@
-import { ExternalLink, Lock } from 'lucide-react';
+import { Camera, ExternalLink, Lock } from 'lucide-react';
+import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { PageHeader } from '@/components/layout/page-header';
 import { EmptyState } from '@/components/states/empty-state';
@@ -7,6 +8,7 @@ import { env } from '@/lib/env';
 import { loadEditorMenu } from '../queries/editor-menu';
 import { editorPageData } from '../server/page-data';
 import { MenuEditor } from './menu-editor';
+import { TranslateDialog } from './translate-dialog';
 
 /** `/dashboard/menu` (P1-05): the menu editor, or a read-only notice. */
 export async function MenuEditorScreen({ focus }: { focus?: string | undefined }) {
@@ -26,15 +28,29 @@ export async function MenuEditorScreen({ focus }: { focus?: string | undefined }
         title={tSection('title')}
         description={t('page.description')}
         actions={
-          <a
-            href={`/${restaurant.slug}`}
-            target="_blank"
-            rel="noopener"
-            className={buttonVariants({ variant: 'outline' })}
-          >
-            {t('page.viewMenu')}
-            <ExternalLink aria-hidden="true" className="rtl:-scale-x-100" />
-          </a>
+          <>
+            {data.canEdit ? (
+              <>
+                <Link
+                  href="/dashboard/menu/import"
+                  className={buttonVariants({ variant: 'outline' })}
+                >
+                  <Camera aria-hidden="true" />
+                  {t('ai.importLink')}
+                </Link>
+                <TranslateDialog />
+              </>
+            ) : null}
+            <a
+              href={`/${restaurant.slug}`}
+              target="_blank"
+              rel="noopener"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              {t('page.viewMenu')}
+              <ExternalLink aria-hidden="true" className="rtl:-scale-x-100" />
+            </a>
+          </>
         }
       />
       {data.canEdit ? (

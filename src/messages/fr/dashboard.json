@@ -102,5 +102,17 @@
       "description": "Horaires, langues, apparence et liens."
     }
   },
-  "notifications": "Notifications"
+  "notifications": "Notifications",
+  "setup": {
+    "title": "Mise en route",
+    "description": "Cinq étapes pour un menu prêt à scanner. Vous pouvez revenir ici à tout moment.",
+    "step": "Étape {number}",
+    "importMenu": "Importer depuis une photo",
+    "openEditor": "Ouvrir l’éditeur de menu",
+    "createTables": "Créer les tables",
+    "printTents": "Imprimer les chevalets",
+    "openTeam": "Inviter l’équipe et associer les appareils",
+    "allDone": "Tout est prêt : votre menu est en ligne.",
+    "viewMenu": "Voir le menu"
+  }
 }

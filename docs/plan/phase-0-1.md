@@ -469,6 +469,8 @@
   - a claim from device 1 removes the request from device 2 immediately.
 - Staff screen DoD at 390 / 768 / 1024 (tablet) / 1440, with 48 px targets verified. Table number readable at 1 m: display token ≥ 56 px, checked in screenshots.
 
+**Note (2026-11-03):** hosted environments must set `app.settings.cron_base_url` (database setting) and the Vault secret `cron_secret` (same value as `CRON_SECRET`) for the 15-second escalation job; locally the job is a no-op and the integration suite calls the escalation directly. Listed in P1-17.
+
 ### P1-13 — AI menu import and translation · L · 👤 developer Anthropic API key (low spend limit)
 
 **Deliverables**
@@ -483,6 +485,8 @@
 - CI tests use recorded fixtures (no network).
 - The eval run (manual, real API) reports price accuracy and item recall. The owner reviews the numbers before the feature ships.
 - Quota exhaustion shows the friendly state. `ai_usage` rows have the correct cost maths. No customer data in prompts (unit test on prompt builders).
+
+**Note (2026-11-03):** built on Gemini (ADR-0030, supersedes the provider part of ADR-0025) at the owner's request. Eval on the 6 fixture menus (`pnpm ai:eval`, gemini-2.5-flash): item recall 97.4 %, millime-exact prices 97.4 % of found items, 34 millimes for all six. Fixtures are rendered menus (printed FR, printed AR, bilingual, handwritten-style, chalkboard, dense); photos of real pilot menus are added when the pilots provide them. E2E and CI run with `AI_RECORDED_RESPONSES=true` (recorded answers, no network; ignored in production). Translation suggestions are reviewed in a dialog; the glossary is read but edited later (P1-14 settings).
 
 ### P1-14 — Onboarding wizard and settings · L
 
@@ -502,6 +506,8 @@
 
 - Scripted E2E of the full onboarding with seeded AI fixtures completes. A human dry run with a stopwatch (owner) confirms the "< 30 min" target.
 - Settings changes reflect on the customer menu (cache invalidation). DoD screenshots.
+
+**Note (2026-11-04):** the setup wizard is `/dashboard/setup`: the five checklist steps in order with the next one open (venue + hours and identity edited in place; menu, tables + print and team link to their screens). The overview checklist links into it. Settings (`/dashboard/settings`) cover venue, hours + exceptions, "close now / open now / back to the hours", languages, brand colour (AA-adjusted preview, logo colour suggestion), light/dark/auto mode, logo and cover, Wi-Fi and links (Google review, Instagram, Facebook, TikTok), session timeout, business-day cutoff and rounding step. The public menu now shows a folded "Info" panel (address with directions, Wi-Fi, social links). Card style (list/grid) is left out: layout follows photo coverage (ADR-0027). The owner's stopwatch dry run of the < 30 min target is part of P1-17.
 
 ### P1-15 — Minimal Super Admin · M
 

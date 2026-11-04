@@ -7,6 +7,8 @@ export const restaurantThemeSchema = z
       .string()
       .regex(/^#[0-9a-f]{6}$/i)
       .optional(),
+    /** Light / dark / auto (system) for the customer menu (spec 02, P1-14). */
+    color_mode: z.enum(['auto', 'light', 'dark']).optional().catch(undefined),
   })
   .catch({});
 

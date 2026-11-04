@@ -1,0 +1,64 @@
+{
+  "model": "gemini-2.5-flash",
+  "raw": {
+    "language": "ar",
+    "categories": [
+      {
+        "name": "أطباق تونسية",
+        "items": [
+          {
+            "name": "لبلابي",
+            "description": null,
+            "price": "4.500 د.ت",
+            "confidence": "high"
+          },
+          {
+            "name": "كفتاجي",
+            "description": null,
+            "price": "7.000 د.ت",
+            "confidence": "high"
+          },
+          {
+            "name": "كسكسي بالحوت",
+            "description": null,
+            "price": "18.000 د.ت",
+            "confidence": "high"
+          },
+          {
+            "name": "مقرونة بالدجاج",
+            "description": null,
+            "price": "12.500 د.ت",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "name": "مشروبات",
+        "items": [
+          {
+            "name": "قهوة",
+            "description": null,
+            "price": "1.800 د.ت",
+            "confidence": "high"
+          },
+          {
+            "name": "شاي أخضر",
+            "description": null,
+            "price": "1.500 د.ت",
+            "confidence": "high"
+          },
+          {
+            "name": "عصير فراولة",
+            "description": null,
+            "price": "5.000 د.ت",
+            "confidence": "high"
+          }
+        ]
+      }
+    ]
+  },
+  "usage": {
+    "inputTokens": 470,
+    "outputTokens": 639
+  }
+}

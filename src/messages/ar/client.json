@@ -127,5 +127,13 @@
     "reviewHint": "أعجبتك الزيارة؟ تقييم على Google يساعد المحل كثيرًا.",
     "failed": "لم يتم الإرسال. أعد المحاولة.",
     "close": "إغلاق"
+  },
+  "practical": {
+    "address": "العنوان",
+    "directions": "الاتجاهات",
+    "password": "كلمة السر:",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok"
   }
 }

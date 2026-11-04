@@ -85,7 +85,12 @@ test('pricing lists the plan catalogue in dinars', async ({ page }, testInfo) =>
 
   // Menu QR (ADR-0031): the menu only, then Basic adds table service.
   const menuQr = page.getByRole('article', { name: 'Menu QR' });
-  await expect(menuQr.getByText('19,000 DT', { exact: true })).toBeVisible();
+  await expect(menuQr.getByText('200,000 DT', { exact: true })).toBeVisible();
+  await expect(menuQr.getByText('Sans abonnement')).toBeVisible();
+  await expect(menuQr.getByRole('link', { name: 'Commander' })).toHaveAttribute(
+    'href',
+    /^https:\/\/wa\.me\/21656525519$/,
+  );
   await expect(menuQr.getByText('Appel serveur et demande d’addition')).toHaveCount(0);
   await expect(basic.getByText('Tout Menu QR, plus :')).toBeVisible();
   await expect(basic.getByText('Appel serveur et demande d’addition')).toBeVisible();

@@ -1,4 +1,4 @@
-import { Check, Clock } from 'lucide-react';
+import { Check, Clock, MessageCircle } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { connection } from 'next/server';
@@ -81,15 +81,31 @@ async function PlanCardView({ card, locale }: { card: PlanCard; locale: Locale }
           </h2>
           {card.recommended ? <Badge variant="success">{t('popular')}</Badge> : null}
         </div>
-        <p className="flex flex-wrap items-baseline gap-x-1.5">
-          <span className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">
-            {formatMoney(card.priceMonthly, locale)}
-          </span>
-          <span className="text-md text-muted-foreground">{t('perMonth')}</span>
-        </p>
-        <p className="text-sm text-muted-foreground tabular-nums">
-          {t('perYear', { price: formatMoney(card.priceYearly, locale) })}
-        </p>
+        {card.priceOnce === null ? (
+          <>
+            <p className="flex flex-wrap items-baseline gap-x-1.5">
+              <span className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">
+                {formatMoney(card.priceMonthly, locale)}
+              </span>
+              <span className="text-md text-muted-foreground">{t('perMonth')}</span>
+            </p>
+            <p className="text-sm text-muted-foreground tabular-nums">
+              {t('perYear', { price: formatMoney(card.priceYearly, locale) })}
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="flex flex-wrap items-baseline gap-x-1.5">
+              <span className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">
+                {formatMoney(card.priceOnce, locale)}
+              </span>
+              <span className="text-md text-muted-foreground">{t('once')}</span>
+            </p>
+            <p>
+              <Badge variant="soft">{t('noSubscription')}</Badge>
+            </p>
+          </>
+        )}
       </header>
 
       <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
@@ -102,7 +118,9 @@ async function PlanCardView({ card, locale }: { card: PlanCard; locale: Locale }
                 products: card.limits.products,
               })}
         </li>
-        <li>{t('ai', { imports: card.ai.imports, items: card.ai.items })}</li>
+        {card.priceOnce === null ? (
+          <li>{t('ai', { imports: card.ai.imports, items: card.ai.items })}</li>
+        ) : null}
       </ul>
 
       <div className="flex flex-1 flex-col gap-3">
@@ -110,6 +128,14 @@ async function PlanCardView({ card, locale }: { card: PlanCard; locale: Locale }
           {card.extends ? t('everything', { plan: card.extends[locale] }) : t('included')}
         </p>
         <ul className="flex flex-col gap-2.5">
+          {card.priceOnce === null
+            ? null
+            : (['printed', 'changes'] as const).map((extra) => (
+                <li key={extra} className="flex items-start gap-2.5 text-md text-foreground">
+                  <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-success" />
+                  <span className="min-w-0 flex-1">{t(`extras.${extra}`)}</span>
+                </li>
+              ))}
           {card.features.map((feature) => (
             <li key={feature.key} className="flex items-start gap-2.5 text-md text-foreground">
               <Check aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-success" />
@@ -124,7 +150,17 @@ async function PlanCardView({ card, locale }: { card: PlanCard; locale: Locale }
         </ul>
       </div>
 
-      {card.available ? (
+      {card.priceOnce !== null && whatsapp ? (
+        <a
+          href={whatsapp}
+          rel="noopener noreferrer"
+          target="_blank"
+          className={cn(buttonVariants({ size: 'lg' }), 'w-full gap-2')}
+        >
+          <MessageCircle aria-hidden="true" />
+          {t('order')}
+        </a>
+      ) : card.available ? (
         <Link
           href="/signup"
           prefetch={false}

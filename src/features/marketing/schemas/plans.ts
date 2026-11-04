@@ -15,6 +15,8 @@ export const publicPlanSchema = z.object({
   name: localizedNameSchema,
   priceMonthly: z.number().int().nonnegative(),
   priceYearly: z.number().int().nonnegative(),
+  /** One-time purchase, no subscription (Menu QR, ADR-0031). */
+  priceOnce: z.number().int().nonnegative().nullable(),
   features: z.array(z.string().min(1)),
   limits: z.object({ tables: limitSchema, staff: limitSchema, products: limitSchema }),
   aiLimits: z.object({

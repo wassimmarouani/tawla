@@ -591,12 +591,13 @@ async function Offers({ locale }: { locale: Locale }) {
   await connection();
   const t = await getTranslations({ locale, namespace: 'marketing' });
   const cards = planCards(await publicPlans()).filter((card) => card.available);
+  const whatsapp = whatsappHref();
 
   const offer = (code: string) => {
     if (code === 'menu_qr') {
       return {
         tagline: t('offers.plans.menu_qr.tagline'),
-        points: (['menu', 'qr', 'languages', 'ai'] as const).map((point) =>
+        points: (['menu', 'qr', 'changes', 'languages'] as const).map((point) =>
           t(`offers.plans.menu_qr.points.${point}`),
         ),
       };
@@ -636,8 +637,10 @@ async function Offers({ locale }: { locale: Locale }) {
               <h3 className="text-2xl font-semibold text-foreground">{card.name[locale]}</h3>
               <p className="text-md text-muted-foreground">{copy.tagline}</p>
             </div>
-            <p className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">
-              {t('offers.from', { price: formatMoney(card.priceMonthly, locale) })}
+            <p className="font-heading text-2xl font-title tracking-title text-foreground tabular-nums sm:text-3xl">
+              {card.priceOnce === null
+                ? t('offers.from', { price: formatMoney(card.priceMonthly, locale) })
+                : t('offers.once', { price: formatMoney(card.priceOnce, locale) })}
             </p>
             <ul className="flex flex-1 flex-col gap-3">
               {copy.points.map((point) => (
@@ -649,10 +652,14 @@ async function Offers({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ul>
-            <StartButton
-              label={t('pricing.cta')}
-              className={card.recommended ? 'w-full' : 'w-full shadow-none'}
-            />
+            {card.priceOnce !== null && whatsapp ? (
+              <WhatsAppButton href={whatsapp} label={t('offers.order')} className="w-full" />
+            ) : (
+              <StartButton
+                label={t('pricing.cta')}
+                className={card.recommended ? 'w-full' : 'w-full shadow-none'}
+              />
+            )}
           </li>
         );
       })}

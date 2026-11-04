@@ -55,7 +55,7 @@
     "items": {
       "onlyMenu": {
         "q": "Je veux seulement le menu en QR code, c’est possible ?",
-        "a": "Oui. La formule Menu QR contient votre carte en ligne et un QR code par table, sans appel serveur ni addition. Vous pouvez passer au Basic à tout moment."
+        "a": "Oui. La formule Menu QR se paie une seule fois, sans abonnement : votre carte en ligne et des QR codes imprimés et plastifiés pour vos tables. Pour changer un prix ou ajouter un plat, envoyez-nous un message WhatsApp et on s’en occupe."
       },
       "app": {
         "q": "Mes clients doivent-ils installer une application ?",
@@ -132,7 +132,14 @@
     },
     "soonNote": "La commande à table arrive bientôt. Les formules Pro et Premium sont proposées sur demande.",
     "everything": "Tout {plan}, plus :",
-    "soon": "Bientôt"
+    "soon": "Bientôt",
+    "once": "paiement unique",
+    "noSubscription": "Sans abonnement",
+    "order": "Commander",
+    "extras": {
+      "printed": "QR codes imprimés et plastifiés pour vos tables",
+      "changes": "Modifications du menu sur simple message WhatsApp"
+    }
   },
   "legal": {
     "pending": "Document provisoire, en attente de validation juridique.",
@@ -302,19 +309,19 @@
   "offers": {
     "eyebrow": "Formules",
     "title": "Commencez simple, évoluez quand vous voulez",
-    "description": "Juste le menu en QR code, ou le menu avec le service à table : vous choisissez.",
+    "description": "Juste le menu en QR code pour un paiement unique, ou le menu avec le service à table en abonnement : vous choisissez.",
     "from": "dès {price} / mois",
     "recommended": "Recommandé",
     "cta": "Comparer les formules",
     "soon": "Bientôt : la commande à table et le suivi des commandes (Pro).",
     "plans": {
       "menu_qr": {
-        "tagline": "Juste le menu, rien de plus",
+        "tagline": "Sans abonnement : on s’occupe de tout",
         "points": {
-          "menu": "Votre carte en ligne, toujours à jour",
-          "qr": "Un QR code sur chaque table",
-          "languages": "Français, arabe, anglais",
-          "ai": "Import par photo et traduction automatique"
+          "menu": "Votre carte en ligne en 3 langues",
+          "qr": "QR codes imprimés et plastifiés pour vos tables",
+          "changes": "Un prix ou un plat à changer ? Un message WhatsApp suffit",
+          "languages": "Aucune application pour vos clients"
         }
       },
       "basic": {
@@ -326,7 +333,9 @@
           "team": "Alertes sur la tablette et les téléphones de l’équipe"
         }
       }
-    }
+    },
+    "once": "{price} · une fois",
+    "order": "Commander sur WhatsApp"
   },
   "support": {
     "eyebrow": "Accompagnement",

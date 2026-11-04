@@ -15,6 +15,7 @@ export async function listPublicPlanRows() {
       name: plans.name,
       priceMonthly: plans.priceMonthly,
       priceYearly: plans.priceYearly,
+      priceOnce: plans.priceOnce,
       features: plans.features,
       limits: plans.limits,
       aiLimits: plans.aiLimits,

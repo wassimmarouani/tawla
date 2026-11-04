@@ -39,7 +39,7 @@
 
 ## 2. Plans (amended by ADR-0015, ADR-0031)
 
-Entry plan **Menu QR** (`menu_qr`, ADR-0031): `menu`, `branding`, `multilingual`, `availability_toggle`, AI import and translation (small quota), "Powered by Tawla" badge. No service requests, no staff alerts. Limits as Basic.
+Entry plan **Menu QR** (`menu_qr`, ADR-0031), **one-time 200 DT**, printed QR codes included, menu changes made by Tawla on request: `menu`, `branding`, `multilingual`, `availability_toggle`, AI import and translation (small quota), "Powered by Tawla" badge. No service requests, no staff alerts. Limits as Basic.
 
 | Feature (flag)                                                      | Basic                     | Pro                                | Premium                                                  |
 | ------------------------------------------------------------------- | ------------------------- | ---------------------------------- | -------------------------------------------------------- |
@@ -92,7 +92,7 @@ Detailed Phase 0–1 tasks: [`docs/plan/phase-0-1.md`](../plan/phase-0-1.md).
 
 | Revenue        | Hypothesis                                                |
 | -------------- | --------------------------------------------------------- |
-| Menu QR        | 19 DT / month (ADR-0031)                                  |
+| Menu QR        | 200 DT once, no subscription (ADR-0031)                   |
 | Basic          | 30–50 DT / month                                          |
 | Pro            | 80–120 DT / month                                         |
 | Premium        | 150–250 DT / month                                        |

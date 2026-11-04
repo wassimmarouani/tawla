@@ -36,6 +36,9 @@ export const LIVE_FEATURES: ReadonlySet<ListedFeature> = new Set([
   'ai_translate',
 ]);
 
+/** What a managed one-time plan lists: Tawla runs the editing, the venue gets the result. */
+const MANAGED_FEATURES: ReadonlySet<ListedFeature> = new Set(['menu', 'branding', 'multilingual']);
+
 export type PlanLimits =
   { kind: 'limited'; tables: number; staff: number; products: number } | { kind: 'unlimited' };
 
@@ -44,6 +47,8 @@ export interface PlanCard {
   name: PublicPlan['name'];
   priceMonthly: number;
   priceYearly: number;
+  /** One-time price: no subscription, menu changes made by Tawla on request (ADR-0031). */
+  priceOnce: number | null;
   /** Every listed feature is live: the plan can be bought now, self-serve. */
   available: boolean;
   /** The most complete plan available now: highlighted on the pricing page. */
@@ -81,9 +86,12 @@ export function planCards(plans: readonly PublicPlan[]): PlanCard[] {
       name: plan.name,
       priceMonthly: plan.priceMonthly,
       priceYearly: plan.priceYearly,
+      priceOnce: plan.priceOnce,
       available: own.every((feature) => LIVE_FEATURES.has(feature)),
       extends: previous ? previous.name : null,
-      features: shown.map((key) => ({ key, live: LIVE_FEATURES.has(key) })),
+      features: shown
+        .filter((key) => plan.priceOnce === null || MANAGED_FEATURES.has(key))
+        .map((key) => ({ key, live: LIVE_FEATURES.has(key) })),
       limits: limitsOf(plan.limits),
       ai: { imports: plan.aiLimits.photo_imports, items: plan.aiLimits.translated_items },
       recommended: false,

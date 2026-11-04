@@ -55,7 +55,7 @@
     "items": {
       "onlyMenu": {
         "q": "I only want the QR code menu. Is that possible?",
-        "a": "Yes. The QR Menu plan includes your menu online and a QR code per table, without waiter calls or bills. You can move to Basic anytime."
+        "a": "Yes. The QR Menu plan is paid once, with no subscription: your menu online and printed, laminated QR codes for your tables. To change a price or add a dish, send us a WhatsApp message and we take care of it."
       },
       "app": {
         "q": "Do my customers need an app?",
@@ -132,7 +132,14 @@
     },
     "soonNote": "Table ordering is coming soon. Pro and Premium are available on request.",
     "everything": "Everything in {plan}, plus:",
-    "soon": "Coming soon"
+    "soon": "Coming soon",
+    "once": "one-time payment",
+    "noSubscription": "No subscription",
+    "order": "Order",
+    "extras": {
+      "printed": "Printed, laminated QR codes for your tables",
+      "changes": "Menu changes with a simple WhatsApp message"
+    }
   },
   "legal": {
     "pending": "Draft document, pending legal review.",
@@ -302,19 +309,19 @@
   "offers": {
     "eyebrow": "Plans",
     "title": "Start simple, grow when you want",
-    "description": "Just the QR code menu, or the menu with table service: your choice.",
+    "description": "Just the QR code menu for a one-time payment, or the menu with table service by subscription: your choice.",
     "from": "from {price} / month",
     "recommended": "Recommended",
     "cta": "Compare plans",
     "soon": "Coming soon: table ordering and order tracking (Pro).",
     "plans": {
       "menu_qr": {
-        "tagline": "Just the menu, nothing more",
+        "tagline": "No subscription: we handle everything",
         "points": {
-          "menu": "Your menu online, always current",
-          "qr": "A QR code on every table",
-          "languages": "French, Arabic, English",
-          "ai": "Photo import and automatic translation"
+          "menu": "Your menu online in 3 languages",
+          "qr": "Printed, laminated QR codes for your tables",
+          "changes": "A price or dish to change? One WhatsApp message",
+          "languages": "No app for your customers"
         }
       },
       "basic": {
@@ -326,7 +333,9 @@
           "team": "Alerts on the team's tablet and phones"
         }
       }
-    }
+    },
+    "once": "{price} · one time",
+    "order": "Order on WhatsApp"
   },
   "support": {
     "eyebrow": "Support",

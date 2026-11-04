@@ -10,6 +10,7 @@ const BASIC: PublicPlan = {
   name: name('Basic'),
   priceMonthly: 39000,
   priceYearly: 390000,
+  priceOnce: null,
   features: ['menu', 'branding', 'service_requests', 'ai_import', 'powered_by_badge'],
   limits: { tables: 40, staff: 1, products: 300 },
   aiLimits: { photo_imports: 3, translated_items: 300 },
@@ -20,6 +21,7 @@ const PRO: PublicPlan = {
   name: name('Pro'),
   priceMonthly: 99000,
   priceYearly: 990000,
+  priceOnce: null,
   features: ['menu', 'branding', 'service_requests', 'ai_import', 'ordering', 'unknown_feature'],
   limits: { tables: 100, staff: 10, products: 1000 },
   aiLimits: { photo_imports: 10, translated_items: 2000 },
@@ -65,6 +67,13 @@ describe('planCards', () => {
     ]);
   });
 
+  it('lists only customer-facing features on a managed one-time plan', () => {
+    const managed: PublicPlan = { ...BASIC, code: 'menu_qr', priceOnce: 200000 };
+    const [card] = planCards([managed]);
+    expect(card?.priceOnce).toBe(200000);
+    expect(card?.features.map((feature) => feature.key)).toEqual(['menu', 'branding']);
+  });
+
   it('reads limits and AI quotas, null meaning unlimited', () => {
     const [basic, , premium] = planCards([BASIC, PRO, PREMIUM]);
     expect(basic?.limits).toEqual({ kind: 'limited', tables: 40, staff: 1, products: 300 });
@@ -76,6 +85,7 @@ describe('planCards', () => {
   it('validates catalogue rows', () => {
     expect(publicPlanSchema.safeParse(BASIC).success).toBe(true);
     expect(publicPlanSchema.safeParse({ ...BASIC, priceMonthly: 39.5 }).success).toBe(false);
+    expect(publicPlanSchema.safeParse({ ...BASIC, priceOnce: 200000 }).success).toBe(true);
     expect(publicPlanSchema.safeParse({ ...BASIC, name: { fr: 'Basic' } }).success).toBe(false);
   });
 });

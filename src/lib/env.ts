@@ -37,6 +37,16 @@ export const env = createEnv({
       .transform((value) => value === 'true'),
     /** Bearer secret of /api/cron/* (ADR-0009), also stored in Supabase Vault as cron_secret. */
     CRON_SECRET: z.string().min(32).optional(),
+    /** Public slug of the demo venue shown on the marketing pages (iframe + QR); hidden when unset. */
+    DEMO_MENU_SLUG: z
+      .string()
+      .regex(/^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$/)
+      .optional(),
+    /** Sales WhatsApp number, digits only with the country code (`216…`); hidden when unset. */
+    CONTACT_WHATSAPP: z
+      .string()
+      .regex(/^\d{8,15}$/)
+      .optional(),
     ENABLE_DEV_ROUTES: z
       .enum(['true', 'false'])
       .default('false')
@@ -66,6 +76,8 @@ export const env = createEnv({
     AI_MODEL_EXTRACT: process.env.AI_MODEL_EXTRACT,
     AI_MODEL_TRANSLATE: process.env.AI_MODEL_TRANSLATE,
     AI_RECORDED_RESPONSES: process.env.AI_RECORDED_RESPONSES,
+    DEMO_MENU_SLUG: process.env.DEMO_MENU_SLUG,
+    CONTACT_WHATSAPP: process.env.CONTACT_WHATSAPP,
     ENABLE_DEV_ROUTES: process.env.ENABLE_DEV_ROUTES,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,

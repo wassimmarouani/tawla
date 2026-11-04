@@ -1,0 +1,661 @@
+import {
+  ArrowRight,
+  BellRing,
+  BookOpenText,
+  Bot,
+  CakeSlice,
+  Camera,
+  Check,
+  CircleCheck,
+  Coffee,
+  CreditCard,
+  CupSoda,
+  Hotel,
+  Languages,
+  LayoutDashboard,
+  MessageCircle,
+  Palette,
+  QrCode,
+  Sandwich,
+  Sparkles,
+  Sun,
+  UtensilsCrossed,
+  Wine,
+} from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import Link from 'next/link';
+import { connection } from 'next/server';
+import { Suspense, type ReactNode } from 'react';
+import { buttonVariants } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { Locale } from '@/i18n/locales';
+import { env } from '@/lib/env';
+import { formatMoney } from '@/lib/money/format';
+import { qrSvg } from '@/lib/qr/qr-svg';
+import { cn } from '@/lib/utils';
+import { publicPlans } from '../server/plans';
+import { marketingHref } from '../services/paths';
+import { planCards } from '../services/pricing';
+import { DemoPhone } from './demo-phone';
+import { MockMenu, ServiceVisual } from './landing-visuals';
+import { whatsappHref } from './marketing-shell';
+
+const MARQUEE = [
+  { key: 'cafe', Icon: Coffee },
+  { key: 'tea', Icon: CupSoda },
+  { key: 'restaurant', Icon: UtensilsCrossed },
+  { key: 'pastry', Icon: CakeSlice },
+  { key: 'lounge', Icon: Wine },
+  { key: 'fastfood', Icon: Sandwich },
+  { key: 'hotel', Icon: Hotel },
+  { key: 'beach', Icon: Sun },
+] as const;
+
+const STATS = ['setup', 'alert', 'languages', 'app'] as const;
+
+const SERVICES = [
+  { key: 'menu', Icon: BookOpenText },
+  { key: 'qr', Icon: QrCode },
+  { key: 'service', Icon: BellRing },
+  { key: 'languages', Icon: Languages },
+  { key: 'ai', Icon: Bot },
+  { key: 'team', Icon: LayoutDashboard },
+] as const;
+
+const STEPS = [
+  { key: 'photo', Icon: Camera },
+  { key: 'brand', Icon: Palette },
+  { key: 'print', Icon: QrCode },
+] as const;
+
+const SEGMENTS = [
+  { key: 'cafe', Icon: Coffee },
+  { key: 'restaurant', Icon: UtensilsCrossed },
+] as const;
+
+const SUPPORT = ['menu', 'print', 'train', 'help'] as const;
+
+const FAQ = ['onlyMenu', 'app', 'start', 'print', 'internet', 'change', 'staff', 'data'] as const;
+
+/** Path of the demo venue's public menu, or null when no demo is configured. */
+function demoMenuPath(): string | null {
+  return env.DEMO_MENU_SLUG ? `/${env.DEMO_MENU_SLUG}` : null;
+}
+
+function SectionHeading({
+  id,
+  eyebrow,
+  title,
+  description,
+  center = false,
+}: {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  center?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        'flex max-w-2xl reveal flex-col gap-3',
+        center && 'mx-auto items-center text-center',
+      )}
+    >
+      {eyebrow ? (
+        <p className="text-sm font-semibold tracking-label text-brand-text uppercase">{eyebrow}</p>
+      ) : null}
+      <h2
+        id={id}
+        className="font-heading text-2xl font-title tracking-heading text-balance text-foreground sm:text-3xl lg:text-4xl"
+      >
+        {title}
+      </h2>
+      {description ? (
+        <p className="text-lg text-pretty text-muted-foreground">{description}</p>
+      ) : null}
+    </div>
+  );
+}
+
+/** Primary call to action (sign-up) with a light sweep. */
+function StartButton({ label, className }: { label: string; className?: string }) {
+  return (
+    <Link
+      href="/signup"
+      prefetch={false}
+      className={cn(
+        buttonVariants({ size: 'lg' }),
+        'group relative gap-2 overflow-hidden shadow-lg shadow-brand/25',
+        className,
+      )}
+    >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 start-0 w-1/2 animate-shine bg-linear-to-r from-transparent via-on-brand/25 to-transparent"
+      />
+      {label}
+      <ArrowRight
+        aria-hidden="true"
+        className="transition-transform group-hover:translate-x-1 motion-reduce:transition-none rtl:-scale-x-100 rtl:group-hover:-translate-x-1"
+      />
+    </Link>
+  );
+}
+
+function WhatsAppButton({
+  href,
+  label,
+  className,
+}: {
+  href: string;
+  label: string;
+  className?: string;
+}) {
+  return (
+    <a
+      href={href}
+      rel="noopener noreferrer"
+      target="_blank"
+      className={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'gap-2', className)}
+    >
+      <MessageCircle aria-hidden="true" />
+      {label}
+    </a>
+  );
+}
+
+/** Marketing home (P1-16): what we do, for whom, how, and for how much. */
+export async function Landing({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale, namespace: 'marketing' });
+  const demo = demoMenuPath();
+  const whatsapp = whatsappHref();
+  const qrTarget = `${env.NEXT_PUBLIC_APP_URL}${demo ?? ''}`;
+
+  return (
+    <>
+      {/* Hero */}
+      <section className="relative isolate overflow-clip">
+        <div aria-hidden="true" className="absolute inset-0 -z-10">
+          <div className="absolute -inset-1/4 animate-drift bg-aurora" />
+          <div className="absolute inset-0 bg-grid-fade" />
+        </div>
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-gutter pt-12 pb-16 sm:pt-16 lg:grid-cols-12 lg:gap-8 lg:pt-20 lg:pb-24">
+          <div className="flex min-w-0 flex-col items-start gap-6 lg:col-span-7">
+            <p className="flex animate-pop-in items-center gap-2 rounded-full border border-border bg-card/80 py-1 ps-1.5 pe-3 text-sm font-semibold text-foreground shadow-sm backdrop-blur-sm">
+              <span className="relative grid size-6 shrink-0 place-items-center rounded-full bg-brand text-on-brand">
+                <span className="absolute inset-0 animate-ping-soft rounded-full bg-brand/50" />
+                <Sparkles aria-hidden="true" className="relative size-3.5" />
+              </span>
+              {t('hero.eyebrow')}
+            </p>
+            <h1 className="animate-pop-in font-heading text-3xl font-title tracking-title text-balance text-foreground anim-delay-1 sm:text-4xl xl:text-display-sm">
+              {t('hero.title')} <span className="text-gradient-brand">{t('hero.titleAccent')}</span>
+            </h1>
+            <p className="max-w-xl animate-pop-in text-lg text-pretty text-muted-foreground anim-delay-2">
+              {t('hero.description')}
+            </p>
+            <div className="flex w-full animate-pop-in flex-col gap-3 anim-delay-3 sm:w-auto sm:flex-row sm:flex-wrap">
+              <StartButton label={t('hero.start')} />
+              {whatsapp ? <WhatsAppButton href={whatsapp} label={t('hero.whatsapp')} /> : null}
+            </div>
+            <ul className="flex animate-pop-in flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-muted-foreground anim-delay-4">
+              {(['app', 'commitment', 'languages'] as const).map((key) => (
+                <li key={key} className="flex items-center gap-1.5">
+                  <CircleCheck aria-hidden="true" className="size-4 text-success" />
+                  {t(`hero.trust.${key}`)}
+                </li>
+              ))}
+            </ul>
+            {demo ? (
+              <a
+                href={demo}
+                className={cn(buttonVariants({ variant: 'link' }), 'gap-2 text-md lg:hidden')}
+              >
+                <QrCode aria-hidden="true" />
+                {t('hero.demo')}
+              </a>
+            ) : null}
+          </div>
+
+          <div className="relative flex justify-center lg:col-span-5">
+            <div className="animate-float-slow">
+              <DemoPhone
+                src={demo}
+                title={t('hero.frame')}
+                fallback={<MockMenu locale={locale} />}
+              />
+            </div>
+            <HeroChip
+              icon={<BellRing className="size-4" />}
+              label={t('hero.chips.call')}
+              live
+              className="start-0 top-16 anim-delay-5 sm:-start-2"
+            />
+            <HeroChip
+              icon={<CreditCard className="size-4" />}
+              label={t('hero.chips.bill')}
+              className="end-0 bottom-24 anim-delay-7 sm:-end-2 lg:top-1/2 lg:bottom-auto"
+            />
+            <HeroChip
+              icon={<Languages className="size-4" />}
+              label={t('hero.chips.translated')}
+              className="start-0 bottom-12 anim-delay-9 max-sm:hidden"
+            />
+            {demo ? (
+              <DemoQr
+                url={qrTarget}
+                label={t('hero.qr')}
+                scan={t('hero.scan')}
+                demo={demo}
+                demoLabel={t('hero.demo')}
+              />
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      {/* Venue types */}
+      <section aria-label={t('marquee.label')} className="border-y border-border bg-card py-6">
+        <p className="mb-4 px-gutter text-center text-sm font-semibold text-muted-foreground">
+          {t('marquee.label')}
+        </p>
+        <div dir="ltr" className="overflow-clip mask-fade-x">
+          <div className="flex w-max animate-marquee gap-3">
+            {[0, 1].map((copy) => (
+              <ul
+                key={copy}
+                aria-hidden={copy === 1 ? true : undefined}
+                className="flex shrink-0 gap-3"
+              >
+                {MARQUEE.map(({ key, Icon }) => (
+                  <li
+                    key={key}
+                    dir="auto"
+                    className="flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-semibold whitespace-nowrap text-foreground"
+                  >
+                    <Icon aria-hidden="true" className="size-4 text-brand-text" />
+                    {t(`marquee.items.${key}`)}
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Numbers */}
+      <section aria-labelledby="stats" className="mx-auto max-w-6xl px-gutter py-16 sm:py-20">
+        <h2 id="stats" className="sr-only">
+          {t('stats.title')}
+        </h2>
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
+          {STATS.map((key) => (
+            <div key={key} className="flex reveal flex-col gap-1">
+              <dt className="order-2 text-sm text-pretty text-muted-foreground sm:text-md">
+                {t(`stats.items.${key}.label`)}
+              </dt>
+              <dd className="order-1 text-gradient-brand font-heading text-4xl font-title tracking-title tabular-nums">
+                {t(`stats.items.${key}.value`)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Services */}
+      <section aria-labelledby="services" className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24">
+        <SectionHeading
+          id="services"
+          eyebrow={t('services.eyebrow')}
+          title={t('services.title')}
+          description={t('services.description')}
+        />
+        <ul className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {SERVICES.map(({ key, Icon }) => (
+            <li
+              key={key}
+              className="group flex reveal flex-col gap-5 rounded-lg p-5 shadow-sm transition duration-300 border-gradient hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            >
+              <ServiceVisual kind={key} locale={locale} qrUrl={qrTarget} />
+              <div className="flex flex-col gap-2">
+                <h3 className="flex items-center gap-2.5 text-lg font-semibold text-foreground">
+                  <span
+                    aria-hidden="true"
+                    className="grid size-8 shrink-0 place-items-center rounded-xs bg-brand-subtle text-brand-on-subtle transition-colors group-hover:bg-brand group-hover:text-on-brand"
+                  >
+                    <Icon className="size-4" />
+                  </span>
+                  {t(`services.items.${key}.title`)}
+                </h3>
+                <p className="text-md text-pretty text-muted-foreground">
+                  {t(`services.items.${key}.body`)}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Plans */}
+      <section aria-labelledby="offers" className="border-y border-border bg-card">
+        <div className="mx-auto max-w-6xl px-gutter py-16 sm:py-24">
+          <SectionHeading
+            id="offers"
+            eyebrow={t('offers.eyebrow')}
+            title={t('offers.title')}
+            description={t('offers.description')}
+            center
+          />
+          <Suspense fallback={<OfferSkeletons />}>
+            <Offers locale={locale} />
+          </Suspense>
+          <p className="mt-8 text-center text-md text-pretty text-muted-foreground">
+            {t('offers.soon')}{' '}
+            <Link
+              href={marketingHref(locale, '/pricing')}
+              className="inline-flex min-h-target items-center gap-1 rounded-xs font-semibold text-brand-text underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {t('offers.cta')}
+              <ArrowRight aria-hidden="true" className="size-4 rtl:-scale-x-100" />
+            </Link>
+          </p>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section aria-labelledby="steps" className="mx-auto max-w-6xl px-gutter py-16 sm:py-24">
+        <SectionHeading id="steps" title={t('steps.title')} />
+        <div className="relative mt-12">
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-12 top-6 hidden h-0.5 reveal-line rounded-full bg-brand/30 md:block"
+          />
+          <ol className="relative grid gap-10 md:grid-cols-3 md:gap-6">
+            {STEPS.map(({ key, Icon }, index) => (
+              <li key={key} className="relative flex reveal flex-col gap-3">
+                <span className="flex items-center gap-3">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-full bg-brand text-lg font-semibold text-on-brand shadow-lg ring-4 shadow-brand/30 ring-background">
+                    {index + 1}
+                  </span>
+                  <Icon aria-hidden="true" className="size-5 text-brand-text" />
+                </span>
+                <h3 className="text-xl font-semibold text-foreground">
+                  {t(`steps.items.${key}.title`)}
+                </h3>
+                <p className="text-md text-pretty text-muted-foreground">
+                  {t(`steps.items.${key}.body`)}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* Segments */}
+      <section aria-labelledby="segments" className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24">
+        <SectionHeading id="segments" title={t('segments.title')} />
+        <ul className="mt-8 grid gap-5 md:grid-cols-2">
+          {SEGMENTS.map(({ key, Icon }) => (
+            <li
+              key={key}
+              className="relative isolate flex reveal flex-col gap-3 overflow-clip rounded-lg bg-brand-subtle p-6 text-brand-on-subtle sm:p-8"
+            >
+              <Icon
+                aria-hidden="true"
+                className="absolute -end-4 -bottom-4 -z-10 size-32 opacity-10"
+              />
+              <Icon aria-hidden="true" className="size-8" />
+              <h3 className="text-xl font-semibold">{t(`segments.items.${key}.title`)}</h3>
+              <p className="text-md text-pretty">{t(`segments.items.${key}.body`)}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Support */}
+      <section aria-labelledby="support" className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24">
+        <div className="relative isolate grid reveal gap-8 overflow-clip rounded-xl bg-brand-panel p-6 text-brand-on-panel sm:p-10 lg:grid-cols-2 lg:p-12">
+          <div
+            aria-hidden="true"
+            className="absolute -end-24 -top-24 -z-10 size-96 rounded-full bg-brand-on-panel/8"
+          />
+          <div className="flex flex-col items-start gap-4">
+            <p className="text-sm font-semibold tracking-label uppercase opacity-90">
+              {t('support.eyebrow')}
+            </p>
+            <h2
+              id="support"
+              className="font-heading text-2xl font-title tracking-heading text-balance sm:text-3xl"
+            >
+              {t('support.title')}
+            </h2>
+            <p className="text-lg text-pretty text-brand-on-panel/90">{t('support.description')}</p>
+            {whatsapp ? (
+              <WhatsAppButton
+                href={whatsapp}
+                label={t('support.cta')}
+                className="mt-2 border-transparent"
+              />
+            ) : null}
+          </div>
+          <ul className="flex flex-col gap-3 self-center">
+            {SUPPORT.map((key) => (
+              <li
+                key={key}
+                className="flex items-center gap-3 rounded-md bg-brand-on-panel/10 px-4 py-3.5 text-md font-medium"
+              >
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-brand-on-panel text-brand-panel">
+                  <Check aria-hidden="true" className="size-4" />
+                </span>
+                {t(`support.items.${key}`)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section aria-labelledby="faq" className="mx-auto max-w-3xl px-gutter pb-16 sm:pb-24">
+        <SectionHeading id="faq" title={t('faq.title')} center />
+        <div className="mt-8 flex flex-col gap-3">
+          {FAQ.map((key) => (
+            <details
+              key={key}
+              className="group rounded-md border border-border bg-card transition-shadow open:shadow-md motion-reduce:transition-none"
+            >
+              <summary className="flex min-h-target-staff cursor-pointer list-none items-center justify-between gap-4 rounded-md px-5 py-3 text-md font-semibold text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                {t(`faq.items.${key}.q`)}
+                <span
+                  aria-hidden="true"
+                  className="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground transition-transform group-open:rotate-45 motion-reduce:transition-none"
+                >
+                  <PlusIcon />
+                </span>
+              </summary>
+              <p className="px-5 pb-5 text-md text-pretty text-muted-foreground">
+                {t(`faq.items.${key}.a`)}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* Closing call to action */}
+      <section className="mx-auto max-w-6xl px-gutter pb-20 sm:pb-28">
+        <div className="relative isolate reveal overflow-clip rounded-xl border border-border bg-card px-6 py-14 text-center shadow-xl sm:px-12 sm:py-20">
+          <div aria-hidden="true" className="absolute -inset-1/4 -z-10 animate-drift bg-aurora" />
+          <h2 className="mx-auto max-w-2xl font-heading text-3xl font-title tracking-title text-balance text-foreground sm:text-4xl">
+            {t('finalCta.title')}
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-pretty text-muted-foreground">
+            {t('finalCta.description')}
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <StartButton label={t('hero.start')} />
+            {whatsapp ? <WhatsAppButton href={whatsapp} label={t('hero.whatsapp')} /> : null}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M8 3v10M3 8h10" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function HeroChip({
+  icon,
+  label,
+  live = false,
+  className,
+}: {
+  icon: ReactNode;
+  label: string;
+  live?: boolean;
+  className?: string;
+}) {
+  return (
+    <div
+      aria-hidden="true"
+      className={cn(
+        'absolute z-10 flex animate-pop-in items-center gap-2.5 rounded-full border border-border bg-card/95 py-2 ps-2 pe-4 text-sm font-semibold whitespace-nowrap text-foreground shadow-xl backdrop-blur-sm',
+        className,
+      )}
+    >
+      <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-brand text-on-brand">
+        {live ? (
+          <span className="absolute inset-0 animate-ping-soft rounded-full bg-brand/60" />
+        ) : null}
+        <span className="relative">{icon}</span>
+      </span>
+      {label}
+    </div>
+  );
+}
+
+/** Large screens: a QR code to open the demo on a real phone. */
+function DemoQr({
+  url,
+  label,
+  scan,
+  demo,
+  demoLabel,
+}: {
+  url: string;
+  label: string;
+  scan: string;
+  demo: string;
+  demoLabel: string;
+}) {
+  const qr = qrSvg(url);
+  return (
+    <div className="absolute -end-6 bottom-0 z-10 hidden w-40 animate-pop-in flex-col items-center gap-2 rounded-md border border-border bg-card p-3 text-center shadow-xl anim-delay-8 xl:flex">
+      <svg
+        viewBox={`0 0 ${String(qr.size)} ${String(qr.size)}`}
+        role="img"
+        aria-label={label}
+        shapeRendering="crispEdges"
+        className="size-28 rounded-xs"
+      >
+        <rect width={qr.size} height={qr.size} className="fill-on-scrim" />
+        <path d={qr.path} className="fill-scrim" />
+      </svg>
+      <p className="text-xs text-pretty text-muted-foreground">{scan}</p>
+      <a
+        href={demo}
+        className="inline-flex min-h-target items-center rounded-xs text-xs font-semibold text-brand-text underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        {demoLabel}
+      </a>
+    </div>
+  );
+}
+
+function OfferSkeletons() {
+  return (
+    <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
+      <Skeleton className="h-96 rounded-lg" />
+      <Skeleton className="h-96 rounded-lg" />
+    </div>
+  );
+}
+
+/** The plans sold today (Menu QR, Basic), priced from the catalogue: streamed, cached. */
+async function Offers({ locale }: { locale: Locale }) {
+  await connection();
+  const t = await getTranslations({ locale, namespace: 'marketing' });
+  const cards = planCards(await publicPlans()).filter((card) => card.available);
+
+  const offer = (code: string) => {
+    if (code === 'menu_qr') {
+      return {
+        tagline: t('offers.plans.menu_qr.tagline'),
+        points: (['menu', 'qr', 'languages', 'ai'] as const).map((point) =>
+          t(`offers.plans.menu_qr.points.${point}`),
+        ),
+      };
+    }
+    if (code === 'basic') {
+      return {
+        tagline: t('offers.plans.basic.tagline'),
+        points: (['menu', 'call', 'bill', 'team'] as const).map((point) =>
+          t(`offers.plans.basic.points.${point}`),
+        ),
+      };
+    }
+    return null;
+  };
+
+  return (
+    <ul className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
+      {cards.map((card) => {
+        const copy = offer(card.code);
+        if (!copy) return null;
+        return (
+          <li
+            key={card.code}
+            className={cn(
+              'relative flex reveal flex-col gap-6 rounded-lg p-6 sm:p-8',
+              card.recommended
+                ? 'shadow-2xl shadow-brand/15 border-gradient'
+                : 'border border-border bg-background',
+            )}
+          >
+            {card.recommended ? (
+              <span className="absolute start-6 -top-3 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-on-brand shadow-md">
+                {t('offers.recommended')}
+              </span>
+            ) : null}
+            <div className="flex flex-col gap-1">
+              <h3 className="text-2xl font-semibold text-foreground">{card.name[locale]}</h3>
+              <p className="text-md text-muted-foreground">{copy.tagline}</p>
+            </div>
+            <p className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">
+              {t('offers.from', { price: formatMoney(card.priceMonthly, locale) })}
+            </p>
+            <ul className="flex flex-1 flex-col gap-3">
+              {copy.points.map((point) => (
+                <li key={point} className="flex items-start gap-2.5 text-md text-foreground">
+                  <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-success-subtle text-success">
+                    <Check aria-hidden="true" className="size-3.5" />
+                  </span>
+                  {point}
+                </li>
+              ))}
+            </ul>
+            <StartButton
+              label={t('pricing.cta')}
+              className={card.recommended ? 'w-full' : 'w-full shadow-none'}
+            />
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

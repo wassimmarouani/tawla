@@ -77,6 +77,8 @@ Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or 
 | `RATE_LIMIT_MULTIPLIER`                                                | server                              | `1` (default); Playwright uses `100` (hundreds of logins from one IP)           |
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | public / server                     | `pnpm dlx web-push generate-vapid-keys`                                         |
 | `GEMINI_API_KEY`                                                       | server                              | developer's own key, low spend limit; AI tests use recorded fixtures (ADR-0030) |
+| `DEMO_MENU_SLUG`                                                       | server                              | slug of the demo venue shown on the marketing pages (`cafe-el-bahja` locally)   |
+| `CONTACT_WHATSAPP`                                                     | server                              | sales WhatsApp number, digits with country code (`216…`); hidden when unset     |
 | `AI_MODEL_EXTRACT` / `AI_MODEL_TRANSLATE`                              | server                              | `gemini-2.5-flash` (defaults)                                                   |
 | `RESEND_API_KEY` / `EMAIL_FROM`                                        | server                              | empty locally → emails logged to console / Mailpit                              |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` / `TURNSTILE_SECRET_KEY`              | public / server                     | Cloudflare test keys                                                            |

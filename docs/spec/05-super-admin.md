@@ -27,3 +27,9 @@ Route `/admin`. Platform staff only (Super Admin, Support), TOTP 2FA mandatory (
 - Announcements: message shown in every manager's back-office (feature, maintenance).
 - Templates: QR tents, menu themes, category templates per business type (café, pizzeria, pastry).
 - Flag overrides per venue with expiry.
+
+## Implementation status (P1-15, 2026-11-04)
+
+- **Live:** `/admin` for platform roles with TOTP (`aal2`): venue list and search, venue page (plan, flag overrides with expiry and reason, AI usage by month, recent audit), global audit log. Writes are Super Admin only and audited; Support reads.
+- **Override `ai_unlimited`:** lifts a venue's monthly AI limits while active (pilots, support gestures).
+- **Later:** suspension and reactivation, impersonation, creating a venue on behalf of a customer, KPIs, announcements, billing (Phase 2–3).

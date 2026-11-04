@@ -521,6 +521,14 @@
 - E2E: a platform user without `aal2` is forced to enrol TOTP; a non-platform user gets 403; a flag override changes behaviour (e.g. AI quota raised).
 - Every admin action is audited (integration).
 
+**Note (2026-11-04):** `/admin` checks the platform role (non-platform users get a 403 page) and `aal2` (TOTP enrolment or verification at `/admin/mfa`). Console pages:
+
+- venue list with search (plan, status, members, AI cost this month);
+- venue page: plan assignment, flag overrides with expiry and a mandatory reason, AI usage for 6 months, recent audit;
+- global audit log filtered by action prefix.
+
+Writes are Super Admin only and audited (`platform.plan_assign`, `platform.flag_override`, `platform.flag_override_remove`); Support reads. The `ai_unlimited` override lifts a venue's AI quotas until it expires. AI import and translation now also check their plan flags server-side. Suspension, impersonation and venue creation on behalf of a customer stay in Phase 2+ (spec 05).
+
 ### P1-16 — Landing, pricing, legal placeholders · M
 
 **Deliverables**

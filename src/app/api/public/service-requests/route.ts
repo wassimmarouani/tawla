@@ -7,6 +7,7 @@ import {
   readJson,
   requireClientSession,
   serviceRequestSchema,
+  serviceRequestsEnabled,
 } from '@/features/table-service';
 import { AppError } from '@/lib/errors';
 import { notifyStaffOfRequest } from '@/server/admin/staff-service';
@@ -17,6 +18,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     await limitByIp(request);
     const session = await requireClientSession(request);
+    if (!(await serviceRequestsEnabled({ restaurantId: session.r }))) {
+      throw new AppError('FORBIDDEN', 'Service requests are not part of this plan', {
+        reason: 'feature',
+      });
+    }
     const key = idempotencyKeySchema.safeParse(request.headers.get('idempotency-key'));
     if (!key.success) throw new AppError('VALIDATION_FAILED', 'Idempotency-Key header required');
     const input = await readJson(request, serviceRequestSchema);

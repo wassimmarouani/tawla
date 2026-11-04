@@ -275,3 +275,217 @@ html:has(dialog[open]) {
     }
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * Marketing pages (P1-16): CSS-only motion, compositor-friendly (transform, opacity).
+ * Scroll-linked reveals run only where supported and when motion is welcome; content is
+ * visible by default everywhere else.
+ * ------------------------------------------------------------------------- */
+@theme {
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-pop-in: pop-in 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+  --animate-ping-soft: ping-soft 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-drift: drift 18s ease-in-out infinite alternate;
+  --animate-scan: scan 2.8s ease-in-out infinite;
+  --animate-shine: shine 3.5s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-0.625rem);
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem) scale(0.92);
+    }
+  }
+  @keyframes ping-soft {
+    75%,
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  @keyframes drift {
+    from {
+      transform: translate3d(-4%, -2%, 0) scale(1);
+    }
+    to {
+      transform: translate3d(4%, 3%, 0) scale(1.08);
+    }
+  }
+  @keyframes scan {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(5rem);
+    }
+  }
+  @keyframes shine {
+    0%,
+    60% {
+      transform: translateX(-120%) skewX(-20deg);
+    }
+    100% {
+      transform: translateX(220%) skewX(-20deg);
+    }
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes header-elevate {
+  to {
+    box-shadow: 0 0.5rem 1.5rem -1rem color-mix(in oklab, var(--color-foreground) 35%, transparent);
+    border-color: var(--color-border);
+  }
+}
+
+/* Staggered entrance: `anim-delay-3` = 300 ms. */
+@utility anim-delay-* {
+  animation-delay: calc(--value(integer) * 100ms);
+}
+
+/* Fades and rises as it enters the viewport (scroll-driven, no JavaScript). */
+@utility reveal {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+  }
+}
+
+/* Draws a line from the start edge as the section scrolls into view. */
+@utility reveal-line {
+  transform-origin: left center;
+  &:where([dir='rtl'] *) {
+    transform-origin: right center;
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: grow-x linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 45%;
+    }
+  }
+}
+
+/* Sticky header gains a shadow once the page scrolls. */
+@utility header-scroll {
+  @supports (animation-timeline: scroll()) {
+    animation: header-elevate linear both;
+    animation-timeline: scroll();
+    animation-range: 0 5rem;
+  }
+}
+
+/* Brand gradient text for headline accents (dark enough for AA in both themes). */
+@utility text-gradient-brand {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-brand-text) 10%,
+    color-mix(in oklab, var(--color-brand-text) 55%, var(--color-success)) 90%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Soft aurora behind the hero and the closing call to action. */
+@utility bg-aurora {
+  background-image:
+    radial-gradient(
+      40% 50% at 15% 20%,
+      color-mix(in oklab, var(--color-brand-solid) 22%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      35% 45% at 85% 30%,
+      color-mix(in oklab, var(--color-success) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      45% 40% at 60% 90%,
+      color-mix(in oklab, var(--color-brand-accent) 14%, transparent),
+      transparent 70%
+    );
+}
+
+/* Faint grid that fades out from the centre. */
+@utility bg-grid-fade {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-foreground) 7%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-foreground) 7%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 3.5rem 3.5rem;
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    var(--color-foreground) 20%,
+    transparent 75%
+  );
+}
+
+/* Fades the ends of a horizontal marquee. */
+@utility mask-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    var(--color-foreground) 12%,
+    var(--color-foreground) 88%,
+    transparent
+  );
+}
+
+/* Gradient hairline around premium cards (border-box trick, no extra element). */
+@utility border-gradient {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-card), var(--color-card)) padding-box,
+    linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--color-brand-solid) 60%, transparent),
+        color-mix(in oklab, var(--color-success) 40%, transparent) 50%,
+        var(--color-border)
+      )
+      border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}

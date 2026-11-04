@@ -2,7 +2,213 @@
   "meta": {
     "description": "Menu digital par QR code et commande à table pour les cafés et restaurants en Tunisie."
   },
-  "home": {
-    "tagline": "Le menu digital des cafés et restaurants tunisiens."
+  "nav": {
+    "pricing": "Tarifs",
+    "login": "Se connecter",
+    "start": "Créer mon menu",
+    "home": "Accueil de {app}",
+    "language": "Langue",
+    "menu": "Navigation",
+    "skip": "Aller au contenu"
+  },
+  "hero": {
+    "eyebrow": "Pour les cafés et restaurants en Tunisie",
+    "title": "Votre menu en QR code, prêt en 30 minutes.",
+    "description": "Photographiez votre carte : l’IA la met en ligne en français, en arabe et en anglais. Vos clients appellent le serveur ou demandent l’addition depuis leur table.",
+    "start": "Créer mon menu",
+    "whatsapp": "Nous écrire sur WhatsApp",
+    "demo": "Voir le menu de démonstration",
+    "scan": "Scannez pour essayer la démo sur votre téléphone",
+    "frame": "Menu de démonstration",
+    "qr": "QR code du menu de démonstration"
+  },
+  "benefits": {
+    "title": "Ce qui change dans votre salle",
+    "items": {
+      "menu": {
+        "title": "Un menu toujours à jour",
+        "body": "Prix, photos et plats épuisés modifiés en un instant, visibles tout de suite. Plus de cartes plastifiées à réimprimer."
+      },
+      "service": {
+        "title": "Le serveur arrive au bon moment",
+        "body": "Appel serveur et demande d’addition depuis la table, avec le mode de paiement. Votre équipe est prévenue en moins de 2 secondes."
+      },
+      "languages": {
+        "title": "Français, arabe, anglais",
+        "body": "Chaque client lit la carte dans sa langue, en arabe de droite à gauche. Traduction automatique incluse, que vous validez."
+      },
+      "setup": {
+        "title": "Prêt sans technicien",
+        "body": "Photo de la carte, tables, chevalets QR à imprimer : tout se fait depuis votre téléphone en moins de 30 minutes."
+      }
+    }
+  },
+  "steps": {
+    "title": "Comment ça marche",
+    "items": {
+      "photo": {
+        "title": "Photographiez votre carte",
+        "body": "L’IA lit les plats et les prix. Vous vérifiez et corrigez."
+      },
+      "brand": {
+        "title": "Ajoutez votre identité",
+        "body": "Logo, couleur, horaires, Wi-Fi : votre menu vous ressemble."
+      },
+      "print": {
+        "title": "Posez les QR codes",
+        "body": "Un chevalet par table, à imprimer. Vos clients scannent, c’est tout."
+      }
+    }
+  },
+  "pricingTeaser": {
+    "title": "Un prix clair, en dinars",
+    "body": "Sans engagement. Commencez par le menu digital, passez à la commande à table quand vous voulez.",
+    "cta": "Voir les tarifs"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "items": {
+      "app": {
+        "q": "Mes clients doivent-ils installer une application ?",
+        "a": "Non. Ils scannent le QR code avec l’appareil photo et le menu s’ouvre dans le navigateur, sans compte."
+      },
+      "internet": {
+        "q": "Et si le Wi-Fi est lent ?",
+        "a": "Le menu est léger et s’affiche vite même en 3G. Vos clients peuvent aussi utiliser leurs données mobiles."
+      },
+      "change": {
+        "q": "Puis-je changer les prix moi-même ?",
+        "a": "Oui, à tout moment depuis votre téléphone : un plat, une catégorie ou une hausse groupée en pourcentage."
+      },
+      "staff": {
+        "q": "Comment mes serveurs reçoivent-ils les appels ?",
+        "a": "Sur la tablette du comptoir ou leur téléphone, avec un son, une vibration et une notification."
+      },
+      "data": {
+        "q": "Où sont mes données ?",
+        "a": "Chez des hébergeurs européens (Union européenne), sauvegardées chaque jour. Vous restez propriétaire de votre menu."
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Le menu digital des cafés et restaurants tunisiens.",
+    "legal": "Informations légales",
+    "notice": "Mentions légales",
+    "terms": "Conditions d’utilisation",
+    "privacy": "Confidentialité",
+    "contact": "Contact",
+    "rights": "© {app}"
+  },
+  "pricing": {
+    "title": "Tarifs",
+    "description": "Des formules simples, en dinars, sans engagement. Prix hors taxes, indicatifs pendant la phase pilote.",
+    "perMonth": "/ mois",
+    "perYear": "ou {price} / an",
+    "popular": "Disponible maintenant",
+    "cta": "Commencer",
+    "contact": "Nous contacter",
+    "included": "Inclus",
+    "limits": "{tables, number} tables · {staff, plural, one {# membre d’équipe} other {# membres d’équipe}} · {products, number} plats",
+    "unlimited": "Tables, équipe et plats illimités",
+    "ai": "IA : {imports, number} imports de menu et {items, number} traductions par mois",
+    "features": {
+      "menu": "Menu digital par QR code",
+      "branding": "Votre logo et vos couleurs",
+      "multilingual": "Français, arabe, anglais",
+      "service_requests": "Appel serveur et demande d’addition",
+      "availability_toggle": "Plats épuisés en un geste",
+      "ai_import": "Import du menu par photo",
+      "ai_translate": "Traduction automatique",
+      "ordering": "Commande à table",
+      "order_tracking": "Suivi de commande en direct",
+      "staff_zones": "Zones de service",
+      "staff_pin": "Connexion du personnel par code",
+      "stats_sales": "Statistiques de ventes",
+      "stats_advanced": "Statistiques avancées",
+      "ai_descriptions": "Descriptions rédigées par l’IA",
+      "ai_insights": "Conseils IA",
+      "kitchen_display": "Écran cuisine et bar",
+      "promotions": "Promotions",
+      "printing": "Impression des tickets",
+      "multi_site": "Plusieurs établissements",
+      "powered_by_badge": "Mention « Propulsé par Tawla »"
+    },
+    "soonNote": "La commande à table arrive bientôt. Les formules Pro et Premium sont proposées sur demande.",
+    "everything": "Tout {plan}, plus :",
+    "soon": "Bientôt"
+  },
+  "legal": {
+    "pending": "Document provisoire, en attente de validation juridique.",
+    "updated": "Dernière mise à jour : {date}",
+    "pages": {
+      "notice": {
+        "title": "Mentions légales",
+        "sections": {
+          "publisher": {
+            "title": "Éditeur",
+            "body": "Le service est édité par [raison sociale], [forme juridique] au capital de [montant], immatriculée sous le numéro [RNE], dont le siège est situé [adresse], Tunisie. Directeur de la publication : [nom]. Contact : [e-mail]."
+          },
+          "hosting": {
+            "title": "Hébergement",
+            "body": "Application hébergée par Vercel Inc. (région Union européenne) ; données hébergées par Supabase (région Union européenne, Paris)."
+          },
+          "ip": {
+            "title": "Propriété intellectuelle",
+            "body": "Les menus, logos et photos publiés par les établissements restent leur propriété. Le reste du service est protégé par le droit d’auteur."
+          }
+        }
+      },
+      "terms": {
+        "title": "Conditions d’utilisation",
+        "sections": {
+          "purpose": {
+            "title": "Objet",
+            "body": "Ces conditions encadrent l’utilisation du service de menu digital et de demandes à table par les établissements et leurs clients."
+          },
+          "account": {
+            "title": "Compte et abonnement",
+            "body": "L’établissement crée un compte, choisit une formule et la paie selon les modalités convenues. Il peut résilier à tout moment ; les données sont conservées 90 jours puis supprimées."
+          },
+          "content": {
+            "title": "Contenus",
+            "body": "L’établissement est responsable des prix, des allergènes et des descriptions qu’il publie. Les traductions et imports par IA sont des propositions qu’il valide."
+          },
+          "availability": {
+            "title": "Disponibilité",
+            "body": "Le service est fourni avec un objectif de disponibilité élevé, sans garantie absolue. Les incidents sont signalés aux établissements concernés."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Politique de confidentialité",
+        "sections": {
+          "customers": {
+            "title": "Clients des établissements",
+            "body": "Aucun compte n’est demandé. Un identifiant de session anonyme permet les appels serveur et l’avis ; il expire en quelques heures. Aucune donnée n’est vendue."
+          },
+          "venues": {
+            "title": "Établissements et personnel",
+            "body": "Nous traitons les adresses e-mail, noms et rôles nécessaires au service, ainsi que les journaux de sécurité. Conformément à la loi organique n° 2004-63, vous pouvez accéder à vos données, les rectifier ou demander leur suppression : [e-mail]."
+          },
+          "processors": {
+            "title": "Sous-traitants",
+            "body": "Vercel (hébergement), Supabase (base de données), Google (IA pour l’import et la traduction de menus, sans données personnelles), un service d’e-mail transactionnel."
+          }
+        }
+      }
+    }
+  },
+  "segments": {
+    "title": "Pensé pour votre établissement",
+    "items": {
+      "cafe": {
+        "title": "Cafés et salons de thé",
+        "body": "Beaucoup de tables, des commandes courtes : vos clients appellent le serveur ou demandent l’addition sans lever la main, et votre équipe voit tout depuis le comptoir."
+      },
+      "restaurant": {
+        "title": "Restaurants",
+        "body": "Une carte riche avec photos, options et allergènes, lisible en trois langues par vos clients tunisiens comme par les touristes."
+      }
+    }
   }
 }

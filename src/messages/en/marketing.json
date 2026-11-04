@@ -2,7 +2,213 @@
   "meta": {
     "description": "QR code digital menu and table ordering for cafés and restaurants in Tunisia."
   },
-  "home": {
-    "tagline": "The digital menu for Tunisian cafés and restaurants."
+  "nav": {
+    "pricing": "Pricing",
+    "login": "Sign in",
+    "start": "Create my menu",
+    "home": "{app} home",
+    "language": "Language",
+    "menu": "Navigation",
+    "skip": "Skip to content"
+  },
+  "hero": {
+    "eyebrow": "For cafés and restaurants in Tunisia",
+    "title": "Your QR code menu, ready in 30 minutes.",
+    "description": "Take a photo of your menu: AI puts it online in French, Arabic and English. Customers call the waiter or ask for the bill from their table.",
+    "start": "Create my menu",
+    "whatsapp": "Message us on WhatsApp",
+    "demo": "See the demo menu",
+    "scan": "Scan to try the demo on your phone",
+    "frame": "Demo menu",
+    "qr": "Demo menu QR code"
+  },
+  "benefits": {
+    "title": "What changes in your venue",
+    "items": {
+      "menu": {
+        "title": "A menu that is always current",
+        "body": "Prices, photos and sold-out dishes change in a moment and show at once. No more laminated menus to reprint."
+      },
+      "service": {
+        "title": "The waiter comes at the right time",
+        "body": "Waiter calls and bill requests from the table, with the payment method. Your team knows in under 2 seconds."
+      },
+      "languages": {
+        "title": "French, Arabic, English",
+        "body": "Every customer reads the menu in their language, Arabic right to left. Automatic translation included, approved by you."
+      },
+      "setup": {
+        "title": "Ready without a technician",
+        "body": "Menu photo, tables, QR tents to print: all from your phone in under 30 minutes."
+      }
+    }
+  },
+  "steps": {
+    "title": "How it works",
+    "items": {
+      "photo": {
+        "title": "Photograph your menu",
+        "body": "AI reads the dishes and prices. You check and correct."
+      },
+      "brand": {
+        "title": "Add your identity",
+        "body": "Logo, colour, hours, Wi-Fi: your menu looks like you."
+      },
+      "print": {
+        "title": "Put the QR codes on tables",
+        "body": "One tent per table, ready to print. Customers scan, that’s it."
+      }
+    }
+  },
+  "pricingTeaser": {
+    "title": "Clear prices, in dinars",
+    "body": "No commitment. Start with the digital menu and add table ordering when you want.",
+    "cta": "See pricing"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "items": {
+      "app": {
+        "q": "Do my customers need an app?",
+        "a": "No. They scan the QR code with the camera and the menu opens in the browser, without an account."
+      },
+      "internet": {
+        "q": "What if the Wi-Fi is slow?",
+        "a": "The menu is light and loads fast even on 3G. Customers can also use their mobile data."
+      },
+      "change": {
+        "q": "Can I change prices myself?",
+        "a": "Yes, anytime from your phone: one dish, a category or a percentage increase for many."
+      },
+      "staff": {
+        "q": "How do my waiters get the calls?",
+        "a": "On the counter tablet or their phone, with a sound, a vibration and a notification."
+      },
+      "data": {
+        "q": "Where is my data?",
+        "a": "With European hosts (European Union), backed up every day. Your menu stays yours."
+      }
+    }
+  },
+  "footer": {
+    "tagline": "The digital menu for Tunisian cafés and restaurants.",
+    "legal": "Legal",
+    "notice": "Legal notice",
+    "terms": "Terms of use",
+    "privacy": "Privacy",
+    "contact": "Contact",
+    "rights": "© {app}"
+  },
+  "pricing": {
+    "title": "Pricing",
+    "description": "Simple plans, in dinars, no commitment. Prices exclude tax and are indicative during the pilot.",
+    "perMonth": "/ month",
+    "perYear": "or {price} / year",
+    "popular": "Available now",
+    "cta": "Get started",
+    "contact": "Contact us",
+    "included": "Included",
+    "limits": "{tables, number} tables · {staff, plural, one {# team member} other {# team members}} · {products, number} dishes",
+    "unlimited": "Unlimited tables, team and dishes",
+    "ai": "AI: {imports, number} menu imports and {items, number} translations a month",
+    "features": {
+      "menu": "QR code digital menu",
+      "branding": "Your logo and colours",
+      "multilingual": "French, Arabic, English",
+      "service_requests": "Waiter calls and bill requests",
+      "availability_toggle": "Sold-out dishes in one tap",
+      "ai_import": "Menu import from a photo",
+      "ai_translate": "Automatic translation",
+      "ordering": "Table ordering",
+      "order_tracking": "Live order tracking",
+      "staff_zones": "Service zones",
+      "staff_pin": "Staff sign-in with a code",
+      "stats_sales": "Sales statistics",
+      "stats_advanced": "Advanced statistics",
+      "ai_descriptions": "AI-written descriptions",
+      "ai_insights": "AI insights",
+      "kitchen_display": "Kitchen and bar screen",
+      "promotions": "Promotions",
+      "printing": "Ticket printing",
+      "multi_site": "Several venues",
+      "powered_by_badge": "“Powered by Tawla” badge"
+    },
+    "soonNote": "Table ordering is coming soon. Pro and Premium are available on request.",
+    "everything": "Everything in {plan}, plus:",
+    "soon": "Coming soon"
+  },
+  "legal": {
+    "pending": "Draft document, pending legal review.",
+    "updated": "Last updated: {date}",
+    "pages": {
+      "notice": {
+        "title": "Legal notice",
+        "sections": {
+          "publisher": {
+            "title": "Publisher",
+            "body": "The service is published by [company name], [legal form] with a capital of [amount], registered under [RNE number], with its registered office at [address], Tunisia. Publication director: [name]. Contact: [email]."
+          },
+          "hosting": {
+            "title": "Hosting",
+            "body": "Application hosted by Vercel Inc. (European Union region); data hosted by Supabase (European Union region, Paris)."
+          },
+          "ip": {
+            "title": "Intellectual property",
+            "body": "Menus, logos and photos published by venues remain theirs. The rest of the service is protected by copyright."
+          }
+        }
+      },
+      "terms": {
+        "title": "Terms of use",
+        "sections": {
+          "purpose": {
+            "title": "Purpose",
+            "body": "These terms govern the use of the digital menu and table request service by venues and their customers."
+          },
+          "account": {
+            "title": "Account and subscription",
+            "body": "The venue creates an account, chooses a plan and pays as agreed. It can cancel at any time; data is kept for 90 days, then deleted."
+          },
+          "content": {
+            "title": "Content",
+            "body": "The venue is responsible for the prices, allergens and descriptions it publishes. AI translations and imports are suggestions it approves."
+          },
+          "availability": {
+            "title": "Availability",
+            "body": "The service aims for high availability without an absolute guarantee. Incidents are reported to the venues concerned."
+          }
+        }
+      },
+      "privacy": {
+        "title": "Privacy policy",
+        "sections": {
+          "customers": {
+            "title": "Venue customers",
+            "body": "No account is required. An anonymous session id enables waiter calls and feedback; it expires within hours. No data is sold."
+          },
+          "venues": {
+            "title": "Venues and staff",
+            "body": "We process the email addresses, names and roles the service needs, and security logs. Under Organic Law No. 2004-63 you may access, correct or ask us to delete your data: [email]."
+          },
+          "processors": {
+            "title": "Processors",
+            "body": "Vercel (hosting), Supabase (database), Google (AI for menu import and translation, without personal data), a transactional email service."
+          }
+        }
+      }
+    }
+  },
+  "segments": {
+    "title": "Built for your venue",
+    "items": {
+      "cafe": {
+        "title": "Cafés and tea rooms",
+        "body": "Many tables, short orders: customers call the waiter or ask for the bill without raising a hand, and your team sees it all from the counter."
+      },
+      "restaurant": {
+        "title": "Restaurants",
+        "body": "A rich menu with photos, options and allergens, readable in three languages by Tunisian customers and tourists alike."
+      }
+    }
   }
 }

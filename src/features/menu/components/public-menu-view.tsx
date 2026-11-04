@@ -1,8 +1,12 @@
 import { UtensilsCrossed } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import type { ReactNode } from 'react';
 import { EmptyState } from '@/components/states/empty-state';
 import type { Locale } from '@/i18n/locales';
+import { env } from '@/lib/env';
+import { classes } from '@/lib/classes';
 import type { PublicMenu } from '../schemas/public-menu';
+import { AvailabilityLive } from './availability-live';
 import { BrandStyle } from './brand-style';
 import { CategoryNav } from './category-nav';
 import { Localized } from './localized';
@@ -19,11 +23,16 @@ export async function PublicMenuView({
   menu,
   locale,
   table,
+  tableToken,
+  serviceBar,
 }: {
   menu: PublicMenu;
   locale: Locale;
   /** Set on the table route (`/t/{token}`): shown in the header. */
   table?: TableBadge | undefined;
+  tableToken?: string | undefined;
+  /** The table's "Call waiter / Bill" bar, fixed at the bottom (P1-10). */
+  serviceBar?: ReactNode;
 }) {
   const t = await getTranslations('client');
   const scope = menu.restaurant.public_id;
@@ -33,8 +42,23 @@ export async function PublicMenuView({
   );
 
   return (
-    <div data-tenant={scope} className="min-h-dvh bg-background pb-safe text-foreground">
+    <div
+      data-tenant={scope}
+      className={classes(
+        'min-h-dvh bg-background text-foreground',
+        serviceBar ? 'pb-40' : 'pb-safe',
+      )}
+    >
       <BrandStyle theme={menu.restaurant.theme} scope={scope} />
+      <AvailabilityLive
+        slug={menu.restaurant.slug}
+        menuPublicId={scope}
+        tableToken={tableToken}
+        realtime={{
+          url: env.NEXT_PUBLIC_SUPABASE_URL,
+          publishableKey: env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+        }}
+      />
       <MenuHeader menu={menu} locale={locale} table={table} />
       {menu.categories.length === 0 ? (
         <main className="mx-auto max-w-3xl px-gutter py-10">
@@ -94,6 +118,7 @@ export async function PublicMenuView({
           </main>
         </>
       )}
+      {serviceBar}
     </div>
   );
 }

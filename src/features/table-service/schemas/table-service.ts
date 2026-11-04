@@ -12,10 +12,16 @@ export const idempotencyKeySchema = z.string().regex(/^[A-Za-z0-9_-]{8,100}$/);
 export const SERVICE_REQUEST_KINDS = ['waiter', 'bill'] as const;
 export const PAYMENT_METHODS = ['cash', 'card'] as const;
 
-export const openSessionSchema = z.object({ token: tableTokenSchema });
+export const openSessionSchema = z.object({
+  token: tableTokenSchema,
+  /** Sent only after a CHALLENGE_REQUIRED answer (ADR-0011 §3). */
+  turnstileToken: z.string().min(1).max(2048).optional(),
+});
 
 export const serviceRequestSchema = z
   .object({
+    /** The table the phone is at: a cookie from another table is refused (SESSION_EXPIRED). */
+    token: tableTokenSchema,
     kind: z.enum(SERVICE_REQUEST_KINDS),
     paymentMethod: z.enum(PAYMENT_METHODS).nullable().default(null),
   })
@@ -41,5 +47,8 @@ export const menuViewSchema = z.union([
   z.object({ slug: z.string().regex(/^[a-z0-9-]{3,40}$/) }),
   z.object({ token: tableTokenSchema }),
 ]);
+
+/** `GET /api/public/session?token=`: the phone's state at this table. */
+export const sessionQuerySchema = z.object({ token: tableTokenSchema });
 
 export const availabilityQuerySchema = z.object({ slug: z.string().regex(/^[a-z0-9-]{3,40}$/) });

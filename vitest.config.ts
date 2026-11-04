@@ -72,6 +72,8 @@ export default defineConfig({
         // Adapter selection from env; the adapters themselves are unit-tested.
         'src/lib/rate-limit/index.ts',
         'src/lib/auth/throttle.ts',
+        // Browser websocket glue, exercised by the E2E table-service journeys.
+        'src/lib/realtime/customer-channel.ts',
       ],
       // CLAUDE.md rule 9: ≥ 90 % on business logic.
       thresholds: { lines: 90, functions: 90, branches: 90, statements: 90 },

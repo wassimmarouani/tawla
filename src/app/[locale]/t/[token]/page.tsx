@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import { Suspense } from 'react';
 import { MenuSkeleton, ProductSheetSlot, PublicMenuView, getPublicMenu } from '@/features/menu';
-import { TableNotFound, getPublicTable } from '@/features/tables';
+import { TableNotFound, TableServiceBar, getPublicTable } from '@/features/table-service';
 import { LOCALES } from '@/i18n/locales';
 
 /** Table menu `/t/{token}` (ADR-0011, ADR-0012): never indexed, the QR is private to the table. */
@@ -36,7 +36,13 @@ async function TableMenu({ params, searchParams }: PageProps<'/[locale]/t/[token
   if (!table || !menu) return <TableNotFound />;
   return (
     <>
-      <PublicMenuView menu={menu} locale={locale} table={table} />
+      <PublicMenuView
+        menu={menu}
+        locale={locale}
+        table={table}
+        tableToken={token}
+        serviceBar={<TableServiceBar token={token} locale={locale} />}
+      />
       <ProductSheetSlot
         params={Promise.resolve({ locale, slug: table.restaurant_slug })}
         searchParams={searchParams}

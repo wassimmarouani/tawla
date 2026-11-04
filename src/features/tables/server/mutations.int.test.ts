@@ -6,7 +6,8 @@ import type { SessionClaims } from '@/lib/auth/claims';
 import { rawDb } from '@/lib/db/client';
 import { createVenue } from '@/server/admin/onboarding';
 import { localSupabase } from '../../../../tooling/testing/local-supabase';
-import { getPublicTable, loadTables } from '../queries/tables';
+import { getPublicTable } from '@/features/table-service';
+import { loadTables } from '../queries/tables';
 import {
   createTables,
   deleteTables,

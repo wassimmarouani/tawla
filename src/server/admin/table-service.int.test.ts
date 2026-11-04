@@ -6,10 +6,17 @@ import {
 import { eq, sql } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { rawDb } from '@/lib/db/client';
-import { clientSessions, serviceRequests, tableSessions, tables } from '@/lib/db/schema/schema';
+import {
+  clientSessions,
+  restaurants,
+  serviceRequests,
+  tableSessions,
+  tables,
+} from '@/lib/db/schema/schema';
 import { localSupabase } from '../../../tooling/testing/local-supabase';
 import { createVenue } from './onboarding';
 import {
+  clientSessionState,
   createFeedback,
   createServiceRequest,
   menuAvailability,
@@ -68,10 +75,16 @@ afterAll(async () => {
   await cleanup();
 });
 
-const request = (clientSessionId: string, key: string, kind: 'waiter' | 'bill' = 'waiter') =>
+const request = (
+  clientSessionId: string,
+  key: string,
+  kind: 'waiter' | 'bill' = 'waiter',
+  tableToken = ctx.tokens[2] ?? '',
+) =>
   createServiceRequest({
     restaurantId: ctx.restaurantId,
     clientSessionId,
+    tableToken,
     kind,
     paymentMethod: kind === 'bill' ? 'cash' : null,
     idempotencyKey: key,
@@ -133,7 +146,9 @@ describe('table sessions (P1-09)', () => {
       .set({ lastActivityAt: sql`now() - interval '2 hours'` })
       .where(eq(tableSessions.id, phone.tableSessionId));
     await rawDb().execute(sql`select public.close_idle_table_sessions()`);
-    await expect(request(phone.clientSessionId, 'idem-key-0004')).rejects.toMatchObject({
+    await expect(
+      request(phone.clientSessionId, 'idem-key-0004', 'waiter', ctx.tokens[3]),
+    ).rejects.toMatchObject({
       code: 'SESSION_EXPIRED',
     });
     // A new scan opens a fresh table session.
@@ -147,12 +162,49 @@ describe('table sessions (P1-09)', () => {
       createServiceRequest({
         restaurantId: '00000000-0000-4000-8000-000000000000',
         clientSessionId: phone.clientSessionId,
+        tableToken: ctx.tokens[0] ?? '',
         kind: 'waiter',
         paymentMethod: null,
         idempotencyKey: 'idem-key-0005',
         cooldownSeconds: 60,
       }),
     ).rejects.toMatchObject({ code: 'SESSION_EXPIRED' });
+  });
+
+  it('refuses a cookie from another table, so a phone that moved joins its new table', async () => {
+    const phone = await openClientSession(ctx.tokens[0] ?? '', DEVICE_A);
+    await expect(
+      request(phone.clientSessionId, 'idem-key-moved', 'waiter', ctx.tokens[1]),
+    ).rejects.toMatchObject({ code: 'SESSION_EXPIRED' });
+  });
+
+  it('reports the table state: latest requests, cooldowns, feedback and review link', async () => {
+    const phone = await openClientSession(ctx.tokens[2] ?? '', DEVICE_A);
+    const claims = { cs: phone.clientSessionId, ts: phone.tableSessionId, r: ctx.restaurantId };
+    await rawDb()
+      .update(restaurants)
+      .set({ settings: { google_review_url: 'https://g.page/r/table-service/review' } })
+      .where(eq(restaurants.id, ctx.restaurantId));
+    const state = await clientSessionState(claims, ctx.tokens[2] ?? '');
+    expect(state).toMatchObject({
+      tableSessionPublicId: phone.tableSessionPublicId,
+      status: 'bill_requested',
+      requests: {
+        waiter: { status: 'open', paymentMethod: null },
+        bill: { status: 'open', paymentMethod: 'cash' },
+      },
+      feedbackOpen: true,
+      reviewUrl: 'https://g.page/r/table-service/review',
+    });
+    expect(state?.requests.waiter?.retryAfterSeconds).toBeGreaterThan(0);
+    // The same cookie at another table's URL: no state there.
+    expect(await clientSessionState(claims, ctx.tokens[0] ?? '')).toBeNull();
+
+    await rawDb()
+      .update(restaurants)
+      .set({ settings: { google_review_url: 'javascript:alert(1)' } })
+      .where(eq(restaurants.id, ctx.restaurantId));
+    expect((await clientSessionState(claims, ctx.tokens[2] ?? ''))?.reviewUrl).toBeNull();
   });
 
   it('records feedback within limits, views and availability', async () => {
@@ -224,7 +276,12 @@ describe('realtime (P1-09, ADR-0008)', () => {
     expect(warm.length).toBeGreaterThan(0);
 
     const phone = await openClientSession(ctx.tokens[1] ?? '', DEVICE_A);
-    const created = await request(phone.clientSessionId, 'idem-key-realtime', 'bill');
+    const created = await request(
+      phone.clientSessionId,
+      'idem-key-realtime',
+      'bill',
+      ctx.tokens[1],
+    );
     await expect
       .poll(() => received, { timeout: 10_000 })
       .toContainEqual(expect.objectContaining({ id: created.id, kind: 'bill', table_number: 2 }));

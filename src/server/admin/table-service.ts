@@ -1,7 +1,14 @@
 import 'server-only';
 import { and, desc, eq, gt, inArray, isNull, ne, sql } from 'drizzle-orm';
 import { z } from 'zod';
-import { cooldownRemaining } from '@/features/table-service';
+import {
+  FEEDBACK_PER_SESSION,
+  REQUEST_COOLDOWN_SECONDS,
+  cooldownRemaining,
+  type ClientSessionClaims,
+  type RequestSnapshot,
+  type SessionState,
+} from '@/features/table-service';
 import { rawDb } from '@/lib/db/client';
 import type { DbTransaction } from '@/lib/db/rls';
 import {
@@ -105,8 +112,16 @@ export async function openClientSession(token: string, deviceId: string): Promis
   });
 }
 
-/** A live client session: its table session is still open and the phone is not blocked. */
-async function liveClientSession(tx: DbTransaction, clientSessionId: string, restaurantId: string) {
+/**
+ * A live client session: its table session is still open, belongs to the table of `tableToken`
+ * (a phone that moved tables must join the new one) and the phone is not blocked.
+ */
+async function liveClientSession(
+  tx: DbTransaction,
+  clientSessionId: string,
+  restaurantId: string,
+  tableToken: string,
+) {
   const [row] = await tx
     .select({
       tableSessionId: clientSessions.tableSessionId,
@@ -122,8 +137,19 @@ async function liveClientSession(tx: DbTransaction, clientSessionId: string, res
         eq(tableSessions.id, clientSessions.tableSessionId),
       ),
     )
+    .innerJoin(
+      tables,
+      and(
+        eq(tables.restaurantId, tableSessions.restaurantId),
+        eq(tables.id, tableSessions.tableId),
+      ),
+    )
     .where(
-      and(eq(clientSessions.id, clientSessionId), eq(clientSessions.restaurantId, restaurantId)),
+      and(
+        eq(clientSessions.id, clientSessionId),
+        eq(clientSessions.restaurantId, restaurantId),
+        eq(tables.token, tableToken),
+      ),
     )
     .limit(1);
   if (!row || row.status === 'closed') {
@@ -133,6 +159,90 @@ async function liveClientSession(tx: DbTransaction, clientSessionId: string, res
     throw new AppError('FORBIDDEN', 'This device is blocked', { reason: 'deviceBlocked' });
   }
   return row;
+}
+
+const reviewUrlSchema = z.url({ protocol: /^https$/ }).max(500);
+
+/**
+ * The phone's view of its table session (`GET /api/public/session`), or `null` when its cookie
+ * belongs to another table (a phone that moved, or a regenerated QR). Read-only.
+ */
+export async function clientSessionState(
+  claims: ClientSessionClaims,
+  token: string,
+): Promise<SessionState | null> {
+  const db = rawDb();
+  const [session] = await db
+    .select({
+      publicId: tableSessions.publicId,
+      status: tableSessions.status,
+      settings: restaurants.settings,
+    })
+    .from(tableSessions)
+    .innerJoin(
+      tables,
+      and(
+        eq(tables.restaurantId, tableSessions.restaurantId),
+        eq(tables.id, tableSessions.tableId),
+      ),
+    )
+    .innerJoin(restaurants, eq(restaurants.id, tableSessions.restaurantId))
+    .where(
+      and(
+        eq(tableSessions.id, claims.ts),
+        eq(tableSessions.restaurantId, claims.r),
+        eq(tables.token, token),
+        isNull(tables.deletedAt),
+      ),
+    )
+    .limit(1);
+  if (!session) return null;
+
+  const [recent, [feedbackCount]] = await Promise.all([
+    db
+      .select({
+        id: serviceRequests.id,
+        kind: serviceRequests.kind,
+        status: serviceRequests.status,
+        version: serviceRequests.version,
+        paymentMethod: serviceRequests.paymentMethod,
+        createdAt: serviceRequests.createdAt,
+      })
+      .from(serviceRequests)
+      .where(
+        and(
+          eq(serviceRequests.restaurantId, claims.r),
+          eq(serviceRequests.tableSessionId, claims.ts),
+        ),
+      )
+      .orderBy(desc(serviceRequests.createdAt))
+      .limit(20),
+    db
+      .select({ value: sql<number>`count(*)::int` })
+      .from(feedbacks)
+      .where(and(eq(feedbacks.restaurantId, claims.r), eq(feedbacks.tableSessionId, claims.ts))),
+  ]);
+  const now = new Date();
+  const latest = (kind: 'waiter' | 'bill'): RequestSnapshot | null => {
+    const row = recent.find((request) => request.kind === kind);
+    if (!row) return null;
+    return {
+      id: row.id,
+      status: row.status,
+      version: row.version,
+      paymentMethod: row.paymentMethod,
+      retryAfterSeconds: cooldownRemaining(new Date(row.createdAt), now, REQUEST_COOLDOWN_SECONDS),
+    };
+  };
+  const settings = session.settings as { google_review_url?: unknown } | null;
+  const reviewUrl = reviewUrlSchema.safeParse(settings?.google_review_url);
+  return {
+    tableSessionPublicId: session.publicId,
+    status: session.status,
+    requests: { waiter: latest('waiter'), bill: latest('bill') },
+    feedbackOpen: (feedbackCount?.value ?? 0) < FEEDBACK_PER_SESSION,
+    reviewUrl: reviewUrl.success ? reviewUrl.data : null,
+  };
 }
 
 /** Stored as the idempotent response; the s: topic capability lets the phone follow it. */
@@ -151,13 +261,19 @@ export type CreatedRequest = z.infer<typeof createdRequestSchema>;
 export async function createServiceRequest(input: {
   restaurantId: string;
   clientSessionId: string;
+  tableToken: string;
   kind: 'waiter' | 'bill';
   paymentMethod: 'cash' | 'card' | null;
   idempotencyKey: string;
   cooldownSeconds: number;
 }): Promise<CreatedRequest> {
   return rawDb().transaction(async (tx) => {
-    const session = await liveClientSession(tx, input.clientSessionId, input.restaurantId);
+    const session = await liveClientSession(
+      tx,
+      input.clientSessionId,
+      input.restaurantId,
+      input.tableToken,
+    );
 
     const [replay] = await tx
       .select({ response: idempotencyKeys.response })

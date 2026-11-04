@@ -71,5 +71,19 @@ describe('buildSecurityHeaders', () => {
       'wss://abc.supabase.co',
     ]);
     expect(directive(csp, 'img-src')).toContain('https://abc.supabase.co');
+    expect(directive(csp, 'frame-src')).toEqual(["'self'"]);
+  });
+
+  it('allows extra script and frame origins (Turnstile on the customer menu)', () => {
+    const csp =
+      buildSecurityHeaders({
+        surface: 'customer',
+        isProduction: true,
+        isHttps: true,
+        scriptSources: ['https://challenges.cloudflare.com'],
+        frameSources: ['https://challenges.cloudflare.com'],
+      })['Content-Security-Policy'] ?? '';
+    expect(directive(csp, 'script-src')).toContain('https://challenges.cloudflare.com');
+    expect(directive(csp, 'frame-src')).toEqual(["'self'", 'https://challenges.cloudflare.com']);
   });
 });

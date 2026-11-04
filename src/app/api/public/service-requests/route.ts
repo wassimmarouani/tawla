@@ -22,6 +22,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const created = await createServiceRequest({
       restaurantId: session.r,
       clientSessionId: session.cs,
+      tableToken: input.token,
       kind: input.kind,
       paymentMethod: input.paymentMethod,
       idempotencyKey: key.data,

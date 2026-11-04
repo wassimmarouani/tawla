@@ -109,6 +109,8 @@ export async function ProductSheet({
                   {group.options.map((option) => (
                     <li
                       key={option.id}
+                      data-option-id={option.id}
+                      data-available={option.isAvailable}
                       className="flex items-baseline justify-between gap-3 py-2 text-sm"
                     >
                       <Localized

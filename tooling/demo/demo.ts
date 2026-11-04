@@ -22,3 +22,11 @@ export const DEMO_RESTAURANTS = {
   'cafe-el-bahja': { name: 'Café El Bahja', publicId: 'demoElBahjaPublicId-01' },
   'pizzeria-test': { name: 'Pizzeria Test', publicId: 'demoPizzeriaPublicId-02' },
 } as const;
+
+/** Café El Bahja's table QR tokens (supabase/seeds/30_tables_el_bahja.sql): `/t/{token}`. */
+export const DEMO_TABLES = {
+  'cafe-el-bahja': Array.from(
+    { length: 12 },
+    (_, index) => `demoElBahjaTable-${String(index + 1).padStart(2, '0')}xxx`,
+  ),
+} as const;

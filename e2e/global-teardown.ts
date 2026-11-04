@@ -1,7 +1,11 @@
 import postgres from 'postgres';
 
 /** Accounts created by the E2E suites (sign-up journeys and screen checks). */
-const TEST_ACCOUNT_PATTERNS = ['owner-%@example.org', 'screens-%@example.org'];
+const TEST_ACCOUNT_PATTERNS = [
+  'owner-%@example.org',
+  'screens-%@example.org',
+  'service-%@example.org',
+];
 
 /**
  * Removes E2E accounts and the venues they own, so the local database stays clean for pgTAP

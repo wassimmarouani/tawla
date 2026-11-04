@@ -11,6 +11,7 @@ import {
   limitByIp,
   openSessionSchema,
   readJson,
+  requireHumanOnAnomaly,
   signClientSession,
 } from '@/features/table-service';
 import { RATE_RULES } from '@/lib/rate-limit';
@@ -23,7 +24,8 @@ import { openClientSession } from '@/server/admin/table-service';
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     await limitByIp(request, [RATE_RULES.publicIp, RATE_RULES.sessionOpen]);
-    const { token } = await readJson(request, openSessionSchema);
+    const { token, turnstileToken } = await readJson(request, openSessionSchema);
+    await requireHumanOnAnomaly(request, turnstileToken);
     const known = deviceIdSchema.safeParse(request.cookies.get(DEVICE_COOKIE)?.value);
     const deviceId = known.success ? known.data : randomBytes(16).toString('base64url');
     const session = await openClientSession(token, deviceId);

@@ -46,6 +46,8 @@ export interface PlanCard {
   priceYearly: number;
   /** Every listed feature is live: the plan can be bought now, self-serve. */
   available: boolean;
+  /** The most complete plan available now: highlighted on the pricing page. */
+  recommended: boolean;
   /** Name of the previous plan when the list shows only what this plan adds. */
   extends: PublicPlan['name'] | null;
   features: { key: ListedFeature; live: boolean }[];
@@ -67,7 +69,7 @@ function limitsOf({ tables, staff, products }: PublicPlan['limits']): PlanLimits
  * what it adds to the previous plan, so the comparison reads as a ladder.
  */
 export function planCards(plans: readonly PublicPlan[]): PlanCard[] {
-  return plans.map((plan, index) => {
+  const cards = plans.map((plan, index) => {
     const previous = index > 0 ? plans[index - 1] : undefined;
     const inherited = new Set(previous?.features ?? []);
     const own = plan.features.filter(isListed);
@@ -84,6 +86,9 @@ export function planCards(plans: readonly PublicPlan[]): PlanCard[] {
       features: shown.map((key) => ({ key, live: LIVE_FEATURES.has(key) })),
       limits: limitsOf(plan.limits),
       ai: { imports: plan.aiLimits.photo_imports, items: plan.aiLimits.translated_items },
+      recommended: false,
     };
   });
+  const best = cards.findLastIndex((card) => card.available);
+  return cards.map((card, index) => (index === best ? { ...card, recommended: true } : card));
 }

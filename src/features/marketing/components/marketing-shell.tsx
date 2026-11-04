@@ -37,7 +37,7 @@ export async function MarketingShell({ locale, path, children }: MarketingShellP
       >
         {t('nav.skip')}
       </a>
-      <header className="sticky top-0 z-40 border-b border-border bg-background/95 pt-safe backdrop-blur-sm">
+      <header className="sticky top-0 z-40 header-scroll border-b border-border bg-background/85 pt-safe backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-2 px-gutter">
           <Link
             href={marketingHref(locale, '/')}

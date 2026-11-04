@@ -48,10 +48,21 @@ describe('planCards', () => {
     expect(premium?.features).toEqual([{ key: 'kitchen_display', live: false }]);
   });
 
-  it('marks plans whose features all shipped as available now', () => {
-    const [basic, pro] = planCards([BASIC, PRO]);
+  it('marks shipped plans as available and recommends the most complete one', () => {
+    const entry: PublicPlan = { ...BASIC, code: 'menu_qr', features: ['menu', 'branding'] };
+    const [menuQr, basic, pro] = planCards([entry, BASIC, PRO]);
+    expect(menuQr?.available).toBe(true);
     expect(basic?.available).toBe(true);
     expect(pro?.available).toBe(false);
+    expect([menuQr?.recommended, basic?.recommended, pro?.recommended]).toEqual([
+      false,
+      true,
+      false,
+    ]);
+    expect(basic?.features.map((feature) => feature.key)).toEqual([
+      'service_requests',
+      'ai_import',
+    ]);
   });
 
   it('reads limits and AI quotas, null meaning unlimited', () => {

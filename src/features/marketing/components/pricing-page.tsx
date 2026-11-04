@@ -37,8 +37,8 @@ export async function PricingPage({ locale }: { locale: Locale }) {
 
 function PlanSkeletons() {
   return (
-    <div className="mt-10 grid gap-5 md:grid-cols-3">
-      {[0, 1, 2].map((index) => (
+    <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      {[0, 1, 2, 3].map((index) => (
         <Skeleton key={index} className="h-120 rounded-lg" />
       ))}
     </div>
@@ -50,7 +50,7 @@ async function PlanGrid({ locale }: { locale: Locale }) {
   await connection();
   const cards = planCards(await publicPlans());
   return (
-    <ul className="mt-10 grid gap-5 md:grid-cols-3">
+    <ul className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => (
         <li key={card.code} className="flex">
           <PlanCardView card={card} locale={locale} />
@@ -71,7 +71,7 @@ async function PlanCardView({ card, locale }: { card: PlanCard; locale: Locale }
       aria-labelledby={titleId}
       className={cn(
         'flex w-full flex-col gap-6 rounded-lg border bg-card p-6',
-        card.available ? 'border-brand shadow-lg ring-1 ring-brand' : 'border-border',
+        card.recommended ? 'border-brand shadow-lg ring-1 ring-brand' : 'border-border',
       )}
     >
       <header className="flex flex-col gap-3">
@@ -79,7 +79,7 @@ async function PlanCardView({ card, locale }: { card: PlanCard; locale: Locale }
           <h2 id={titleId} className="text-xl font-semibold text-foreground">
             {name}
           </h2>
-          {card.available ? <Badge variant="success">{t('popular')}</Badge> : null}
+          {card.recommended ? <Badge variant="success">{t('popular')}</Badge> : null}
         </div>
         <p className="flex flex-wrap items-baseline gap-x-1.5">
           <span className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">

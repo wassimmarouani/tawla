@@ -12,35 +12,25 @@
     "skip": "Skip to content"
   },
   "hero": {
-    "eyebrow": "For cafés and restaurants in Tunisia",
-    "title": "Your QR code menu, ready in 30 minutes.",
-    "description": "Take a photo of your menu: AI puts it online in French, Arabic and English. Customers call the waiter or ask for the bill from their table.",
+    "eyebrow": "New: import your menu from one photo",
+    "title": "Your QR code menu,",
+    "titleAccent": "ready in 30 minutes.",
+    "description": "Customers scan the QR code on the table and read your menu in French, Arabic or English. They call the waiter or ask for the bill in one tap, and your team knows at once.",
     "start": "Create my menu",
     "whatsapp": "Message us on WhatsApp",
     "demo": "See the demo menu",
     "scan": "Scan to try the demo on your phone",
     "frame": "Demo menu",
-    "qr": "Demo menu QR code"
-  },
-  "benefits": {
-    "title": "What changes in your venue",
-    "items": {
-      "menu": {
-        "title": "A menu that is always current",
-        "body": "Prices, photos and sold-out dishes change in a moment and show at once. No more laminated menus to reprint."
-      },
-      "service": {
-        "title": "The waiter comes at the right time",
-        "body": "Waiter calls and bill requests from the table, with the payment method. Your team knows in under 2 seconds."
-      },
-      "languages": {
-        "title": "French, Arabic, English",
-        "body": "Every customer reads the menu in their language, Arabic right to left. Automatic translation included, approved by you."
-      },
-      "setup": {
-        "title": "Ready without a technician",
-        "body": "Menu photo, tables, QR tents to print: all from your phone in under 30 minutes."
-      }
+    "qr": "Demo menu QR code",
+    "trust": {
+      "app": "No app",
+      "commitment": "No commitment",
+      "languages": "Français · عربي · English"
+    },
+    "chips": {
+      "call": "Table 4 · Waiter call",
+      "bill": "Table 7 · Bill by card",
+      "translated": "Menu in 3 languages"
     }
   },
   "steps": {
@@ -48,7 +38,7 @@
     "items": {
       "photo": {
         "title": "Photograph your menu",
-        "body": "AI reads the dishes and prices. You check and correct."
+        "body": "AI reads the dishes and prices. You check and correct in minutes."
       },
       "brand": {
         "title": "Add your identity",
@@ -60,17 +50,24 @@
       }
     }
   },
-  "pricingTeaser": {
-    "title": "Clear prices, in dinars",
-    "body": "No commitment. Start with the digital menu and add table ordering when you want.",
-    "cta": "See pricing"
-  },
   "faq": {
     "title": "Frequently asked questions",
     "items": {
+      "onlyMenu": {
+        "q": "I only want the QR code menu. Is that possible?",
+        "a": "Yes. The QR Menu plan includes your menu online and a QR code per table, without waiter calls or bills. You can move to Basic anytime."
+      },
       "app": {
         "q": "Do my customers need an app?",
         "a": "No. They scan the QR code with the camera and the menu opens in the browser, without an account."
+      },
+      "start": {
+        "q": "How long does it take to start?",
+        "a": "Under 30 minutes: a photo of the menu, your colours, then printing the QR codes."
+      },
+      "print": {
+        "q": "Who prints the QR codes?",
+        "a": "You print them from your space, on paper or at a print shop. We can also point you to acrylic or wooden tents."
       },
       "internet": {
         "q": "What if the Wi-Fi is slow?",
@@ -104,7 +101,7 @@
     "description": "Simple plans, in dinars, no commitment. Prices exclude tax and are indicative during the pilot.",
     "perMonth": "/ month",
     "perYear": "or {price} / year",
-    "popular": "Available now",
+    "popular": "Recommended",
     "cta": "Get started",
     "contact": "Contact us",
     "included": "Included",
@@ -210,5 +207,141 @@
         "body": "A rich menu with photos, options and allergens, readable in three languages by Tunisian customers and tourists alike."
       }
     }
+  },
+  "mock": {
+    "venue": "Café El Bahja",
+    "tagline": "Café · Tunis",
+    "categories": {
+      "hot": "Coffee",
+      "cold": "Juices",
+      "sweet": "Pastries"
+    },
+    "items": {
+      "espresso": "Espresso",
+      "capucin": "Capucin",
+      "citronnade": "House lemonade"
+    }
+  },
+  "marquee": {
+    "label": "For every kind of venue",
+    "items": {
+      "cafe": "Cafés",
+      "tea": "Tea rooms",
+      "restaurant": "Restaurants",
+      "pastry": "Pastry shops",
+      "lounge": "Lounges",
+      "fastfood": "Fast food",
+      "hotel": "Hotels",
+      "beach": "Beach bars"
+    }
+  },
+  "stats": {
+    "title": "Table service, by the numbers",
+    "items": {
+      "setup": {
+        "value": "30 min",
+        "label": "to publish your menu"
+      },
+      "alert": {
+        "value": "< 2 s",
+        "label": "to alert the waiter"
+      },
+      "languages": {
+        "value": "3",
+        "label": "languages: French, Arabic, English"
+      },
+      "app": {
+        "value": "0",
+        "label": "apps to install"
+      }
+    }
+  },
+  "services": {
+    "eyebrow": "Our services",
+    "title": "Everything a modern service needs",
+    "description": "One tool for your menu, your tables and your team. Here is what we do for your venue.",
+    "items": {
+      "menu": {
+        "title": "Digital menu",
+        "body": "Your menu online with photos, prices, options and allergens. Change a price or hide a sold-out dish: it shows at once."
+      },
+      "qr": {
+        "title": "QR codes on tables",
+        "body": "One QR code per table on a tent with your name, ready to print. Customers scan with the camera, no app."
+      },
+      "service": {
+        "title": "Waiter calls and bills",
+        "body": "From the table, customers call the waiter or ask for the bill, cash or card. Basic plan."
+      },
+      "languages": {
+        "title": "French, Arabic, English",
+        "body": "Every customer reads the menu in their language, Arabic right to left. Automatic translation saves you hours."
+      },
+      "ai": {
+        "title": "Menu import from a photo",
+        "body": "Take a photo of your menu: AI reads the dishes and prices, you check, it is online."
+      },
+      "team": {
+        "title": "Team screen and dashboard",
+        "body": "The counter and waiters get calls with sound and vibration. You follow everything from your phone."
+      }
+    },
+    "visual": {
+      "soldOut": "Sold out",
+      "available": "Available",
+      "call": "Waiter call",
+      "bill": "Bill",
+      "cash": "Cash",
+      "card": "Card",
+      "scanning": "Reading the menu…",
+      "found": "{count} dishes found",
+      "table": "Table {number}",
+      "now": "just now"
+    }
+  },
+  "offers": {
+    "eyebrow": "Plans",
+    "title": "Start simple, grow when you want",
+    "description": "Just the QR code menu, or the menu with table service: your choice.",
+    "from": "from {price} / month",
+    "recommended": "Recommended",
+    "cta": "Compare plans",
+    "soon": "Coming soon: table ordering and order tracking (Pro).",
+    "plans": {
+      "menu_qr": {
+        "tagline": "Just the menu, nothing more",
+        "points": {
+          "menu": "Your menu online, always current",
+          "qr": "A QR code on every table",
+          "languages": "French, Arabic, English",
+          "ai": "Photo import and automatic translation"
+        }
+      },
+      "basic": {
+        "tagline": "The menu and table service",
+        "points": {
+          "menu": "Everything in QR Menu",
+          "call": "Waiter calls from the table",
+          "bill": "Bill requests with the payment method",
+          "team": "Alerts on the team's tablet and phones"
+        }
+      }
+    }
+  },
+  "support": {
+    "eyebrow": "Support",
+    "title": "We are with you from start to finish",
+    "description": "No technical skills needed: we set everything up with you.",
+    "items": {
+      "menu": "Your menu put online with you",
+      "print": "QR tents ready to print for every table",
+      "train": "Your team up and running in minutes",
+      "help": "WhatsApp support in derja, French or Arabic"
+    },
+    "cta": "Talk to an advisor"
+  },
+  "finalCta": {
+    "title": "Ready for a digital menu?",
+    "description": "Create your menu in minutes, or message us: we set it all up with you."
   }
 }

@@ -1,0 +1,102 @@
+{
+  "page": {
+    "description": "Invitez votre équipe et associez les appareils du service : la tablette du comptoir, les téléphones des serveurs."
+  },
+  "members": {
+    "title": "Membres",
+    "you": "Vous",
+    "inactive": "Désactivé",
+    "invite": "Inviter",
+    "pending": "Invitation envoyée",
+    "expires": "Expire le {date}",
+    "revoke": "Annuler l’invitation",
+    "revokeLabel": "Annuler l’invitation de {email}",
+    "seats": "{count, plural, =0 {Plus de place dans votre formule} one {Encore # place dans votre formule} other {Encore # places dans votre formule}}",
+    "unlimited": "Équipe illimitée"
+  },
+  "roles": {
+    "owner": "Propriétaire",
+    "manager": "Gérant",
+    "counter": "Comptoir",
+    "waiter": "Serveur",
+    "station": "Poste"
+  },
+  "invite": {
+    "title": "Inviter un membre",
+    "description": "Il reçoit un e-mail pour créer son mot de passe. Le lien est valable 7 jours.",
+    "email": "Adresse e-mail",
+    "role": "Rôle",
+    "roleHints": {
+      "manager": "Accès au tableau de bord et au service.",
+      "counter": "Service au comptoir, sur l’appli du personnel.",
+      "waiter": "Service en salle, sur l’appli du personnel."
+    },
+    "submit": "Envoyer l’invitation",
+    "cancel": "Annuler"
+  },
+  "devices": {
+    "title": "Appareils du service",
+    "description": "Seuls les appareils associés ouvrent l’appli du personnel.",
+    "pair": "Associer un appareil",
+    "empty": "Aucun appareil associé.",
+    "lastSeen": "Dernière connexion {date}",
+    "never": "Jamais connecté",
+    "rename": "Modifier",
+    "revoke": "Retirer",
+    "actions": "Actions de l’appareil {name}",
+    "modes": {
+      "fixed": "Fixe (comptoir, écran)",
+      "mobile": "Mobile (téléphone)"
+    },
+    "modeHints": {
+      "fixed": "Reste connecté jusqu’à la fin de la journée.",
+      "mobile": "Déconnexion automatique après 12 h."
+    }
+  },
+  "pairing": {
+    "title": "Associer un appareil",
+    "description": "Donnez-lui un nom, puis ouvrez le lien ou scannez le QR code avec l’appareil.",
+    "label": "Nom de l’appareil",
+    "labelPlaceholder": "Tablette comptoir",
+    "mode": "Type",
+    "submit": "Obtenir le code",
+    "codeTitle": "Code d’association",
+    "codeHint": "Sur l’appareil, ouvrez {url} et saisissez ce code, ou scannez le QR code.",
+    "expires": "Valable jusqu’à {time}, une seule fois.",
+    "qr": "QR code d’association",
+    "done": "Terminé"
+  },
+  "rename": {
+    "title": "Modifier l’appareil",
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "revoke": {
+    "title": "Retirer « {name} » ?",
+    "description": "L’appareil est déconnecté immédiatement. Il faudra l’associer à nouveau pour s’en servir.",
+    "confirm": "Retirer l’appareil",
+    "cancel": "Annuler"
+  },
+  "sessions": {
+    "title": "Sessions actives",
+    "empty": "Personne n’est connecté sur un appareil.",
+    "on": "sur {device}",
+    "until": "jusqu’à {time}",
+    "end": "Déconnecter",
+    "endLabel": "Déconnecter {name}"
+  },
+  "toast": {
+    "invited": "Invitation envoyée à {email}.",
+    "inviteRevoked": "Invitation annulée.",
+    "deviceSaved": "Appareil enregistré.",
+    "deviceRevoked": "Appareil retiré.",
+    "sessionEnded": "Session terminée.",
+    "failed": "L’action n’a pas abouti. Réessayez."
+  },
+  "errors": {
+    "planLimit": "Votre formule Basic inclut un seul membre en plus de vous. Passez à Pro pour agrandir l’équipe.",
+    "forbidden": "Vous n’avez pas le droit de gérer l’équipe.",
+    "notFound": "Élément introuvable : la page a été mise à jour.",
+    "readOnly": "Établissement en lecture seule."
+  }
+}

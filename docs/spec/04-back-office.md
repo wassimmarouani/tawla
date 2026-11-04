@@ -64,6 +64,7 @@ A progress checklist stays on the dashboard until onboarding is complete. Steps 
 - Invite by email (owner, manager, any role), or create a shadow staff member with name + PIN (Phase 2).
 - Assign role, deactivate immediately.
 - **Devices:** pair (code or QR), name, mode (fixed / mobile), revoke. Active sessions with remote logout.
+- **Implemented (P1-11):** `/dashboard/team` lists members (role badges), pending invitations (cancel), seats left on the plan, devices (edit, remove with confirmation) and active sessions (sign out). Pairing shows the code (`ABCD-EFGH`) and a QR code of `/staff/pair?code=…`, valid 10 minutes. Owners and managers only (`staff.manage`).
 
 ## Settings
 

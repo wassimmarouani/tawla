@@ -447,6 +447,8 @@
   - a second staff invite on Basic is refused.
 - Unit: pairing code expiry and single use. Push send prunes dead subscriptions (mocked endpoint).
 
+**Note (2026-11-03):** the Team page holds members, invitations, devices and active sessions. Inviting an address that already has a Tawla account is refused in Phase 1 (ADR-0010 amendment). The staff home after sign-in is a "ready for service" card; P1-12 replaces it with the live screen and adds the push subscription to "Start service" (`POST /api/staff/push-subscriptions` exists).
+
 ### P1-12 — Staff live screen · L
 
 **Deliverables**

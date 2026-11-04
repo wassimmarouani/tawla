@@ -17,6 +17,7 @@ The staff app is a PWA under `/staff`, installed on the counter tablet and waite
 - **Counter / waiter / station:** tap your name, then enter your 4-digit PIN. Lockout: 5 failures → 5 min; 20 per device per hour → device locked until a manager unlocks it.
 - **Sessions:** `fixed` = until end of business day; `mobile` = 12 h. Managers see active sessions and revoke them remotely.
 - A connection indicator (green / orange / red) is always visible.
+- **Implemented (P1-11):** `/staff` → `/staff/pair` (8-character code, or the QR link) → `/staff/login` (email + password of a member of the device's venue) → `/staff`. Revoking the device or ending the session from the back-office sends the device back to pairing or sign-in on its next request. Staff PWA manifest, apple-touch icon, service worker (push, notification click, offline shell).
 
 ## "Start service" screen (ADR-0007)
 

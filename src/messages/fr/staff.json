@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "pair": "Associer l’appareil",
+    "login": "Connexion du personnel",
+    "home": "Service"
+  },
+  "pair": {
+    "title": "Associer cet appareil",
+    "description": "Saisissez le code à 8 caractères affiché dans le tableau de bord, rubrique Équipe.",
+    "code": "Code d’association",
+    "submit": "Associer l’appareil",
+    "help": "Pas de code ? Demandez au gérant d’en créer un : il est valable 10 minutes."
+  },
+  "login": {
+    "title": "Connexion",
+    "description": "Appareil « {device} » de {venue}.",
+    "submit": "Se connecter"
+  },
+  "home": {
+    "title": "Prêt pour le service",
+    "description": "Connecté sur « {device} » en tant que {role}.",
+    "next": "L’écran du service (appels, additions, disponibilités) arrive ici.",
+    "logout": "Se déconnecter",
+    "until": "Session jusqu’à {time}"
+  }
+}

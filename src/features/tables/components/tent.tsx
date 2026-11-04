@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { qrSvg } from '../services/qr';
+import { qrSvg } from '@/lib/qr/qr-svg';
 
 export interface TentText {
   fr: string;

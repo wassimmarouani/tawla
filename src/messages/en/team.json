@@ -1,0 +1,102 @@
+{
+  "page": {
+    "description": "Invite your team and pair your service devices: the counter tablet, the waiters’ phones."
+  },
+  "members": {
+    "title": "Members",
+    "you": "You",
+    "inactive": "Deactivated",
+    "invite": "Invite",
+    "pending": "Invitation sent",
+    "expires": "Expires on {date}",
+    "revoke": "Cancel invitation",
+    "revokeLabel": "Cancel the invitation of {email}",
+    "seats": "{count, plural, =0 {No seats left on your plan} one {# seat left on your plan} other {# seats left on your plan}}",
+    "unlimited": "Unlimited team"
+  },
+  "roles": {
+    "owner": "Owner",
+    "manager": "Manager",
+    "counter": "Counter",
+    "waiter": "Waiter",
+    "station": "Station"
+  },
+  "invite": {
+    "title": "Invite a member",
+    "description": "They get an email to create their password. The link is valid for 7 days.",
+    "email": "Email address",
+    "role": "Role",
+    "roleHints": {
+      "manager": "Dashboard and service access.",
+      "counter": "Counter service, on the staff app.",
+      "waiter": "Floor service, on the staff app."
+    },
+    "submit": "Send invitation",
+    "cancel": "Cancel"
+  },
+  "devices": {
+    "title": "Service devices",
+    "description": "Only paired devices can open the staff app.",
+    "pair": "Pair a device",
+    "empty": "No paired devices.",
+    "lastSeen": "Last signed in {date}",
+    "never": "Never signed in",
+    "rename": "Edit",
+    "revoke": "Remove",
+    "actions": "Actions for device {name}",
+    "modes": {
+      "fixed": "Fixed (counter, screen)",
+      "mobile": "Mobile (phone)"
+    },
+    "modeHints": {
+      "fixed": "Stays signed in until the end of the day.",
+      "mobile": "Signs out automatically after 12 h."
+    }
+  },
+  "pairing": {
+    "title": "Pair a device",
+    "description": "Name it, then open the link or scan the QR code with the device.",
+    "label": "Device name",
+    "labelPlaceholder": "Counter tablet",
+    "mode": "Type",
+    "submit": "Get the code",
+    "codeTitle": "Pairing code",
+    "codeHint": "On the device, open {url} and enter this code, or scan the QR code.",
+    "expires": "Valid until {time}, once.",
+    "qr": "Pairing QR code",
+    "done": "Done"
+  },
+  "rename": {
+    "title": "Edit device",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "revoke": {
+    "title": "Remove “{name}”?",
+    "description": "The device is signed out at once. It must be paired again to be used.",
+    "confirm": "Remove device",
+    "cancel": "Cancel"
+  },
+  "sessions": {
+    "title": "Active sessions",
+    "empty": "Nobody is signed in on a device.",
+    "on": "on {device}",
+    "until": "until {time}",
+    "end": "Sign out",
+    "endLabel": "Sign out {name}"
+  },
+  "toast": {
+    "invited": "Invitation sent to {email}.",
+    "inviteRevoked": "Invitation cancelled.",
+    "deviceSaved": "Device saved.",
+    "deviceRevoked": "Device removed.",
+    "sessionEnded": "Session ended.",
+    "failed": "That didn’t work. Try again."
+  },
+  "errors": {
+    "planLimit": "Your Basic plan includes one member besides you. Upgrade to Pro to grow the team.",
+    "forbidden": "You are not allowed to manage the team.",
+    "notFound": "Item not found: the page has been updated.",
+    "readOnly": "This venue is read-only."
+  }
+}

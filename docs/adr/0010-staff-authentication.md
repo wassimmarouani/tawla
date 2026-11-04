@@ -96,3 +96,15 @@ Constraints carried into Phase 2 (PIN login):
 - https://supabase.com/docs/guides/auth/password-security
 - https://supabase.com/docs/guides/auth/auth-mfa
 - https://github.com/supabase/auth/blob/master/internal/mailer/validateclient/validateclient.go
+
+## Amendment — 2026-11-03 (P1-11): paired devices and staff accounts in Phase 1
+
+- **Device cookie:** `__Host-tawla_staff_device` (`tawla_staff_device` on http://localhost), HttpOnly, SameSite=Strict, one year. The customer menu already uses `tawla_device` for its per-phone id, hence the distinct name.
+- **Pairing codes:**
+  - 8 characters from `ABCDEFGHJKMNPQRSTVWXYZ23456789` (no look-alikes), drawn without modulo bias;
+  - SHA-256 only in `device_pairing_codes`, valid 10 minutes, single use (row lock on redemption);
+  - the QR code opens `/staff/pair?code=…`, which only pre-fills the form (GET stays side-effect free).
+- **Every staff request** (pages and `/api/staff/*`) checks the device (not revoked), the Supabase user and a live `staff_sessions` row on that device. A revoked device is therefore refused at once, even with an access token that is still valid; the revocation also deletes the matching `auth.sessions` rows so refresh fails.
+- **Session expiry** is computed in `features/staff/services/session-expiry.ts`: mobile 12 h; fixed until the restaurant's next day cutoff (local time) plus 30 minutes.
+- **Invitations:** `inviteUserByEmail` (template `invite.html`, link to `/invite/accept`, token used on click) and `staff_invitations`. The plan limit counts active non-owner members plus pending invitations (`PLAN_LIMIT_REACHED`). An address that already has an account is refused in Phase 1 ("invite another address"); linking existing accounts comes with the PIN-login work.
+- **Writes are server-only:** clients read these tables under RLS (owners and managers; a member reads their own sessions and subscriptions) and never write them. Token and code hashes have no column grant.

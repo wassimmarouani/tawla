@@ -12,11 +12,23 @@ import { SubmitButton } from '@/components/forms/submit-button';
 import { useFormErrors } from '@/components/forms/use-form-errors';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import type { ActionError } from '@/lib/errors';
+import type { ActionError, ActionResult } from '@/lib/errors';
 import { logInSchema, type LogIn } from '../schemas/auth';
 import { logIn, resendConfirmation } from '../server/actions';
 
-export function LoginForm({ next }: { next?: string | undefined }) {
+/**
+ * Email + password sign-in. `action` replaces the back-office login (the staff app signs in on a
+ * paired device); `compact` hides the sign-up and password-reset links there.
+ */
+export function LoginForm({
+  next,
+  action,
+  compact = false,
+}: {
+  next?: string | undefined;
+  action?: ((values: LogIn) => Promise<ActionResult>) | undefined;
+  compact?: boolean;
+}) {
   const t = useTranslations('auth');
   const tForms = useTranslations('common.forms');
   const { fieldError, reasonText } = useFormErrors();
@@ -36,7 +48,7 @@ export function LoginForm({ next }: { next?: string | undefined }) {
     setFormError(null);
     setResent(false);
     startTransition(async () => {
-      const result = await logIn(values, next);
+      const result = action ? await action(values) : await logIn(values, next);
       if (result.ok) return;
       const fields = result.error.details?.fields;
       if (fields) {
@@ -102,12 +114,14 @@ export function LoginForm({ next }: { next?: string | undefined }) {
         label={t('fields.password')}
         error={fieldError(errors.password?.message)}
         labelAside={
-          <Link
-            href="/reset"
-            className="text-sm font-medium text-brand-text underline-offset-4 hover:underline pointer-coarse:py-3"
-          >
-            {t('login.forgot')}
-          </Link>
+          compact ? undefined : (
+            <Link
+              href="/reset"
+              className="text-sm font-medium text-brand-text underline-offset-4 hover:underline pointer-coarse:py-3"
+            >
+              {t('login.forgot')}
+            </Link>
+          )
         }
       >
         <PasswordInput
@@ -122,15 +136,17 @@ export function LoginForm({ next }: { next?: string | undefined }) {
         {t('login.submit')}
       </SubmitButton>
 
-      <p className="text-center text-sm text-muted-foreground">
-        {t('login.noAccount')}{' '}
-        <Link
-          href="/signup"
-          className="font-semibold text-brand-text underline-offset-4 hover:underline"
-        >
-          {t('login.signUp')}
-        </Link>
-      </p>
+      {compact ? null : (
+        <p className="text-center text-sm text-muted-foreground">
+          {t('login.noAccount')}{' '}
+          <Link
+            href="/signup"
+            className="font-semibold text-brand-text underline-offset-4 hover:underline"
+          >
+            {t('login.signUp')}
+          </Link>
+        </p>
+      )}
     </form>
   );
 }

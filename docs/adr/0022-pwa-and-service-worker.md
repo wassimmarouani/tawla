@@ -37,3 +37,10 @@
 - https://github.com/serwist/serwist/issues/360
 - https://bugs.webkit.org/show_bug.cgi?id=254545 (Wake Lock in home-screen web apps, iOS 18.4)
 - https://github.com/mdn/browser-compat-data/blob/main/api/PushManager.json
+
+## Amendment — 2026-11-03 (P1-11): staff service worker
+
+- `src/sw/staff-sw.ts` uses the plain Service Worker API: push, notification click and a network-first offline shell for `/staff` pages. It needs no runtime-caching strategies, so `serwist` joins with the customer-menu worker, where stale-while-revalidate and cache-first rules pay off.
+- The worker has its own `tsconfig.json` (`webworker` lib) and is type-checked by `pnpm typecheck`. `pnpm build` and `pnpm dev` run `scripts/build-sw.ts` first; `public/sw-*.js` is generated, not committed.
+- The staff manifest is served by `src/app/staff.webmanifest/route.ts` (name from `NEXT_PUBLIC_APP_NAME`, colours from the tokens). The worker registers with scope `/staff`.
+- `src/server/admin/push.ts` sends with VAPID; without keys, sending is a logged no-op. `push-delivery.ts` holds the pure loop that prunes 404/410 subscriptions (unit-tested).

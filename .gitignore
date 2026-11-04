@@ -42,3 +42,5 @@ Thumbs.db
 # office lock files
 ~$*
 
+# Service workers built by scripts/build-sw.ts (ADR-0022)
+/public/sw-*.js

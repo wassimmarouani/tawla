@@ -697,6 +697,7 @@ export const plans = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'string' })
       .defaultNow()
       .notNull(),
+    priceOnce: integer('price_once'),
   },
   (table): PgTableExtraConfigValue[] => [unique('plans_code_key').on(table.code)],
 );

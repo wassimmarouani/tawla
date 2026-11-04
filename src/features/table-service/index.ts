@@ -55,3 +55,4 @@ export { TableServiceBar } from './components/table-service-bar';
 export { TableNotFound } from './components/table-not-found';
 export { getPublicTable } from './queries/public-table';
 export type { PublicTable } from './queries/public-table';
+export { serviceRequestsEnabled } from './server/flags';

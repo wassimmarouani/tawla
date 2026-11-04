@@ -36,6 +36,7 @@ ADRs override `docs/spec/*`, which override the original `docs/cahier-des-charge
 | [0028](0028-legal-and-compliance-open-items.md)      | Legal and compliance items                                             | Accepted                        |
 | [0029](0029-visual-direction-tawla-mix.md)           | Visual direction "Tawla" (A + B lists + C grid)                        | Accepted                        |
 | [0030](0030-gemini-provider.md)                      | Gemini as the AI provider (menu import, translation)                   | Accepted                        |
+| [0031](0031-menu-qr-entry-plan.md)                   | "Menu QR" entry plan; `service_requests` enforced                      | Accepted                        |
 
 ## Audit ID → ADR
 

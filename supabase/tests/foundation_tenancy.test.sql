@@ -86,7 +86,7 @@ select is((select count(*) from public.subscriptions), 1::bigint, 'manager A see
 select is((select count(*) from public.feature_overrides), 1::bigint, 'manager A sees only overrides of A');
 select results_eq($$ select old_slug from public.slug_redirects $$, array['old-cafe-a'], 'manager A sees only redirects of A');
 select is((select count(*) from public.audit_logs), 1::bigint, 'manager A sees only the audit log of A');
-select is((select count(*) from public.plans), 3::bigint, 'signed-in users read the public plan catalogue');
+select is((select count(*) from public.plans), 4::bigint, 'signed-in users read the public plan catalogue');
 select ok((select count(*) from public.reserved_slugs) > 0, 'signed-in users read reserved slugs');
 
 select is(

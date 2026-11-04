@@ -1,12 +1,17 @@
 import 'server-only';
 import { and, asc, eq, inArray, isNull } from 'drizzle-orm';
-import { z } from 'zod';
 import { can, type TenantRole } from '@/features/auth';
 import { LOCALES, isLocale, type Locale } from '@/i18n/locales';
 import type { SessionClaims } from '@/lib/auth/claims';
 import { withRls } from '@/lib/db/rls';
 import { featureOverrides, plans, restaurants, subscriptions } from '@/lib/db/schema/schema';
-import { FEATURE_KEYS, resolveFlags, type FeatureKey, type FeatureOverride } from '@/lib/flags';
+import {
+  featureKeySchema,
+  featureSettingsSchema,
+  resolveFlags,
+  type FeatureKey,
+  type FeatureOverride,
+} from '@/lib/flags';
 import { selectActiveRestaurant } from '../services/active-restaurant';
 
 export interface TenantRestaurant {
@@ -36,12 +41,6 @@ export interface TenantContext {
 
 export type TenantContextResult =
   { kind: 'ok'; context: TenantContext } | { kind: 'no-restaurant' } | { kind: 'forbidden' };
-
-const featureKeySchema = z.enum(FEATURE_KEYS);
-/** `restaurants.settings.features`: switches that may only disable a plan feature. */
-const featureSettingsSchema = z
-  .object({ features: z.partialRecord(featureKeySchema, z.boolean()).default({}) })
-  .catch({ features: {} });
 
 const canOpenDashboard = (role: TenantRole) => can(role, 'dashboard.view');
 

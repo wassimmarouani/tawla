@@ -507,6 +507,8 @@
 - Scripted E2E of the full onboarding with seeded AI fixtures completes. A human dry run with a stopwatch (owner) confirms the "< 30 min" target.
 - Settings changes reflect on the customer menu (cache invalidation). DoD screenshots.
 
+**Note (2026-11-04):** the setup wizard is `/dashboard/setup`: the five checklist steps in order with the next one open (venue + hours and identity edited in place; menu, tables + print and team link to their screens). The overview checklist links into it. Settings (`/dashboard/settings`) cover venue, hours + exceptions, "close now / open now / back to the hours", languages, brand colour (AA-adjusted preview, logo colour suggestion), light/dark/auto mode, logo and cover, Wi-Fi and links (Google review, Instagram, Facebook, TikTok), session timeout, business-day cutoff and rounding step. The public menu now shows a folded "Info" panel (address with directions, Wi-Fi, social links). Card style (list/grid) is left out: layout follows photo coverage (ADR-0027). The owner's stopwatch dry run of the < 30 min target is part of P1-17.
+
 ### P1-15 — Minimal Super Admin · M
 
 **Deliverables**

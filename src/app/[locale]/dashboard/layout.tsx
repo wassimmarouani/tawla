@@ -27,6 +27,7 @@ export default async function DashboardLayout({ children }: LayoutProps<'/[local
     'dashboard',
     'menuEditor',
     'onboarding',
+    'settings',
     'tables',
     'team',
   ]);

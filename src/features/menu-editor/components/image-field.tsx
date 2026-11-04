@@ -16,13 +16,22 @@ interface ImageFieldProps {
   storageUrl: string;
   media: EditorMedia | null;
   onChange: (media: EditorMedia | null) => void;
+  /** Rendition set (ADR-0018): product photos by default; logos and covers for the venue. */
+  kind?: 'product' | 'category' | 'logo' | 'cover';
 }
 
 /**
  * Product photo (ADR-0018): the original goes straight to a one-time signed upload URL, the
  * server turns it into AVIF/WebP renditions and returns the new media for the preview.
  */
-export function ImageField({ label, hint, storageUrl, media, onChange }: ImageFieldProps) {
+export function ImageField({
+  label,
+  hint,
+  storageUrl,
+  media,
+  onChange,
+  kind = 'product',
+}: ImageFieldProps) {
   const t = useTranslations('menuEditor');
   const { perform } = useEditorAction();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,7 +50,7 @@ export function ImageField({ label, hint, storageUrl, media, onChange }: ImageFi
     }
     setUploading(true);
     try {
-      const ticket = await perform(() => requestImageUpload('product'));
+      const ticket = await perform(() => requestImageUpload(kind));
       if (!ticket.ok) return;
       const response = await fetch(ticket.data.signedUrl, {
         method: 'PUT',
@@ -52,9 +61,7 @@ export function ImageField({ label, hint, storageUrl, media, onChange }: ImageFi
         toast.error(t('errors.uploadFailed'));
         return;
       }
-      const processed = await perform(() =>
-        processImage({ path: ticket.data.path, kind: 'product' }),
-      );
+      const processed = await perform(() => processImage({ path: ticket.data.path, kind }));
       if (processed.ok) onChange(processed.data.media);
     } catch {
       toast.error(t('errors.uploadFailed'));

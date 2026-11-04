@@ -127,5 +127,13 @@
     "reviewHint": "Enjoyed it? A Google review really helps the venue.",
     "failed": "That didn’t go through. Try again.",
     "close": "Close"
+  },
+  "practical": {
+    "address": "Address",
+    "directions": "Directions",
+    "password": "password:",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok"
   }
 }

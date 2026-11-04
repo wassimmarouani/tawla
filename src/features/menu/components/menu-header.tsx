@@ -98,7 +98,83 @@ export async function MenuHeader({
             <OpenStatus restaurant={restaurant} />
           </Suspense>
         </div>
+        <PracticalInfo info={restaurant.info} t={t} />
       </div>
     </header>
+  );
+}
+
+type Translator = Awaited<ReturnType<typeof getTranslations<'client'>>>;
+
+/** Address with directions, Wi-Fi and social links (spec 02), folded: no script needed. */
+function PracticalInfo({ info, t }: { info: PublicMenu['restaurant']['info']; t: Translator }) {
+  const links = [
+    { href: info.instagram_url, label: t('practical.instagram') },
+    { href: info.facebook_url, label: t('practical.facebook') },
+    { href: info.tiktok_url, label: t('practical.tiktok') },
+  ].filter((link): link is { href: string; label: string } => link.href !== null);
+  if (!info.address && !info.wifi_name && links.length === 0) return null;
+  return (
+    <details className="group mt-3 border-t border-border pt-2 text-start">
+      <summary className="mx-auto flex min-h-11 w-fit cursor-pointer list-none items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-brand-text outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        {t('info')}
+        <span
+          aria-hidden="true"
+          className="transition-transform group-open:rotate-180 motion-reduce:transition-none"
+        >
+          ▾
+        </span>
+      </summary>
+      <dl className="mt-2 grid gap-3 text-sm">
+        {info.address ? (
+          <div>
+            <dt className="font-semibold text-foreground">{t('practical.address')}</dt>
+            <dd className="flex flex-wrap items-center gap-x-3 text-muted-foreground">
+              <span dir="auto">{info.address}</span>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(info.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center font-semibold text-brand-text underline-offset-4 hover:underline"
+              >
+                {t('practical.directions')}
+              </a>
+            </dd>
+          </div>
+        ) : null}
+        {info.wifi_name ? (
+          <div>
+            <dt className="font-semibold text-foreground">{t('wifi')}</dt>
+            <dd className="text-muted-foreground">
+              <span dir="auto">{info.wifi_name}</span>
+              {info.wifi_password ? (
+                <>
+                  {' · '}
+                  {t('practical.password')}{' '}
+                  <span dir="ltr" className="font-mono font-semibold text-foreground select-all">
+                    {info.wifi_password}
+                  </span>
+                </>
+              ) : null}
+            </dd>
+          </div>
+        ) : null}
+        {links.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {links.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center rounded-full bg-muted px-4 font-medium text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
+      </dl>
+    </details>
   );
 }

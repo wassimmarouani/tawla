@@ -1,0 +1,91 @@
+{
+  "page": {
+    "description": "Informations, horaires, langues et apparence de votre menu. Chaque changement est visible tout de suite par vos clients."
+  },
+  "save": "Enregistrer",
+  "saved": "Enregistré.",
+  "failed": "L’enregistrement n’a pas abouti. Réessayez.",
+  "venue": {
+    "title": "Établissement",
+    "name": "Nom",
+    "type": "Type",
+    "address": "Adresse",
+    "addressHint": "Affichée dans « Infos » avec un lien d’itinéraire."
+  },
+  "hours": {
+    "title": "Horaires d’ouverture",
+    "description": "Une plage qui finit avant son début continue après minuit (ex. 18:00 → 02:00).",
+    "closed": "Fermé",
+    "open": "Ouvert",
+    "from": "De",
+    "to": "À",
+    "add": "Ajouter une plage",
+    "remove": "Retirer la plage",
+    "exceptions": "Jours exceptionnels",
+    "exceptionDate": "Date",
+    "exceptionClosed": "Fermé ce jour-là",
+    "addException": "Ajouter un jour",
+    "removeException": "Retirer ce jour",
+    "invalid": "Vérifiez les horaires : une plage ne peut pas commencer et finir à la même heure."
+  },
+  "status": {
+    "title": "Ouverture maintenant",
+    "auto": "Selon les horaires",
+    "closedNow": "Fermé jusqu’à nouvel ordre",
+    "openNow": "Ouvert jusqu’à nouvel ordre",
+    "close": "Fermer maintenant",
+    "openAction": "Ouvrir maintenant",
+    "resume": "Reprendre les horaires"
+  },
+  "languages": {
+    "title": "Langues du menu",
+    "description": "Les clients choisissent parmi ces langues. La langue par défaut s’affiche si leur téléphone n’est dans aucune d’elles.",
+    "default": "Langue par défaut"
+  },
+  "appearance": {
+    "title": "Apparence",
+    "logo": "Logo",
+    "logoHint": "Carré, fond uni de préférence.",
+    "cover": "Photo de couverture",
+    "coverHint": "Paysage, la salle ou la terrasse.",
+    "color": "Couleur principale",
+    "useLogo": "Utiliser la couleur du logo",
+    "preview": "Aperçu ajusté pour rester lisible",
+    "previewButton": "Appeler le serveur",
+    "mode": "Thème du menu",
+    "modes": {
+      "auto": "Automatique (selon le téléphone)",
+      "light": "Clair",
+      "dark": "Sombre"
+    },
+    "previewBadge": "Table 4"
+  },
+  "links": {
+    "title": "Wi-Fi et liens",
+    "wifiName": "Nom du Wi-Fi",
+    "wifiPassword": "Mot de passe du Wi-Fi",
+    "googleReview": "Lien avis Google",
+    "googleReviewHint": "Proposé aux clients qui donnent 4 ou 5 étoiles.",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "urlHint": "Adresse complète commençant par https://"
+  },
+  "service": {
+    "title": "Service",
+    "timeout": "Fermeture automatique d’une table inactive (minutes)",
+    "timeoutHint": "Entre 30 et 240 minutes. 90 par défaut.",
+    "cutoff": "Fin de la journée de travail",
+    "cutoffHint": "Pour les établissements ouverts après minuit (05:00 par défaut).",
+    "rounding": "Arrondi des prix pour les hausses groupées"
+  },
+  "errors": {
+    "urlInvalid": "Adresse invalide : elle doit commencer par https://",
+    "localesRequired": "Choisissez au moins une langue.",
+    "defaultLocaleEnabled": "La langue par défaut doit être cochée.",
+    "colorInvalid": "Couleur invalide (ex. #1d5aa6).",
+    "cutoffInvalid": "Heure entre 00:00 et 11:59.",
+    "readOnly": "Établissement en lecture seule.",
+    "forbidden": "Vous n’avez pas le droit de modifier les réglages."
+  }
+}

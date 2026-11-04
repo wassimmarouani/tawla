@@ -6,6 +6,7 @@ import type { Locale } from '@/i18n/locales';
 import { env } from '@/lib/env';
 import { classes } from '@/lib/classes';
 import type { PublicMenu } from '../schemas/public-menu';
+import { restaurantThemeSchema } from '../schemas/restaurant-theme';
 import { AvailabilityLive } from './availability-live';
 import { BrandStyle } from './brand-style';
 import { CategoryNav } from './category-nav';
@@ -36,6 +37,7 @@ export async function PublicMenuView({
 }) {
   const t = await getTranslations('client');
   const scope = menu.restaurant.public_id;
+  const colorMode = restaurantThemeSchema.parse(menu.restaurant.theme).color_mode ?? 'auto';
   // Photos above the fold only in the first photo section.
   const firstPhotoSection = menu.categories.findIndex(
     (category) => sectionLayout(category) === 'cards',
@@ -44,6 +46,7 @@ export async function PublicMenuView({
   return (
     <div
       data-tenant={scope}
+      data-theme={colorMode === 'auto' ? undefined : colorMode}
       className={classes(
         'min-h-dvh bg-background text-foreground',
         serviceBar ? 'pb-40' : 'pb-safe',

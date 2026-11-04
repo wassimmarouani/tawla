@@ -92,6 +92,33 @@ export const publicMenuSchema = z.object({
     theme: z.record(z.string(), z.unknown()),
     logo: publicMediaSchema.nullable(),
     cover: publicMediaSchema.nullable(),
+    /** Practical info from Settings (P1-14); absent keys read as null. */
+    info: z
+      .object({
+        address: z.string().max(200).nullable().catch(null),
+        wifi_name: z.string().max(64).nullable().catch(null),
+        wifi_password: z.string().max(64).nullable().catch(null),
+        instagram_url: z
+          .url({ protocol: /^https$/ })
+          .nullable()
+          .catch(null),
+        facebook_url: z
+          .url({ protocol: /^https$/ })
+          .nullable()
+          .catch(null),
+        tiktok_url: z
+          .url({ protocol: /^https$/ })
+          .nullable()
+          .catch(null),
+      })
+      .catch({
+        address: null,
+        wifi_name: null,
+        wifi_password: null,
+        instagram_url: null,
+        facebook_url: null,
+        tiktok_url: null,
+      }),
   }),
   categories: z.array(publicCategorySchema),
 });

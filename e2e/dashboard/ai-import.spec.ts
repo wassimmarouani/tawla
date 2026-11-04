@@ -29,7 +29,7 @@ test('imports a paper menu from a photo, then translates it', async ({ page }, t
     page.getByRole('heading', { level: 1, name: 'Importer votre menu papier' }),
   ).toBeVisible();
   await expect(page.getByText('Encore 3 imports ce mois-ci')).toBeVisible();
-  await page.locator('input[type="file"]').setInputFiles(PHOTO);
+  await page.locator('input[type="file"][multiple]').setInputFiles(PHOTO);
   await expect(page.getByRole('button', { name: 'Retirer la photo 1' })).toBeVisible();
   await page.getByRole('button', { name: 'Analyser le menu' }).click();
 
@@ -96,6 +96,6 @@ test('a used-up import quota shows the friendly state', async ({ page }, testInf
   }
   await page.goto('/dashboard/menu/import');
   await expect(page.getByText('Plus d’import ce mois-ci')).toBeVisible();
-  await page.locator('input[type="file"]').setInputFiles(PHOTO);
+  await page.locator('input[type="file"][multiple]').setInputFiles(PHOTO);
   await expect(page.getByRole('button', { name: 'Analyser le menu' })).toBeDisabled();
 });

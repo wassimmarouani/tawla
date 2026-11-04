@@ -1,0 +1,91 @@
+{
+  "page": {
+    "description": "Details, hours, languages and look of your menu. Every change is visible to customers right away."
+  },
+  "save": "Save",
+  "saved": "Saved.",
+  "failed": "Saving didn’t work. Try again.",
+  "venue": {
+    "title": "Venue",
+    "name": "Name",
+    "type": "Type",
+    "address": "Address",
+    "addressHint": "Shown under “Info” with a directions link."
+  },
+  "hours": {
+    "title": "Opening hours",
+    "description": "A range that ends before it starts runs past midnight (e.g. 18:00 → 02:00).",
+    "closed": "Closed",
+    "open": "Open",
+    "from": "From",
+    "to": "To",
+    "add": "Add a range",
+    "remove": "Remove the range",
+    "exceptions": "Special days",
+    "exceptionDate": "Date",
+    "exceptionClosed": "Closed that day",
+    "addException": "Add a day",
+    "removeException": "Remove this day",
+    "invalid": "Check the hours: a range cannot start and end at the same time."
+  },
+  "status": {
+    "title": "Open right now",
+    "auto": "Following the hours",
+    "closedNow": "Closed until further notice",
+    "openNow": "Open until further notice",
+    "close": "Close now",
+    "openAction": "Open now",
+    "resume": "Back to the hours"
+  },
+  "languages": {
+    "title": "Menu languages",
+    "description": "Customers choose among these languages. The default shows when their phone uses none of them.",
+    "default": "Default language"
+  },
+  "appearance": {
+    "title": "Look",
+    "logo": "Logo",
+    "logoHint": "Square, plain background preferred.",
+    "cover": "Cover photo",
+    "coverHint": "Landscape: the room or the terrace.",
+    "color": "Main colour",
+    "useLogo": "Use the logo’s colour",
+    "preview": "Preview, adjusted to stay readable",
+    "previewButton": "Call the waiter",
+    "mode": "Menu theme",
+    "modes": {
+      "auto": "Automatic (follows the phone)",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "previewBadge": "Table 4"
+  },
+  "links": {
+    "title": "Wi-Fi and links",
+    "wifiName": "Wi-Fi name",
+    "wifiPassword": "Wi-Fi password",
+    "googleReview": "Google review link",
+    "googleReviewHint": "Offered to customers who give 4 or 5 stars.",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok",
+    "urlHint": "Full address starting with https://"
+  },
+  "service": {
+    "title": "Service",
+    "timeout": "Close an idle table after (minutes)",
+    "timeoutHint": "Between 30 and 240 minutes. 90 by default.",
+    "cutoff": "End of the business day",
+    "cutoffHint": "For venues open after midnight (05:00 by default).",
+    "rounding": "Price rounding for bulk increases"
+  },
+  "errors": {
+    "urlInvalid": "Invalid address: it must start with https://",
+    "localesRequired": "Choose at least one language.",
+    "defaultLocaleEnabled": "The default language must be ticked.",
+    "colorInvalid": "Invalid colour (e.g. #1d5aa6).",
+    "cutoffInvalid": "A time between 00:00 and 11:59.",
+    "readOnly": "This venue is read-only.",
+    "forbidden": "You are not allowed to change the settings."
+  }
+}

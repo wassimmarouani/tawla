@@ -41,6 +41,7 @@ import {
   updateCategory,
   updateProduct,
 } from './mutations';
+import { setVenueMedia } from './mutations';
 import { runEditorAction, withEditorAccess } from './scope';
 
 /* Menu editor Server Actions (P1-05, spec 04). Each validates its input with Zod (rule 3). */
@@ -276,4 +277,18 @@ export async function processImage(input: {
     if (!media) throw new AppError('INTERNAL', 'Processed media not readable');
     return { media };
   });
+}
+
+const venueMediaSchema = z.object({
+  logoMediaId: z.uuid().nullable(),
+  coverMediaId: z.uuid().nullable(),
+});
+
+/** Venue logo and cover (Settings, P1-14): processed like product photos, then linked. */
+export async function saveVenueMedia(
+  input: z.input<typeof venueMediaSchema>,
+): Promise<ActionResult<void>> {
+  const parsed = venueMediaSchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  return runEditorAction('venue.media', (scope) => setVenueMedia(scope, parsed.data));
 }

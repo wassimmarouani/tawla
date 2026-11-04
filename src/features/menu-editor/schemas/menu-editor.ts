@@ -100,7 +100,7 @@ export const setPricesSchema = z.object({
     .max(MAX_BATCH),
 });
 
-export const uploadKindSchema = z.enum(['product', 'category']);
+export const uploadKindSchema = z.enum(['product', 'category', 'logo', 'cover']);
 
 export const processUploadSchema = z.object({
   path: z.string().max(200),

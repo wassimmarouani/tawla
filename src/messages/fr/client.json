@@ -127,5 +127,13 @@
     "reviewHint": "Vous avez aimé ? Un avis Google aide beaucoup l’établissement.",
     "failed": "L’envoi n’a pas abouti. Réessayez.",
     "close": "Fermer"
+  },
+  "practical": {
+    "address": "Adresse",
+    "directions": "Itinéraire",
+    "password": "mot de passe :",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "tiktok": "TikTok"
   }
 }

@@ -88,7 +88,7 @@ The customer uses their phone's browser after scanning: no app, no account.
 - **Measured:** initial JS 134.5 KB gz on a phone, CLS 0, axe clean and no overflow at 7 widths × FR/AR × light/dark.
 - **P1-07b:** product sheet on `?p=<slug>` (native `<dialog>`: focus trap, Esc, backdrop; Back closes it; rendered in a dynamic hole from the cached menu) with photo, price, diet labels, option groups and their rules, allergens (EU 14). Search loads on first intent (panel, uFuzzy and index in a lazy chunk; plural forms pre-rendered on the server). Filters (vegetarian, gluten-free, spicy, new) hide server-rendered items and empty sections and their category chips. JSON-LD `CafeOrCoffeeShop`/`Restaurant` + `Menu` (prices as exact decimals, availability, diets), canonical URL and Open Graph cover. Initial JS 138.3 KB gz.
 - **Deviation:** the sheet closes by button, backdrop, Esc or Back; drag-to-close needs a gesture library and waits for the ordering sheet (Phase 2), where it is worth the bytes.
-- **Next:** venue info panel (hours, Maps, Wi-Fi, socials).
+- **Venue info (P1-14):** a folded "Info" panel under the status: address with a Google Maps directions link, Wi-Fi name and password, Instagram / Facebook / TikTok links, from Settings (`get_public_menu.restaurant.info`, whitelisted keys only). A forced light or dark theme (Settings) pins the menu's surfaces and brand shades.
 
 ## Implementation status (P1-10, 2026-11-03)
 

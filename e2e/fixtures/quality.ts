@@ -19,6 +19,9 @@ export async function undersizedTargets(page: Page, minSize = 44): Promise<strin
       const scope =
         document.querySelector('[aria-modal="true"], [role="dialog"], dialog:modal') ?? document;
       for (const element of scope.querySelectorAll<HTMLElement>(selector)) {
+        // Content of a closed <details> is not rendered: nothing to touch there.
+        const folded = element.closest('details:not([open])');
+        if (folded && !element.closest('summary')) continue;
         // elementFromPoint only sees the viewport: bring the control into view first.
         element.scrollIntoView({ block: 'center', inline: 'center' });
         const box = element.getBoundingClientRect();
@@ -116,6 +119,7 @@ export async function truncatedTexts(page: Page): Promise<string[]> {
       const style = getComputedStyle(element);
       const clamps = style.textOverflow === 'ellipsis' || style.webkitLineClamp !== 'none';
       if (!clamps || element.childElementCount > 0) continue;
+      if (element.closest('details:not([open])') && !element.closest('summary')) continue;
       const cut =
         element.scrollWidth > element.clientWidth + 1 ||
         element.scrollHeight > element.clientHeight + 1;

@@ -21,6 +21,14 @@ const menu: PublicMenu = {
     theme: {},
     logo: null,
     cover: null,
+    info: {
+      address: null,
+      wifi_name: null,
+      wifi_password: null,
+      instagram_url: null,
+      facebook_url: null,
+      tiktok_url: null,
+    },
   },
   categories: [
     {

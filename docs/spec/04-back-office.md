@@ -76,6 +76,7 @@ A progress checklist stays on the dashboard until onboarding is complete. Steps 
 - **Customer menu theme:** main colour, light / dark / auto, card style (list or grid).
 - **Links:** Google reviews, Instagram, Facebook, TikTok, Wi-Fi.
 - **Price rounding step** for bulk changes.
+- **Implemented (P1-14):** `/dashboard/settings`, one form per section saved on its own (`settings.edit`); every save expires the public menu cache tags so customers see it on their next load. Logo and cover upload through the media pipeline and are linked at once. Card style is not offered (layout follows photo coverage, ADR-0027).
 
 ## Dashboard and statistics
 

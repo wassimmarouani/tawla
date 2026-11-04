@@ -266,7 +266,8 @@ export function MenuImport({ importsLeft }: { importsLeft: number }) {
             </ul>
           </fieldset>
         ))}
-        <div className="flex flex-wrap gap-2">
+        {/* Stays reachable above the phone tab bar while the owner scrolls the draft. */}
+        <div className="sticky bottom-above-tabbar z-10 flex flex-wrap gap-2 rounded-md border border-border bg-card/95 p-3 shadow-md backdrop-blur-md">
           <Button
             size="lg"
             disabled={kept.length === 0 || phase === 'importing'}

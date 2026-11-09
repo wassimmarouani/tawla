@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { showUndoToast } from '@/components/feedback/undo-toast';
 import { EmptyState } from '@/components/states/empty-state';
+import { TemplatePickerButton } from './template-picker';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Dialog,
@@ -258,14 +259,17 @@ export function MenuEditor({
             description={t('empty.description')}
             className="bg-card py-16"
             action={
-              <Button
-                onClick={() => {
-                  setCategoryDialog({ open: true, category: null });
-                }}
-              >
-                <FolderPlus aria-hidden="true" />
-                {t('empty.action')}
-              </Button>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Button
+                  onClick={() => {
+                    setCategoryDialog({ open: true, category: null });
+                  }}
+                >
+                  <FolderPlus aria-hidden="true" />
+                  {t('empty.action')}
+                </Button>
+                <TemplatePickerButton />
+              </div>
             }
           />
         ) : (

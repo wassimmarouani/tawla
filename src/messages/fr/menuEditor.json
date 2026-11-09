@@ -288,5 +288,13 @@
       "photos": "Ajoutez 1 à 6 photos JPEG, PNG ou WebP.",
       "failed": "L’action n’a pas abouti. Réessayez."
     }
+  },
+  "templates": {
+    "open": "Partir d'un modèle",
+    "title": "Choisir un modèle de menu",
+    "description": "Les catégories et articles du modèle s'ajoutent à votre menu. Vous pouvez tout modifier ou supprimer après.",
+    "count": "{categories} catégories · {products} articles",
+    "applied": "{categories} catégories et {products} articles ajoutés.",
+    "applying": "Ajout…"
   }
 }

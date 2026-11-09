@@ -5,6 +5,7 @@ export const MARKETING_PAGES = [
   '/',
   '/how-it-works',
   '/pricing',
+  '/venues',
   '/legal/notice',
   '/legal/terms',
   '/legal/privacy',

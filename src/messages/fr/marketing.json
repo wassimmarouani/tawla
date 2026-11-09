@@ -96,7 +96,8 @@
     "privacy": "Confidentialité",
     "contact": "Contact",
     "rights": "© {app}",
-    "credits": "Crédits photos"
+    "credits": "Crédits photos",
+    "directory": "Annuaire"
   },
   "pricing": {
     "title": "Tarifs",
@@ -400,5 +401,14 @@
   },
   "testimonials": {
     "title": "Ils nous font confiance"
+  },
+  "directory": {
+    "eyebrow": "Annuaire",
+    "title": "Cafés & restaurants sur Taply",
+    "intro": "Parcourez les menus des établissements qui utilisent Taply. Chaque fiche ouvre le menu digital, prêt à être consulté comme depuis la table.",
+    "empty": {
+      "title": "Aucun établissement encore",
+      "description": "Les établissements inscrits sur Taply apparaîtront ici dès qu’ils auront publié leur menu."
+    }
   }
 }

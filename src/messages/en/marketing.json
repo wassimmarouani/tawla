@@ -96,7 +96,8 @@
     "privacy": "Privacy",
     "contact": "Contact",
     "rights": "© {app}",
-    "credits": "Photo credits"
+    "credits": "Photo credits",
+    "directory": "Directory"
   },
   "pricing": {
     "title": "Pricing",
@@ -400,5 +401,14 @@
   },
   "testimonials": {
     "title": "Trusted by local venues"
+  },
+  "directory": {
+    "eyebrow": "Directory",
+    "title": "Cafés & restaurants on Taply",
+    "intro": "Browse the menus of venues using Taply. Each card opens the digital menu, ready to view just as if you were at the table.",
+    "empty": {
+      "title": "No venues yet",
+      "description": "Venues on Taply will appear here as soon as they publish their menu."
+    }
   }
 }

@@ -96,6 +96,8 @@ export const storedSettingsSchema = z.object({
     .union(ROUNDING_STEPS.map((step) => z.literal(step)))
     .catch(100)
     .default(100),
+  /** The venue appears in the public /venues directory. Default on; owner opts out in settings. */
+  listed: z.boolean().catch(true).default(true),
 });
 export type StoredSettings = z.infer<typeof storedSettingsSchema>;
 

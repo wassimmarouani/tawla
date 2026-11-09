@@ -13,6 +13,7 @@ import { RestaurantSwitcher, getTenantContext, switchRestaurant } from '@/featur
 import { clientMessages } from '@/i18n/client-messages';
 import { getSessionClaims } from '@/lib/auth/session';
 import { env } from '@/lib/env';
+import { ImpersonationBanner } from '@/features/platform';
 import { DashboardForbidden } from './_components/dashboard-forbidden';
 import { DashboardNoRestaurant } from './_components/dashboard-no-restaurant';
 
@@ -69,6 +70,7 @@ async function DashboardFrame({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-dvh flex-col print:min-h-0">
+      <ImpersonationBanner />
       <header className="sticky top-0 z-30 border-b border-border bg-background/90 pt-safe backdrop-blur-md print:hidden">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-3 px-gutter sm:gap-4">
           <Link

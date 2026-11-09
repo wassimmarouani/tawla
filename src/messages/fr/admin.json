@@ -98,5 +98,14 @@
     "ai": "Coût IA ce mois",
     "monthHint": "du 1er du mois à aujourd’hui",
     "aiHint": "{imports} imports · {items} traductions"
+  },
+  "impersonation": {
+    "banner": "Mode support actif · vous agissez au nom du café",
+    "stop": "Quitter le mode support",
+    "start": "Ouvrir le dashboard du café",
+    "reason": "Motif (pour l’audit)",
+    "startSubmit": "Démarrer",
+    "startDialog": "Ouvrir le dashboard de l’établissement",
+    "startDescription": "Vous accédez au dashboard comme son propriétaire pendant 60 min. Toutes les actions sont enregistrées avec votre identifiant."
   }
 }

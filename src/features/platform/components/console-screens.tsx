@@ -21,6 +21,7 @@ import {
   type PlatformKpis,
 } from '../server/data';
 import { MfaForm } from './mfa-form';
+import { StartImpersonationButton } from './impersonation-start';
 import { InstallDemoButton, OverridesEditor, PlanForm } from './venue-forms';
 
 async function locale() {
@@ -268,15 +269,20 @@ export async function VenueScreen({ id }: { id: string }) {
         title={venue.name}
         description={t(`statuses.${venue.status as 'active'}`)}
         actions={
-          <a
-            href={`/${venue.slug}`}
-            target="_blank"
-            rel="noopener"
-            className={buttonVariants({ variant: 'outline' })}
-          >
-            {t('venue.open')}
-            <ExternalLink aria-hidden="true" className="rtl:-scale-x-100" />
-          </a>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={`/${venue.slug}`}
+              target="_blank"
+              rel="noopener"
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              {t('venue.open')}
+              <ExternalLink aria-hidden="true" className="rtl:-scale-x-100" />
+            </a>
+            {claims?.platform_role === 'super_admin' ? (
+              <StartImpersonationButton restaurantId={venue.id} />
+            ) : null}
+          </div>
         }
       />
       <section className="flex flex-col gap-3 rounded-md border border-border bg-card p-5">

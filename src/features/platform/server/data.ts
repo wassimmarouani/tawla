@@ -11,3 +11,4 @@ export {
 export type { AuditRow, PlatformKpis, VenueDetail, VenueRow } from '@/server/admin/platform';
 export { demoVenueState, DEMO_VENUE } from '@/server/admin/demo-venue';
 export type { DemoVenueState } from '@/server/admin/demo-venue';
+export { activeImpersonation } from '@/server/admin/impersonation';

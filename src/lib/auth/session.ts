@@ -19,7 +19,9 @@ export const getSessionClaims = cache(async (): Promise<SessionClaims | null> =>
     log.warn('auth.claims_invalid', { issues: parsed.error.issues.length });
     return null;
   }
-  return parsed.data;
+  // Super Admin impersonation (spec 05): rewrite the claims as the chosen venue's owner.
+  const { applyImpersonation } = await import('@/server/admin/impersonation');
+  return applyImpersonation(parsed.data);
 });
 
 /** Claims of the signed-in user; otherwise redirects to the login page, then back to `from`. */

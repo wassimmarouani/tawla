@@ -98,5 +98,14 @@
     "ai": "AI cost this month",
     "monthHint": "1st of the month to today",
     "aiHint": "{imports} imports · {items} translations"
+  },
+  "impersonation": {
+    "banner": "Support mode active — you are acting as the venue owner",
+    "stop": "Exit support mode",
+    "start": "Open the venue dashboard",
+    "reason": "Reason (audited)",
+    "startSubmit": "Start",
+    "startDialog": "Open the venue dashboard",
+    "startDescription": "You enter the dashboard as the owner for up to 60 minutes. Every action is recorded with your admin id."
   }
 }

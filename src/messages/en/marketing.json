@@ -9,7 +9,8 @@
     "home": "{app} home",
     "language": "Language",
     "menu": "Navigation",
-    "skip": "Skip to content"
+    "skip": "Skip to content",
+    "how": "How it works"
   },
   "hero": {
     "eyebrow": "New: import your menu from one photo",
@@ -359,5 +360,42 @@
   "finalCta": {
     "title": "Ready for a digital menu?",
     "description": "Create your menu in minutes, or message us: we set it all up with you."
+  },
+  "howItWorks": {
+    "eyebrow": "How it works",
+    "title": "From the table to the kitchen, in six steps",
+    "intro": "Taply is a QR code on the table and a web menu without downloads. Here is the exact path for customers and staff.",
+    "steps": {
+      "scan": {
+        "title": "1. The customer scans the QR",
+        "body": "Every table has its own unique QR printed on a small card sitting on top. The customer opens their phone camera, points, and the menu opens. Nothing to install, no account to create."
+      },
+      "browse": {
+        "title": "2. They browse the menu in 3 languages",
+        "body": "French, Arabic (right-to-left) and English. Photos, prices, allergens and descriptions. Sold-out items are marked automatically. Loads in under 2 seconds on 3G."
+      },
+      "call": {
+        "title": "3. They call the waiter or ask for the bill",
+        "body": "Two buttons at the bottom of the screen. The customer picks one and the alert flies to the staff's phone or tablet immediately, with the table number and the time."
+      },
+      "serve": {
+        "title": "4. The waiter gets the alert in real time",
+        "body": "Sound, vibration and notification. One tap acknowledges it and frees the table for the next call. Average pickup time drops below two minutes."
+      },
+      "rate": {
+        "title": "5. The customer rates the experience",
+        "body": "After the bill: a 1-to-5 star rating and an optional comment. For 4 or 5 stars, the customer is invited to leave a Google review — reputation grows on its own."
+      },
+      "edit": {
+        "title": "6. The owner updates the menu any time",
+        "body": "Changed a price, added a dish, launched a happy hour: the owner edits from their phone and the customer menu changes in seconds. On the Menu QR plan, a WhatsApp message is enough — we do it for you."
+      }
+    },
+    "cta": {
+      "title": "See it live",
+      "body": "Scan the demo café QR from the home page, or pick the plan that fits.",
+      "pricing": "See pricing",
+      "whatsapp": "Contact us"
+    }
   }
 }

@@ -9,7 +9,8 @@
     "home": "Accueil de {app}",
     "language": "Langue",
     "menu": "Navigation",
-    "skip": "Aller au contenu"
+    "skip": "Aller au contenu",
+    "how": "Comment ça marche"
   },
   "hero": {
     "eyebrow": "Nouveau : importez votre carte en une photo",
@@ -359,5 +360,42 @@
   "finalCta": {
     "title": "Prêt à passer au menu digital ?",
     "description": "Créez votre menu en quelques minutes, ou écrivez-nous : on s’occupe de tout avec vous."
+  },
+  "howItWorks": {
+    "eyebrow": "Comment ça marche",
+    "title": "De la table au service, en six étapes",
+    "intro": "Taply tient en un QR code sur la table et une interface sans téléchargement. Voici le parcours exact du client et du personnel.",
+    "steps": {
+      "scan": {
+        "title": "1. Le client scanne le QR",
+        "body": "Chaque table a son QR unique imprimé sur une petite carte posée dessus. Le client ouvre l'appareil photo de son téléphone, pointe, et le menu s'ouvre. Rien à installer, rien à créer."
+      },
+      "browse": {
+        "title": "2. Il parcourt le menu en 3 langues",
+        "body": "Français, arabe (droite à gauche) et anglais. Photos, prix, allergènes et descriptions. Les plats en rupture sont marqués automatiquement. Tout chargé en moins de 2 secondes sur 3G."
+      },
+      "call": {
+        "title": "3. Il appelle le serveur ou demande l’addition",
+        "body": "Deux boutons en bas de l'écran. Le client choisit, et la notification part immédiatement vers le téléphone ou la tablette du personnel, avec la table et l'heure."
+      },
+      "serve": {
+        "title": "4. Le serveur reçoit l’alerte en temps réel",
+        "body": "Son, vibration et notification. Le serveur confirme en un tap, ce qui libère la table pour le prochain appel. La moyenne de prise en charge descend sous les 2 minutes."
+      },
+      "rate": {
+        "title": "5. Le client note l’expérience",
+        "body": "Après l'addition, une étoile sur 5 et un commentaire optionnel. Si la note est 4 ou 5, le client est invité à laisser un avis Google : la réputation du café se construit sans y penser."
+      },
+      "edit": {
+        "title": "6. Le patron met à jour le menu quand il veut",
+        "body": "Prix changé, nouveau plat, happy hour : le patron modifie depuis son téléphone et le menu client bouge en secondes. Pour l'offre Menu QR, un simple message WhatsApp suffit — on s'en occupe."
+      }
+    },
+    "cta": {
+      "title": "Voir le produit en action",
+      "body": "Scannez le QR du café démo depuis la page d’accueil, ou choisissez la formule qui vous va.",
+      "pricing": "Voir les tarifs",
+      "whatsapp": "Nous contacter"
+    }
   }
 }

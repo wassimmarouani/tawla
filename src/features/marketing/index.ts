@@ -1,4 +1,5 @@
 export { CreditsPage } from './components/credits-page';
+export { HowItWorksPage } from './components/how-page';
 export { Landing } from './components/landing';
 export { LegalPage, LEGAL_PAGES, isLegalPage, type LegalPageKey } from './components/legal-page';
 export { MarketingShell } from './components/marketing-shell';

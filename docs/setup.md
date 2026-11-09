@@ -26,10 +26,10 @@ pnpm dev                            # http://localhost:3000
 
 Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or `pnpm demo:info`):
 
-- Back-office: `http://localhost:3000/login`. Local password for every demo account: `Tawla-demo-2026`.
-  - `owner@demo.tawla.local` (owner) and `manager@demo.tawla.local` (manager) of **Café El Bahja**;
-  - `counter@demo.tawla.local` (counter: refused by the back-office, used by the staff screen);
-  - `owner@pizzeria.tawla.local`, owner of **Pizzeria Test**, the second tenant for isolation checks.
+- Back-office: `http://localhost:3000/login`. Local password for every demo account: `Taply-demo-2026`.
+  - `owner@demo.taply.local` (owner) and `manager@demo.taply.local` (manager) of **Café El Bahja**;
+  - `counter@demo.taply.local` (counter: refused by the back-office, used by the staff screen);
+  - `owner@pizzeria.taply.local`, owner of **Pizzeria Test**, the second tenant for isolation checks.
 - Public menus (from P1-07): `http://localhost:3000/cafe-el-bahja`, `http://localhost:3000/pizzeria-test`.
 - Customer table menu: `http://localhost:3000/t/<demo-token>` (tables seeded in P1-08).
 - Staff screen: pair from back-office → Devices.
@@ -62,15 +62,15 @@ Demo entry points (seeded by `supabase/seed.sql`, printed by `pnpm db:reset` or 
 | Variable                                                               | Scope                               | Local value                                                                     |
 | ---------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_APP_URL`                                                  | public                              | `http://localhost:3000`                                                         |
-| `NEXT_PUBLIC_APP_NAME` / `APP_DOMAIN`                                  | public / server                     | `Tawla` / `localhost:3000`                                                      |
+| `NEXT_PUBLIC_APP_NAME` / `APP_DOMAIN`                                  | public / server                     | `Taply` / `localhost:3000`                                                      |
 | `NEXT_PUBLIC_SUPABASE_URL`                                             | public                              | from `supabase status`                                                          |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`                                 | public                              | from `supabase status`                                                          |
 | `SUPABASE_SECRET_KEY`                                                  | server, **`src/server/admin` only** | from `supabase status`                                                          |
 | `DATABASE_URL`                                                         | server                              | local Postgres (pooler URL in hosted envs, `prepare: false`)                    |
 | `DATABASE_URL_DIRECT`                                                  | CI/migrations                       | direct connection                                                               |
-| `CLIENT_SESSION_SECRET`                                                | server                              | random 32 bytes (jose HS256 for `__Host-tawla_cs`)                              |
+| `CLIENT_SESSION_SECRET`                                                | server                              | random 32 bytes (jose HS256 for `__Host-taply_cs`)                              |
 | `PIN_PEPPER`                                                           | server                              | random 32 bytes                                                                 |
-| `STAFF_EMAIL_DOMAIN`                                                   | server                              | `staff.tawla.local` locally; owned subdomain in hosted envs                     |
+| `STAFF_EMAIL_DOMAIN`                                                   | server                              | `staff.taply.local` locally; owned subdomain in hosted envs                     |
 | `CRON_SECRET`                                                          | server + Supabase Vault             | random 32 bytes                                                                 |
 | `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`                                   | server                              | random 32 bytes base64                                                          |
 | `UPSTASH_REDIS_REST_URL` / `_TOKEN`                                    | server                              | empty locally → in-memory limiter adapter (same interface)                      |

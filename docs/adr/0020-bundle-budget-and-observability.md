@@ -44,7 +44,7 @@ The customer menu must ship < 150 KB of compressed initial JS, LCP < 2 s on 4G, 
 ## Amendment — 2026-10-14 (P1-07a): first measurement and guard
 
 - Customer menu `/{slug}`: **134.5 KB gz** initial JS (8 scripts; React DOM and the Next.js runtime are about 115 KB of it). The two client islands (language pills, category scroll-spy) weigh about 4 KB.
-- Found and removed during the measurement: the `@/components/states` barrel shipped a client component (and Lucide's runtime) to the menu, and `cn` ships a Tailwind class merger (about 10 KB gz). Customer-menu code now uses `classes()` from `@/lib/classes` and direct state imports; the lint rule `tawla/customer-menu-budget` enforces both.
+- Found and removed during the measurement: the `@/components/states` barrel shipped a client component (and Lucide's runtime) to the menu, and `cn` ships a Tailwind class merger (about 10 KB gz). Customer-menu code now uses `classes()` from `@/lib/classes` and direct state imports; the lint rule `taply/customer-menu-budget` enforces both.
 - The E2E suite fails above 150 KB (transfer size measured in the browser), until `pnpm size` (size-limit) lands.
 
 ## Consequences

@@ -22,6 +22,7 @@ import {
   UtensilsCrossed,
   Wine,
 } from 'lucide-react';
+import { Quote } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { connection } from 'next/server';
@@ -29,6 +30,7 @@ import { Suspense, type ReactNode } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Locale } from '@/i18n/locales';
+import { TESTIMONIALS } from '../services/testimonials';
 import { env } from '@/lib/env';
 import { formatMoney } from '@/lib/money/format';
 import { qrSvg } from '@/lib/qr/qr-svg';
@@ -391,6 +393,41 @@ export async function Landing({ locale }: { locale: Locale }) {
           </ol>
         </div>
       </section>
+
+      {/* Testimonials */}
+      {TESTIMONIALS.length > 0 ? (
+        <section
+          aria-labelledby="testimonials"
+          className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24"
+        >
+          <SectionHeading id="testimonials" title={t('testimonials.title')} />
+          <ul className="mt-8 grid gap-5 md:grid-cols-3">
+            {TESTIMONIALS.map((item) => (
+              <li
+                key={item.id}
+                className="flex reveal flex-col gap-4 rounded-lg border border-border bg-card p-6"
+              >
+                <Quote aria-hidden="true" className="size-6 text-brand-text" />
+                <blockquote
+                  dir="auto"
+                  className="text-md leading-relaxed text-pretty text-foreground"
+                >
+                  “{item.quote[locale]}”
+                </blockquote>
+                <div className="mt-auto flex flex-col text-sm">
+                  <span className="font-semibold text-foreground" dir="auto">
+                    {item.author}
+                  </span>
+                  <span className="text-muted-foreground" dir="auto">
+                    {item.role[locale]}
+                    {item.city ? ` · ${item.city}` : ''}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {/* Segments */}
       <section aria-labelledby="segments" className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24">

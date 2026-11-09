@@ -93,7 +93,7 @@ export const DIRECTIONS: Record<DirectionId, Direction> = {
   },
   m: {
     id: 'm',
-    name: 'Tawla — A calm + B menu-card lists + C food grid',
+    name: 'Taply — A calm + B menu-card lists + C food grid',
     fonts: { latin: 'geist', arabic: 'plex' },
     palettes: {
       light: {

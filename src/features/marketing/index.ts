@@ -1,4 +1,7 @@
 export { CreditsPage } from './components/credits-page';
+export { DirectoryPage } from './components/directory-page';
+export { DIRECTORY_CACHE_TAG } from './server/directory';
+export { HowItWorksPage } from './components/how-page';
 export { Landing } from './components/landing';
 export { LegalPage, LEGAL_PAGES, isLegalPage, type LegalPageKey } from './components/legal-page';
 export { MarketingShell } from './components/marketing-shell';

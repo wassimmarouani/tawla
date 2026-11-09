@@ -5,7 +5,7 @@ import { requireSessionClaims } from '@/lib/auth/session';
 import { loadTenantContext, type TenantContextResult } from '../queries/tenant-context';
 
 /** Restaurant chosen in the switcher. Only a hint: membership is re-checked on every request. */
-export const ACTIVE_RESTAURANT_COOKIE = 'tawla_restaurant';
+export const ACTIVE_RESTAURANT_COOKIE = 'taply_restaurant';
 
 /**
  * Tenant context of the current back-office request, loaded once per request (spec 07).

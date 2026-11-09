@@ -15,7 +15,7 @@
 
 ## Decision
 
-1. **Visual direction first (P0-06).** Before building any production screen, three distinct directions for the Tawla platform brand are proposed. Each has a palette, a typography pairing (Latin + Arabic) and a component style. Each is shown as screenshots of **the same customer menu screen** at **390 px**:
+1. **Visual direction first (P0-06).** Before building any production screen, three distinct directions for the Taply platform brand are proposed. Each has a palette, a typography pairing (Latin + Arabic) and a component style. Each is shown as screenshots of **the same customer menu screen** at **390 px**:
    - light and dark;
    - FR and AR;
    - photo-rich and photo-less variants;

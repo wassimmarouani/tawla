@@ -102,15 +102,15 @@ describe('project lint restrictions', () => {
   it('applies the class and TODO rules to source files', async () => {
     expect(
       await ruleIds('export const A = () => <div className="ml-4" />;\n', 'src/components/a.tsx'),
-    ).toContain('tawla/no-physical-direction-classes');
+    ).toContain('taply/no-physical-direction-classes');
     expect(
       await ruleIds(
         'export const A = () => <div className="w-[13px]" />;\n',
         'src/components/a.tsx',
       ),
-    ).toContain('tawla/no-arbitrary-tailwind-values');
+    ).toContain('taply/no-arbitrary-tailwind-values');
     expect(await ruleIds('// TODO: x\nexport const a = 1;\n', 'scripts/x.ts')).toContain(
-      'tawla/todo-requires-issue',
+      'taply/todo-requires-issue',
     );
   });
 });

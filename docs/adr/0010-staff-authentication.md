@@ -25,7 +25,7 @@
 3. **Paired devices.** Table `staff_devices`:
    - columns: `id, restaurant_id, label, mode ('fixed'|'mobile'), token_hash, created_by, last_seen_at, revoked_at`;
    - an owner or manager pairs a device from the back-office with a QR or 8-character code, valid 10 min;
-   - the device gets a 256-bit token in an HttpOnly, Secure, SameSite=Strict cookie (`__Host-tawla_device`), stored only as a SHA-256 hash.
+   - the device gets a 256-bit token in an HttpOnly, Secure, SameSite=Strict cookie (`__Host-taply_device`), stored only as a SHA-256 hash.
    - Revoking a device invalidates it immediately and ends every session started from it.
 4. **PIN login:**
    1. The device cookie identifies the restaurant.
@@ -99,7 +99,7 @@ Constraints carried into Phase 2 (PIN login):
 
 ## Amendment — 2026-11-03 (P1-11): paired devices and staff accounts in Phase 1
 
-- **Device cookie:** `__Host-tawla_staff_device` (`tawla_staff_device` on http://localhost), HttpOnly, SameSite=Strict, one year. The customer menu already uses `tawla_device` for its per-phone id, hence the distinct name.
+- **Device cookie:** `__Host-taply_staff_device` (`taply_staff_device` on http://localhost), HttpOnly, SameSite=Strict, one year. The customer menu already uses `taply_device` for its per-phone id, hence the distinct name.
 - **Pairing codes:**
   - 8 characters from `ABCDEFGHJKMNPQRSTVWXYZ23456789` (no look-alikes), drawn without modulo bias;
   - SHA-256 only in `device_pairing_codes`, valid 10 minutes, single use (row lock on redemption);

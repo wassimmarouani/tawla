@@ -14,7 +14,7 @@ import '../../_styles/base.css';
 import '../../_styles/a-jasmin.css';
 import '../../_styles/b-medina.css';
 import '../../_styles/c-souk.css';
-import '../../_styles/m-tawla.css';
+import '../../_styles/m-taply.css';
 
 /**
  * P0-06 design exploration (dev-only, ENABLE_DEV_ROUTES=true at build time).

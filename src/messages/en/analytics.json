@@ -1,0 +1,24 @@
+{
+  "title": "Analytics",
+  "description": "Menu scans and customer requests over the last 30 days.",
+  "forbidden": "Not authorized.",
+  "weekHint": "{count} this week",
+  "uniqueHint": "Tables scanned this month",
+  "cards": {
+    "menuViewsMonth": "Menu scans · 30 days",
+    "serviceRequestsMonth": "Calls & bills · 30 days",
+    "uniqueTablesMonth": "Active tables"
+  },
+  "daily": {
+    "title": "Daily activity",
+    "description": "Each bar is one day. Taller bar = busier day.",
+    "legend": {
+      "menu": "Menu scans",
+      "service": "Waiter calls"
+    }
+  },
+  "empty": {
+    "title": "No data yet",
+    "description": "As soon as customers scan your QR codes, the numbers appear here."
+  }
+}

@@ -2,7 +2,7 @@
 # https://supabase.com/docs/guides/local-development/cli/config
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
 # working directory name when running `supabase init`.
-project_id = "tawla"
+project_id = "taply"
 
 [api]
 enabled = true
@@ -247,15 +247,15 @@ otp_expiry = 3600
 # Links point to our pages (token exchanged on an explicit click, ADR-0010), localized with
 # the user's `locale` metadata. Hosted projects use the same templates (docs/setup.md).
 [auth.email.template.confirmation]
-subject = "Tawla · Confirmez votre adresse / تأكيد البريد / Confirm your email"
+subject = "Taply · Confirmez votre adresse / تأكيد البريد / Confirm your email"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "Tawla · Mot de passe / كلمة المرور / Password"
+subject = "Taply · Mot de passe / كلمة المرور / Password"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.invite]
-subject = "Tawla · Invitation / دعوة / Invitation"
+subject = "Taply · Invitation / دعوة / Invitation"
 content_path = "./supabase/templates/invite.html"
 
 # Uncomment to customize notification email template

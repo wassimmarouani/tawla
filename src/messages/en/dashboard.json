@@ -23,8 +23,10 @@
       "menu": "Menu",
       "tables": "Tables",
       "team": "Team",
-      "settings": "Settings"
-    }
+      "settings": "Settings",
+      "analytics": "Stats"
+    },
+    "analytics": "Analytics"
   },
   "home": {
     "eyebrow": "Dashboard",
@@ -100,6 +102,10 @@
     "settings": {
       "title": "Settings",
       "description": "Hours, languages, appearance and links."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Menu scans, waiter calls, daily activity."
     }
   },
   "notifications": "Notifications",

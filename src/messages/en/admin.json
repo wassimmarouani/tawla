@@ -5,7 +5,7 @@
   "logout": "Sign out",
   "forbidden": {
     "title": "Restricted access",
-    "description": "This console is for the Tawla team only."
+    "description": "This console is for the Taply team only."
   },
   "mfa": {
     "title": "Two-factor authentication",
@@ -88,5 +88,24 @@
     "installing": "Installing…",
     "done": "Demo café ready.",
     "slugTaken": "The cafe-el-bahja link is already used by another venue."
+  },
+  "kpis": {
+    "title": "Headline figures",
+    "venues": "Active venues",
+    "venuesHint": "of {total} total · {week} new this week",
+    "menuViews": "Menu scans this month",
+    "service": "Waiter / bill requests",
+    "ai": "AI cost this month",
+    "monthHint": "1st of the month to today",
+    "aiHint": "{imports} imports · {items} translations"
+  },
+  "impersonation": {
+    "banner": "Support mode active — you are acting as the venue owner",
+    "stop": "Exit support mode",
+    "start": "Open the venue dashboard",
+    "reason": "Reason (audited)",
+    "startSubmit": "Start",
+    "startDialog": "Open the venue dashboard",
+    "startDescription": "You enter the dashboard as the owner for up to 60 minutes. Every action is recorded with your admin id."
   }
 }

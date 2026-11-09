@@ -3,7 +3,9 @@ import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales';
 /** Marketing pages served with visible locale prefixes (ADR-0012). */
 export const MARKETING_PAGES = [
   '/',
+  '/how-it-works',
   '/pricing',
+  '/venues',
   '/legal/notice',
   '/legal/terms',
   '/legal/privacy',

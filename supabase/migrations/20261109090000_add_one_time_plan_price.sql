@@ -1,5 +1,5 @@
 -- ADR-0031 amendment (2026-11-04): Menu QR is a one-time purchase (menu online + printed,
--- laminated QR codes), with menu changes made by Tawla on request. No subscription.
+-- laminated QR codes), with menu changes made by Taply on request. No subscription.
 alter table public.plans
   add column price_once integer check (price_once >= 0);
 

@@ -12,15 +12,15 @@ insert into auth.users (
 )
 select
   '00000000-0000-0000-0000-000000000000', account.id, 'authenticated', 'authenticated',
-  account.email, extensions.crypt('Tawla-demo-2026', extensions.gen_salt('bf')), now(),
+  account.email, extensions.crypt('Taply-demo-2026', extensions.gen_salt('bf')), now(),
   '{"provider": "email", "providers": ["email"]}'::jsonb,
   jsonb_build_object('full_name', account.full_name, 'locale', account.locale),
   now(), now(), '', '', '', ''
 from (values
-  ('d0000000-0000-4000-8000-000000000001'::uuid, 'owner@demo.tawla.local', 'Leïla Trabelsi', 'fr'),
-  ('d0000000-0000-4000-8000-000000000002'::uuid, 'manager@demo.tawla.local', 'Karim Jaziri', 'fr'),
-  ('d0000000-0000-4000-8000-000000000003'::uuid, 'counter@demo.tawla.local', 'Comptoir El Bahja', 'ar'),
-  ('d0000000-0000-4000-8000-000000000004'::uuid, 'owner@pizzeria.tawla.local', 'Marco Ferchichi', 'fr')
+  ('d0000000-0000-4000-8000-000000000001'::uuid, 'owner@demo.taply.local', 'Leïla Trabelsi', 'fr'),
+  ('d0000000-0000-4000-8000-000000000002'::uuid, 'manager@demo.taply.local', 'Karim Jaziri', 'fr'),
+  ('d0000000-0000-4000-8000-000000000003'::uuid, 'counter@demo.taply.local', 'Comptoir El Bahja', 'ar'),
+  ('d0000000-0000-4000-8000-000000000004'::uuid, 'owner@pizzeria.taply.local', 'Marco Ferchichi', 'fr')
 ) as account (id, email, full_name, locale);
 
 insert into auth.identities (

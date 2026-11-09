@@ -1,0 +1,24 @@
+{
+  "title": "Analytique",
+  "description": "Scans du menu et demandes des clients sur les 30 derniers jours.",
+  "forbidden": "Non autorisé.",
+  "weekHint": "{count} cette semaine",
+  "uniqueHint": "Tables scannées ce mois",
+  "cards": {
+    "menuViewsMonth": "Scans menu · 30 jours",
+    "serviceRequestsMonth": "Appels & additions · 30 jours",
+    "uniqueTablesMonth": "Tables actives"
+  },
+  "daily": {
+    "title": "Activité par jour",
+    "description": "Chaque barre = un jour. Une barre haute = journée chargée.",
+    "legend": {
+      "menu": "Scans menu",
+      "service": "Appels serveur"
+    }
+  },
+  "empty": {
+    "title": "Pas encore de données",
+    "description": "Dès que vos clients scannent les QR, les chiffres apparaissent ici."
+  }
+}

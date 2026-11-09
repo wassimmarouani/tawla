@@ -119,7 +119,7 @@ insert into public.reserved_slugs (slug) values
   ('api'), ('_next'), ('_vercel'),
   ('fr'), ('ar'), ('en'),
   ('app'), ('p'), ('help'), ('support'), ('status'), ('www'), ('mail'), ('static'), ('assets'),
-  ('blog'), ('docs'), ('about'), ('contact'), ('terms'), ('privacy'), ('tawla'), ('menu'),
+  ('blog'), ('docs'), ('about'), ('contact'), ('terms'), ('privacy'), ('taply'), ('menu'),
   ('ingest'), ('health'), ('robots'), ('sitemap'), ('favicon'), ('manifest'), ('sw');
 
 create table public.restaurants (

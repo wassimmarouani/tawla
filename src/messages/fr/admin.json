@@ -5,7 +5,7 @@
   "logout": "Se déconnecter",
   "forbidden": {
     "title": "Accès réservé",
-    "description": "Cette console est réservée à l’équipe Tawla."
+    "description": "Cette console est réservée à l’équipe Taply."
   },
   "mfa": {
     "title": "Double authentification",
@@ -88,5 +88,24 @@
     "installing": "Installation…",
     "done": "Café démo prêt.",
     "slugTaken": "Le lien cafe-el-bahja est déjà pris par un autre établissement."
+  },
+  "kpis": {
+    "title": "Chiffres clés",
+    "venues": "Établissements actifs",
+    "venuesHint": "sur {total} au total · {week} nouveaux cette semaine",
+    "menuViews": "Scans ce mois",
+    "service": "Appels serveur / addition",
+    "ai": "Coût IA ce mois",
+    "monthHint": "du 1er du mois à aujourd’hui",
+    "aiHint": "{imports} imports · {items} traductions"
+  },
+  "impersonation": {
+    "banner": "Mode support actif · vous agissez au nom du café",
+    "stop": "Quitter le mode support",
+    "start": "Ouvrir le dashboard du café",
+    "reason": "Motif (pour l’audit)",
+    "startSubmit": "Démarrer",
+    "startDialog": "Ouvrir le dashboard de l’établissement",
+    "startDescription": "Vous accédez au dashboard comme son propriétaire pendant 60 min. Toutes les actions sont enregistrées avec votre identifiant."
   }
 }

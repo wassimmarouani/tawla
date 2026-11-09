@@ -1,10 +1,10 @@
-# CLAUDE.md — Tawla
+# CLAUDE.md — Taply
 
 Rules for every Claude Code session in this repo. Read this file fully, then only the docs your task needs (`docs/README.md` maps tasks to files).
 
 ## Product (10 lines)
 
-1. **Tawla** (working name; `APP_NAME`/`APP_DOMAIN` constants) is a multi-tenant SaaS for Tunisian cafés and restaurants.
+1. **Taply** (working name; `APP_NAME`/`APP_DOMAIN` constants) is a multi-tenant SaaS for Tunisian cafés and restaurants.
 2. Customers scan a QR on their table (`/t/{token}`) and get a fast digital menu in FR / AR (RTL) / EN, with no app and no account.
 3. **Basic:** menu, branding, out-of-stock toggle, "call waiter" / "request bill" with real-time staff alerts, AI menu import and AI translation (quota).
 4. **Pro:** cart and table ordering, live order tracking, table bill, staff PIN login, zones, counter kanban.

@@ -288,5 +288,13 @@
       "photos": "Add 1 to 6 JPEG, PNG or WebP photos.",
       "failed": "That didn’t work. Try again."
     }
+  },
+  "templates": {
+    "open": "Start from a template",
+    "title": "Pick a menu template",
+    "description": "The template categories and items are added to your menu. You can edit or delete anything afterwards.",
+    "count": "{categories} categories · {products} items",
+    "applied": "Added {categories} categories and {products} items.",
+    "applying": "Adding…"
   }
 }

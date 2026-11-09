@@ -7,7 +7,7 @@ import { env } from '@/lib/env';
  * prefixed (Secure, host-only) whenever the app runs over HTTPS. Only its SHA-256 is stored.
  */
 const secure = env.NEXT_PUBLIC_APP_URL.startsWith('https://');
-export const STAFF_DEVICE_COOKIE = secure ? '__Host-tawla_staff_device' : 'tawla_staff_device';
+export const STAFF_DEVICE_COOKIE = secure ? '__Host-taply_staff_device' : 'taply_staff_device';
 const MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
 
 export async function readDeviceToken(): Promise<string | undefined> {

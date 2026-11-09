@@ -20,7 +20,7 @@ export default defineConfig([
     'src/lib/db/schema/**',
   ]),
   {
-    name: 'tawla/typescript-strict',
+    name: 'taply/typescript-strict',
     files: ['**/*.{ts,tsx}'],
     extends: [tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked],
     languageOptions: {

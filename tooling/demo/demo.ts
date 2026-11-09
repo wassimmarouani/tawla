@@ -3,14 +3,14 @@
  * Local development only: these credentials exist on developer machines and in CI, never in
  * hosted environments.
  */
-export const DEMO_PASSWORD = 'Tawla-demo-2026';
+export const DEMO_PASSWORD = 'Taply-demo-2026';
 
 export const DEMO_ACCOUNTS = {
-  owner: { email: 'owner@demo.tawla.local', role: 'owner', restaurant: 'cafe-el-bahja' },
-  manager: { email: 'manager@demo.tawla.local', role: 'manager', restaurant: 'cafe-el-bahja' },
-  counter: { email: 'counter@demo.tawla.local', role: 'counter', restaurant: 'cafe-el-bahja' },
+  owner: { email: 'owner@demo.taply.local', role: 'owner', restaurant: 'cafe-el-bahja' },
+  manager: { email: 'manager@demo.taply.local', role: 'manager', restaurant: 'cafe-el-bahja' },
+  counter: { email: 'counter@demo.taply.local', role: 'counter', restaurant: 'cafe-el-bahja' },
   pizzeriaOwner: {
-    email: 'owner@pizzeria.tawla.local',
+    email: 'owner@pizzeria.taply.local',
     role: 'owner',
     restaurant: 'pizzeria-test',
   },

@@ -16,6 +16,7 @@ import { MENU_FILTERS, type MenuFilter } from './filters';
 import { MenuFilters } from './menu-filters';
 import { MenuSearch, type SearchItem } from './menu-search';
 import { MenuSection, sectionLayout } from './menu-section';
+import { PoweredByBadge } from './powered-by-badge';
 import { formatMoney } from '@/lib/money';
 import { displayPrice } from '../services/pricing';
 
@@ -121,6 +122,7 @@ export async function PublicMenuView({
           </main>
         </>
       )}
+      <PoweredByBadge slug={menu.restaurant.slug} />
       {serviceBar}
     </div>
   );

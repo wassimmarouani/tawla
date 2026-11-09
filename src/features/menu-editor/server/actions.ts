@@ -292,3 +292,19 @@ export async function saveVenueMedia(
   if (!parsed.success) return validationError(parsed.error);
   return runEditorAction('venue.media', (scope) => setVenueMedia(scope, parsed.data));
 }
+
+const templateIdSchema = z.object({ templateId: z.string().min(1).max(60) });
+
+/** Applies a menu template — creates its categories and products in the venue. */
+export async function applyTemplate(
+  input: z.input<typeof templateIdSchema>,
+): Promise<ActionResult<{ categories: number; products: number }>> {
+  const parsed = templateIdSchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  return runEditorAction('menu.template_apply', async (scope) => {
+    const { applyMenuTemplate } = await import('./templates');
+    const result = await applyMenuTemplate(scope, parsed.data.templateId);
+    if (!result) throw new AppError('NOT_FOUND', 'Unknown template');
+    return result;
+  });
+}

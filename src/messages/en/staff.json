@@ -27,7 +27,7 @@
     "title": "Start service",
     "description": "One tap turns on sound, keeps the screen awake and checks notifications.",
     "button": "Start service",
-    "iosHint": "On iPhone: Share → “Add to Home Screen”, then open Tawla from the icon to get notifications."
+    "iosHint": "On iPhone: Share → “Add to Home Screen”, then open Taply from the icon to get notifications."
   },
   "live": {
     "tabs": {

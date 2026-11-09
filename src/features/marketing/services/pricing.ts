@@ -36,7 +36,7 @@ export const LIVE_FEATURES: ReadonlySet<ListedFeature> = new Set([
   'ai_translate',
 ]);
 
-/** What a managed one-time plan lists: Tawla runs the editing, the venue gets the result. */
+/** What a managed one-time plan lists: Taply runs the editing, the venue gets the result. */
 const MANAGED_FEATURES: ReadonlySet<ListedFeature> = new Set(['menu', 'branding', 'multilingual']);
 
 export type PlanLimits =
@@ -47,7 +47,7 @@ export interface PlanCard {
   name: PublicPlan['name'];
   priceMonthly: number;
   priceYearly: number;
-  /** One-time price: no subscription, menu changes made by Tawla on request (ADR-0031). */
+  /** One-time price: no subscription, menu changes made by Taply on request (ADR-0031). */
   priceOnce: number | null;
   /** Every listed feature is live: the plan can be bought now, self-serve. */
   available: boolean;

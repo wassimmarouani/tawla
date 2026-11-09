@@ -44,7 +44,7 @@ export default defineConfig({
     env: {
       APP_DOMAIN: 'localhost',
       NEXT_PUBLIC_APP_URL: baseURL,
-      NEXT_PUBLIC_APP_NAME: 'Tawla',
+      NEXT_PUBLIC_APP_NAME: 'Taply',
       NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
       DATABASE_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres',

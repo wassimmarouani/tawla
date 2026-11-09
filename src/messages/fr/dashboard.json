@@ -23,8 +23,10 @@
       "menu": "Menu",
       "tables": "Tables",
       "team": "Équipe",
-      "settings": "Réglages"
-    }
+      "settings": "Réglages",
+      "analytics": "Stats"
+    },
+    "analytics": "Analytique"
   },
   "home": {
     "eyebrow": "Tableau de bord",
@@ -100,6 +102,10 @@
     "settings": {
       "title": "Réglages",
       "description": "Horaires, langues, apparence et liens."
+    },
+    "analytics": {
+      "title": "Analytique",
+      "description": "Scans du menu, appels serveur, activité par jour."
     }
   },
   "notifications": "Notifications",

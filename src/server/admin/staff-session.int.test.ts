@@ -15,7 +15,7 @@ const ID = {
   restaurant: '24000000-0000-4000-8000-00000000000a',
   membership: '34000000-0000-4000-8000-00000000000a',
 } as const;
-const STAFF_DOMAIN = 'staff.tawla.app';
+const STAFF_DOMAIN = 'staff.taply.app';
 const EMAIL = shadowEmail(ID.membership, STAFF_DOMAIN);
 const MAILPIT = 'http://127.0.0.1:54324/api/v1/messages';
 

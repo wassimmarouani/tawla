@@ -1,6 +1,6 @@
 # P0-06 — Three visual directions for the customer menu
 
-> **Decided 2026-10-12: mix "M" — see [ADR-0029](../../adr/0029-visual-direction-tawla-mix.md).** Captures of the mix are in `m/`. A, B and C below are kept as references.
+> **Decided 2026-10-12: mix "M" — see [ADR-0029](../../adr/0029-visual-direction-taply-mix.md).** Captures of the mix are in `m/`. A, B and C below are kept as references.
 >
 > Original brief (ADR-0027). The chosen direction (or a mix) becomes **ADR-0029**, and its values move into `src/styles/tokens.css` in P0-07.
 
@@ -17,7 +17,7 @@ Photos: real Tunisian dishes from Wikimedia Commons (see `supabase/seed-media/AT
 
 ---
 
-## M — Tawla (chosen mix)
+## M — Taply (chosen mix)
 
 | Light · photos · FR                | Dark · no photos · AR               | Light · no photos · FR             |
 | ---------------------------------- | ----------------------------------- | ---------------------------------- |

@@ -146,7 +146,7 @@ export function AvailabilityLive({
 
 /** One view per page per tab, sent without delaying anything (statistics, P1-09). */
 function countView(body: { slug: string } | { token: string }) {
-  const key = `tawla:view:${location.pathname}`;
+  const key = `taply:view:${location.pathname}`;
   try {
     if (sessionStorage.getItem(key)) return;
     sessionStorage.setItem(key, '1');

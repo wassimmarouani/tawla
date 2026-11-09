@@ -26,8 +26,8 @@
 | Local      | `pnpm dev`                        | Supabase local (Docker), PG 17                       | `supabase/seed.sql`: full demo café |
 | CI         | GitHub Actions                    | Supabase local started in the job                    | seed + test fixtures                |
 | Preview    | Vercel preview per PR             | **shared staging project** (read-mostly smoke tests) | seed                                |
-| Staging    | `main` auto-deploys               | Supabase project `tawla-staging`                     | seed + pilot rehearsal data         |
-| Production | promoted from staging by tag `v*` | Supabase project `tawla-prod`, PITR/backups          | real                                |
+| Staging    | `main` auto-deploys               | Supabase project `taply-staging`                     | seed + pilot rehearsal data         |
+| Production | promoted from staging by tag `v*` | Supabase project `taply-prod`, PITR/backups          | real                                |
 
 Supabase Branching per PR is not used at launch, for cost reasons. Revisit when collaborators join. 4. **Trunk-based workflow:**
 

@@ -135,5 +135,8 @@
     "instagram": "Instagram",
     "facebook": "Facebook",
     "tiktok": "TikTok"
+  },
+  "poweredBy": {
+    "text": "Digital menu powered by"
   }
 }

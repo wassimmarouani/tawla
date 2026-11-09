@@ -171,8 +171,12 @@ async function KpiCards({ claims }: { claims: Awaited<ReturnType<typeof getSessi
             <dt className="text-xs font-semibold tracking-label text-muted-foreground uppercase">
               {t(item.key as 'venues')}
             </dt>
-            <dd className="text-2xl font-semibold text-foreground tabular-nums">{item.value}</dd>
-            <p className="text-xs text-muted-foreground">{item.hint}</p>
+            <dd className="flex flex-col gap-1">
+              <span className="text-2xl font-semibold text-foreground tabular-nums">
+                {item.value}
+              </span>
+              <span className="text-xs text-muted-foreground">{item.hint}</span>
+            </dd>
           </div>
         ))}
       </dl>

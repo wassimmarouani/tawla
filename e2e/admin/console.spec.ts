@@ -71,6 +71,7 @@ test('the console needs TOTP, refuses other users, and its overrides take effect
 
   const adminContext = await browser.newContext();
   await adminContext.addCookies(FRENCH);
+  let originalOjjaMediaId: string | null = null;
   try {
     const adminPage = await adminContext.newPage();
     await logIn(adminPage, adminEmail, '/admin');
@@ -87,9 +88,14 @@ test('the console needs TOTP, refuses other users, and its overrides take effect
     // The seeded demo café is complete: no install card.
     await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeHidden();
 
-    // An interrupted demo install (a photo missing) shows the card, which completes it.
+    // An interrupted demo install (a photo missing) shows the card. Record the current
+    // media_id so retries find the demo ready again even when the completion below fails.
     const demo = database();
     try {
+      const [row] = await demo<
+        { media_id: string | null }[]
+      >`select media_id from public.products where restaurant_id = ${DEMO_RESTAURANT} and slug = 'ojja'`;
+      originalOjjaMediaId = row?.media_id ?? null;
       await demo`update public.products set media_id = null where restaurant_id = ${DEMO_RESTAURANT} and slug = 'ojja'`;
     } finally {
       await demo.end();
@@ -113,6 +119,16 @@ test('the console needs TOTP, refuses other users, and its overrides take effect
     await expect(adminPage.getByText('platform.flag_override')).toBeVisible();
   } finally {
     await adminContext.close();
+    // Belt-and-braces: restore the demo ojja photo in case the completion flow above left it
+    // null, so retries and other tests find the demo ready again.
+    if (originalOjjaMediaId !== null) {
+      const restore = database();
+      try {
+        await restore`update public.products set media_id = ${originalOjjaMediaId} where restaurant_id = ${DEMO_RESTAURANT} and slug = 'ojja' and media_id is null`;
+      } finally {
+        await restore.end();
+      }
+    }
   }
 
   await page.goto('/dashboard/menu/import');

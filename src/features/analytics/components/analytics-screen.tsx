@@ -59,8 +59,12 @@ export async function AnalyticsScreen() {
                     ? t('cards.serviceRequestsMonth')
                     : t('cards.uniqueTablesMonth')}
               </dt>
-              <dd className="text-3xl font-semibold text-foreground tabular-nums">{card.value}</dd>
-              <p className="text-xs text-muted-foreground">{card.hint}</p>
+              <dd className="flex flex-col gap-1">
+                <span className="text-3xl font-semibold text-foreground tabular-nums">
+                  {card.value}
+                </span>
+                <span className="text-xs text-muted-foreground">{card.hint}</span>
+              </dd>
             </div>
           );
         })}

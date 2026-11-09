@@ -397,5 +397,8 @@
       "pricing": "Voir les tarifs",
       "whatsapp": "Nous contacter"
     }
+  },
+  "testimonials": {
+    "title": "Ils nous font confiance"
   }
 }

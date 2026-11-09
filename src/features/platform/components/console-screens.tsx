@@ -1,4 +1,4 @@
-import { ChevronLeft, ExternalLink, ShieldCheck } from 'lucide-react';
+import { ChevronLeft, ExternalLink, ShieldCheck, Store } from 'lucide-react';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
@@ -10,9 +10,16 @@ import { DEFAULT_LOCALE, isLocale } from '@/i18n/locales';
 import { getSessionClaims } from '@/lib/auth/session';
 import { formatMoney } from '@/lib/money';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { globalAudit, listPlans, listVenues, venueDetail, type AuditRow } from '../server/data';
+import {
+  demoVenueState,
+  globalAudit,
+  listPlans,
+  listVenues,
+  venueDetail,
+  type AuditRow,
+} from '../server/data';
 import { MfaForm } from './mfa-form';
-import { OverridesEditor, PlanForm } from './venue-forms';
+import { InstallDemoButton, OverridesEditor, PlanForm } from './venue-forms';
 
 async function locale() {
   const value = await getLocale();
@@ -54,6 +61,7 @@ export async function VenuesScreen({ query }: { query: string }) {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t('venues')} />
+      {claims?.platform_role === 'super_admin' ? <DemoVenueCard /> : null}
       <form role="search" className="flex flex-wrap gap-2" action="/admin">
         <Input
           name="q"
@@ -112,6 +120,30 @@ export async function VenuesScreen({ query }: { query: string }) {
         </div>
       )}
     </div>
+  );
+}
+
+/** Shown until the sales demo venue is fully installed (marketing home demo). */
+async function DemoVenueCard() {
+  const state = await demoVenueState();
+  if (state === 'ready') return null;
+  const t = await getTranslations('admin.demo');
+  return (
+    <section
+      aria-labelledby="demo-venue-title"
+      className="flex flex-col gap-4 rounded-md border border-border bg-card p-5 sm:flex-row sm:items-center"
+    >
+      <Store aria-hidden="true" className="size-8 shrink-0 text-brand-text" />
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
+        <h2 id="demo-venue-title" className="font-semibold text-foreground">
+          {t('title')}
+        </h2>
+        <p className="text-sm text-pretty text-muted-foreground">
+          {state === 'partial' ? t('partial') : t('missing')}
+        </p>
+      </div>
+      <InstallDemoButton partial={state === 'partial'} />
+    </section>
   );
 }
 

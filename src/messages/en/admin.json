@@ -78,5 +78,15 @@
     "reasonRequired": "Give a reason (at least 3 characters).",
     "dateInvalid": "Invalid date.",
     "codeInvalid": "Invalid or expired code. Try again."
+  },
+  "demo": {
+    "title": "Demo café",
+    "missing": "Install the “Café El Bahja” demo: full menu in 3 languages, photos and 12 tables. It appears on the home page once DEMO_MENU_SLUG is set to cafe-el-bahja. You will be its owner.",
+    "partial": "The demo café is installed but some photos are missing. Run it again to complete it.",
+    "install": "Install the demo café",
+    "complete": "Complete the install",
+    "installing": "Installing…",
+    "done": "Demo café ready.",
+    "slugTaken": "The cafe-el-bahja link is already used by another venue."
   }
 }

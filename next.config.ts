@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   typedRoutes: true,
   poweredByHeader: false,
+  // Demo venue installer (src/server/admin/demo-venue.ts) reads the shared menu and photos.
+  outputFileTracingIncludes: {
+    '/\\[locale\\]/admin': ['./supabase/seeds/10_menu_el_bahja.sql', './supabase/seed-media/*.jpg'],
+  },
   experimental: {
     // AI menu import sends up to 6 photos, resized in the browser to ≤ 1 MB each (P1-13).
     serverActions: { bodySizeLimit: '8mb' },

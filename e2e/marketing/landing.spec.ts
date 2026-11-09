@@ -123,6 +123,21 @@ test('legal drafts are marked pending review and kept out of search', async ({ p
   await expect(page.getByRole('heading', { level: 1, name: 'Page introuvable' })).toBeVisible();
 });
 
+test('the footer links to the demo photo credits', async ({ page }, testInfo) => {
+  await page.goto('/fr/pricing');
+  await page.getByRole('link', { name: 'Crédits photos' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Crédits photos' })).toBeVisible();
+  await expect(page.getByRole('listitem')).toHaveCount(7);
+  await expect(page.getByRole('link', { name: 'CC BY-SA 4.0' }).first()).toHaveAttribute(
+    'href',
+    'https://creativecommons.org/licenses/by-sa/4.0/',
+  );
+  expect(await horizontalOverflow(page), 'horizontal overflow').toBeLessThanOrEqual(0);
+  if (testInfo.project.name.startsWith('chromium')) {
+    expect(await seriousAxeViolations(page), 'axe').toEqual([]);
+  }
+});
+
 test('robots.txt and the sitemap describe the marketing pages', async ({ request }) => {
   const robots = await (await request.get('/robots.txt')).text();
   expect(robots).toContain('Disallow: /dashboard');

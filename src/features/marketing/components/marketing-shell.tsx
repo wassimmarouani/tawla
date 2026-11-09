@@ -138,6 +138,9 @@ async function MarketingFooter({ locale }: { locale: Locale }) {
           <Link href={marketingHref(locale, '/legal/privacy')} className={link}>
             {t('footer.privacy')}
           </Link>
+          <Link href={marketingHref(locale, '/legal/credits')} className={link}>
+            {t('footer.credits')}
+          </Link>
         </nav>
         <div className="flex flex-col">
           <h2 className="mb-1 text-sm font-semibold text-foreground">{t('footer.contact')}</h2>

@@ -94,7 +94,8 @@
     "terms": "Conditions d’utilisation",
     "privacy": "Confidentialité",
     "contact": "Contact",
-    "rights": "© {app}"
+    "rights": "© {app}",
+    "credits": "Crédits photos"
   },
   "pricing": {
     "title": "Tarifs",
@@ -199,6 +200,12 @@
             "body": "Vercel (hébergement), Supabase (base de données), Google (IA pour l’import et la traduction de menus, sans données personnelles), un service d’e-mail transactionnel."
           }
         }
+      },
+      "credits": {
+        "title": "Crédits photos",
+        "intro": "Les photos du café démo viennent de Wikimedia Commons. Merci à leurs auteurs ; elles sont réutilisées selon leur licence, sans modification autre qu’un recadrage et une compression pour le web.",
+        "author": "Auteur :",
+        "source": "Voir l’original"
       }
     }
   },

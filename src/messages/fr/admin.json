@@ -88,5 +88,15 @@
     "installing": "Installation…",
     "done": "Café démo prêt.",
     "slugTaken": "Le lien cafe-el-bahja est déjà pris par un autre établissement."
+  },
+  "kpis": {
+    "title": "Chiffres clés",
+    "venues": "Établissements actifs",
+    "venuesHint": "sur {total} au total · {week} nouveaux cette semaine",
+    "menuViews": "Scans ce mois",
+    "service": "Appels serveur / addition",
+    "ai": "Coût IA ce mois",
+    "monthHint": "du 1er du mois à aujourd’hui",
+    "aiHint": "{imports} imports · {items} traductions"
   }
 }

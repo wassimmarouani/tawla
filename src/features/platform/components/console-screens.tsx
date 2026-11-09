@@ -15,8 +15,10 @@ import {
   globalAudit,
   listPlans,
   listVenues,
+  platformKpis,
   venueDetail,
   type AuditRow,
+  type PlatformKpis,
 } from '../server/data';
 import { MfaForm } from './mfa-form';
 import { InstallDemoButton, OverridesEditor, PlanForm } from './venue-forms';
@@ -62,6 +64,8 @@ export async function VenuesScreen({ query }: { query: string }) {
     <div className="flex flex-col gap-6">
       <PageHeader title={t('venues')} />
       {claims?.platform_role === 'super_admin' ? <DemoVenueCard /> : null}
+      <KpiCards claims={claims} />
+
       <form role="search" className="flex flex-wrap gap-2" action="/admin">
         <Input
           name="q"
@@ -124,6 +128,57 @@ export async function VenuesScreen({ query }: { query: string }) {
 }
 
 /** Shown until the sales demo venue is fully installed (marketing home demo). */
+/** Platform-wide headline numbers above the venue list (Super Admin v2). */
+async function KpiCards({ claims }: { claims: Awaited<ReturnType<typeof getSessionClaims>> }) {
+  const kpis: PlatformKpis = await platformKpis(claims);
+  const t = await getTranslations('admin.kpis');
+  const format = await getFormatter();
+  const current = await locale();
+  const items = [
+    {
+      key: 'venues',
+      value: format.number(kpis.venues.active),
+      hint: t('venuesHint', { total: kpis.venues.total, week: kpis.venues.newThisWeek }),
+    },
+    {
+      key: 'menuViews',
+      value: format.number(kpis.activity.menuViewsThisMonth),
+      hint: t('monthHint'),
+    },
+    {
+      key: 'service',
+      value: format.number(kpis.activity.serviceRequestsThisMonth),
+      hint: t('monthHint'),
+    },
+    {
+      key: 'ai',
+      value: formatMoney(kpis.ai.costThisMonthMillimes, current),
+      hint: t('aiHint', { imports: kpis.ai.imports, items: kpis.ai.translatedItems }),
+    },
+  ] as const;
+  return (
+    <section aria-labelledby="kpis" className="flex flex-col gap-3">
+      <h2 id="kpis" className="sr-only">
+        {t('title')}
+      </h2>
+      <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {items.map((item) => (
+          <div
+            key={item.key}
+            className="flex flex-col gap-1 rounded-md border border-border bg-card p-4"
+          >
+            <dt className="text-xs font-semibold tracking-label text-muted-foreground uppercase">
+              {t(item.key as 'venues')}
+            </dt>
+            <dd className="text-2xl font-semibold text-foreground tabular-nums">{item.value}</dd>
+            <p className="text-xs text-muted-foreground">{item.hint}</p>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
 async function DemoVenueCard() {
   const state = await demoVenueState();
   if (state === 'ready') return null;

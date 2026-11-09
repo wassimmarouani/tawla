@@ -185,6 +185,78 @@ export async function globalAudit(
   return auditRows(prefix ? sql`${auditLogs.action} like ${`${prefix}%`}` : undefined, 100);
 }
 
+export interface PlatformKpis {
+  venues: {
+    /** Active (non-deleted, non-suspended) venues. */
+    active: number;
+    /** All venues ever created, including deleted/suspended. */
+    total: number;
+    /** Venues created in the last seven days. */
+    newThisWeek: number;
+  };
+  activity: {
+    /** Menu scans/visits this month. */
+    menuViewsThisMonth: number;
+    /** Call-waiter / bill requests this month. */
+    serviceRequestsThisMonth: number;
+  };
+  ai: {
+    /** Total AI cost across all venues this month (millimes). */
+    costThisMonthMillimes: number;
+    imports: number;
+    translatedItems: number;
+  };
+}
+
+/** Headline numbers for the Super Admin console (platform-wide, this calendar month, Africa/Tunis). */
+export async function platformKpis(claims: SessionClaims | null): Promise<PlatformKpis> {
+  requirePlatform(claims);
+  const weekAgo = sql`now() - interval '7 days'`;
+  const [row] = await rawDb().execute<{
+    venues_active: number;
+    venues_total: number;
+    venues_new_week: number;
+    menu_views_month: number;
+    service_requests_month: number;
+    ai_cost_month: number;
+    ai_imports: number;
+    ai_translated: number;
+  }>(sql`
+    select
+      (select count(*)::int from public.restaurants
+        where deleted_at is null and status = 'active') as venues_active,
+      (select count(*)::int from public.restaurants) as venues_total,
+      (select count(*)::int from public.restaurants
+        where deleted_at is null and created_at >= ${weekAgo}) as venues_new_week,
+      (select count(*)::int from public.menu_views
+        where viewed_at >= ${monthStart}) as menu_views_month,
+      (select count(*)::int from public.service_requests
+        where created_at >= ${monthStart}) as service_requests_month,
+      (select coalesce(sum(cost_millimes), 0)::int from public.ai_usage
+        where created_at >= ${monthStart}) as ai_cost_month,
+      (select count(*)::int from public.ai_usage
+        where created_at >= ${monthStart} and feature = 'menu_import') as ai_imports,
+      (select coalesce(sum(units), 0)::int from public.ai_usage
+        where created_at >= ${monthStart} and feature = 'translation') as ai_translated
+  `);
+  return {
+    venues: {
+      active: row?.venues_active ?? 0,
+      total: row?.venues_total ?? 0,
+      newThisWeek: row?.venues_new_week ?? 0,
+    },
+    activity: {
+      menuViewsThisMonth: row?.menu_views_month ?? 0,
+      serviceRequestsThisMonth: row?.service_requests_month ?? 0,
+    },
+    ai: {
+      costThisMonthMillimes: row?.ai_cost_month ?? 0,
+      imports: row?.ai_imports ?? 0,
+      translatedItems: row?.ai_translated ?? 0,
+    },
+  };
+}
+
 export async function listPlans(claims: SessionClaims | null) {
   requirePlatform(claims);
   return rawDb()

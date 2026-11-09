@@ -4,7 +4,7 @@
 
 ## 1. Product
 
-**Tawla** (working name, "table" in Tunisian Arabic) is a multi-tenant SaaS for Tunisian cafés, restaurants, tea rooms and fast-food places. It replaces paper menus with a digital menu opened by scanning a QR code on the table. Ordering from the table is optional, with real-time notification of the counter and waiters.
+**Taply** (working name, "table" in Tunisian Arabic) is a multi-tenant SaaS for Tunisian cafés, restaurants, tea rooms and fast-food places. It replaces paper menus with a digital menu opened by scanning a QR code on the table. Ordering from the table is optional, with real-time notification of the counter and waiters.
 
 ### Problems solved
 
@@ -39,7 +39,7 @@
 
 ## 2. Plans (amended by ADR-0015, ADR-0031)
 
-Entry plan **Menu QR** (`menu_qr`, ADR-0031), **one-time 200 DT**, printed QR codes included, menu changes made by Tawla on request: `menu`, `branding`, `multilingual`, `availability_toggle`, AI import and translation (small quota), "Powered by Tawla" badge. No service requests, no staff alerts. Limits as Basic.
+Entry plan **Menu QR** (`menu_qr`, ADR-0031), **one-time 200 DT**, printed QR codes included, menu changes made by Taply on request: `menu`, `branding`, `multilingual`, `availability_toggle`, AI import and translation (small quota), "Powered by Taply" badge. No service requests, no staff alerts. Limits as Basic.
 
 | Feature (flag)                                                      | Basic                     | Pro                                | Premium                                                  |
 | ------------------------------------------------------------------- | ------------------------- | ---------------------------------- | -------------------------------------------------------- |
@@ -64,7 +64,7 @@ Entry plan **Menu QR** (`menu_qr`, ADR-0031), **one-time 200 DT**, printed QR co
 | Promotions, happy hour, time-based prices (`promotions`)            | —                         | —                                  | ✓                                                        |
 | Thermal ticket printing (`printing`)                                | —                         | —                                  | ✓                                                        |
 | Multi-site / chains (`multi_site`)                                  | —                         | —                                  | ✓                                                        |
-| "Powered by Tawla" badge (`powered_by_badge`)                       | ✓                         | —                                  | —                                                        |
+| "Powered by Taply" badge (`powered_by_badge`)                       | ✓                         | —                                  | —                                                        |
 
 ### Feature flags
 
@@ -100,7 +100,7 @@ Detailed Phase 0–1 tasks: [`docs/plan/phase-0-1.md`](../plan/phase-0-1.md).
 | Set-up fee     | free or 100–200 DT (photos, data entry, on-site training) |
 | QR tents       | margin on acrylic/wood printing                           |
 
-Acquisition: 14-day Pro trial (from Phase 2), live demo on the manager's phone, referral (1 month free per referred venue), "Powered by Tawla" badge on Basic.
+Acquisition: 14-day Pro trial (from Phase 2), live demo on the manager's phone, referral (1 month free per referred venue), "Powered by Taply" badge on Basic.
 KPIs from the first customer: MRR, trial → paid conversion, monthly churn, orders per venue per day, **AI cost per venue**.
 
 Market differentiators: prices in dinars with millimes, Arabic UI with a derja tone, WhatsApp support, on-site set-up for the first customers (menu photo, QR printing, 20-minute staff training), works on weak connections and entry-level phones.

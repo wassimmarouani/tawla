@@ -27,7 +27,7 @@
     "title": "Commencer le service",
     "description": "Un appui active le son, garde l’écran allumé et vérifie les notifications.",
     "button": "Commencer le service",
-    "iosHint": "Sur iPhone : Partager → « Sur l’écran d’accueil », puis ouvrez Tawla depuis l’icône pour recevoir les notifications."
+    "iosHint": "Sur iPhone : Partager → « Sur l’écran d’accueil », puis ouvrez Taply depuis l’icône pour recevoir les notifications."
   },
   "live": {
     "tabs": {

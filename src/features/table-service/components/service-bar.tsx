@@ -70,8 +70,8 @@ const STATUSES: ReadonlySet<string> = new Set<RequestStatus>([
 ]);
 
 /** Per-tab memory that this phone joined the table (the session cookie is HttpOnly). */
-const tableKey = (token: string) => `tawla:table:${token}`;
-const feedbackKey = (publicId: string) => `tawla:feedback:${publicId}`;
+const tableKey = (token: string) => `taply:table:${token}`;
+const feedbackKey = (publicId: string) => `taply:feedback:${publicId}`;
 
 function remember(key: string, value: boolean) {
   try {

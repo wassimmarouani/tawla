@@ -3,7 +3,7 @@
  * Project-specific lint restrictions (CLAUDE.md rules 7, 8, 9, 17; ADR-0003; 07-architecture).
  * Kept separate from eslint.config.mjs so they can be tested without type information.
  */
-import tawla from '../eslint-plugin-tawla/index.mjs';
+import taply from '../eslint-plugin-taply/index.mjs';
 
 const featureDeepImport = {
   group: ['@/features/*/*'],
@@ -39,13 +39,13 @@ const impureForServices = {
 /** @type {import('eslint').Linter.Config[]} */
 export const projectRestrictions = [
   {
-    name: 'tawla/source',
+    name: 'taply/source',
     files: ['src/**/*.{ts,tsx}'],
-    plugins: { tawla },
+    plugins: { taply },
     rules: {
-      'tawla/no-physical-direction-classes': 'error',
-      'tawla/no-arbitrary-tailwind-values': 'error',
-      'tawla/client-module-exports': 'error',
+      'taply/no-physical-direction-classes': 'error',
+      'taply/no-arbitrary-tailwind-values': 'error',
+      'taply/client-module-exports': 'error',
       // Structured logging only (src/lib/log.ts, ADR-0020).
       'no-console': 'error',
       'no-restricted-imports': [
@@ -65,19 +65,19 @@ export const projectRestrictions = [
   {
     // Vendored shadcn/Base UI primitives: internal calc() geometry is tolerated, colours are not
     // (they must come from tokens). Logical-direction rules still apply.
-    name: 'tawla/ui-primitives',
+    name: 'taply/ui-primitives',
     files: ['src/components/ui/**/*.{ts,tsx}'],
-    rules: { 'tawla/no-arbitrary-tailwind-values': ['error', { allowGeometry: true }] },
+    rules: { 'taply/no-arbitrary-tailwind-values': ['error', { allowGeometry: true }] },
   },
   {
-    name: 'tawla/admin-callers',
+    name: 'taply/admin-callers',
     files: ['src/app/api/**/*.{ts,tsx}', 'src/features/*/server/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': ['error', { patterns: [featureDeepImport, rawDbClient] }],
     },
   },
   {
-    name: 'tawla/privileged-modules',
+    name: 'taply/privileged-modules',
     files: ['src/server/admin/**/*.{ts,tsx}', 'src/lib/db/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': ['error', { patterns: [featureDeepImport] }],
@@ -85,14 +85,14 @@ export const projectRestrictions = [
   },
   {
     // Integration tests build fixtures as a privileged role (they verify RLS, they are not app code).
-    name: 'tawla/integration-tests',
+    name: 'taply/integration-tests',
     files: ['src/**/*.int.test.ts'],
     rules: { 'no-restricted-imports': ['error', { patterns: [featureDeepImport] }] },
   },
   {
     // Customer menu (ADR-0020: < 150 KB initial JS). `cn` ships a Tailwind class merger and the
     // states barrel ships client components; use '@/lib/classes' and direct state imports.
-    name: 'tawla/customer-menu-budget',
+    name: 'taply/customer-menu-budget',
     files: ['src/features/menu/components/**/*.{ts,tsx}', 'src/components/media/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': [
@@ -114,12 +114,12 @@ export const projectRestrictions = [
     },
   },
   {
-    name: 'tawla/env-readers',
+    name: 'taply/env-readers',
     files: ['src/lib/env.ts', 'src/server/admin/env.ts'],
     rules: { 'no-restricted-properties': 'off' },
   },
   {
-    name: 'tawla/pure-services',
+    name: 'taply/pure-services',
     files: ['src/features/*/services/**/*.{ts,tsx}', 'src/lib/*/services/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': [
@@ -135,12 +135,12 @@ export const projectRestrictions = [
     },
   },
   {
-    name: 'tawla/todo',
+    name: 'taply/todo',
     files: ['**/*.{ts,tsx,mjs,js}'],
-    plugins: { tawla },
+    plugins: { taply },
     rules: {
-      'tawla/todo-requires-issue': 'error',
-      'tawla/no-invisible-characters': 'error',
+      'taply/todo-requires-issue': 'error',
+      'taply/no-invisible-characters': 'error',
     },
   },
 ];

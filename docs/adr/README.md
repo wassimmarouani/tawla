@@ -34,7 +34,7 @@ ADRs override `docs/spec/*`, which override the original `docs/cahier-des-charge
 | [0026](0026-i18n-money-and-search.md)                | i18n, money formatting, search                                         | Accepted                        |
 | [0027](0027-design-process-and-visual-direction.md)  | Design-in-code, three visual directions                                | Accepted (choice pending P0-06) |
 | [0028](0028-legal-and-compliance-open-items.md)      | Legal and compliance items                                             | Accepted                        |
-| [0029](0029-visual-direction-tawla-mix.md)           | Visual direction "Tawla" (A + B lists + C grid)                        | Accepted                        |
+| [0029](0029-visual-direction-taply-mix.md)           | Visual direction "Taply" (A + B lists + C grid)                        | Accepted                        |
 | [0030](0030-gemini-provider.md)                      | Gemini as the AI provider (menu import, translation)                   | Accepted                        |
 | [0031](0031-menu-qr-entry-plan.md)                   | "Menu QR" entry plan; `service_requests` enforced                      | Accepted                        |
 

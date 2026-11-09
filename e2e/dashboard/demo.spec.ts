@@ -35,7 +35,7 @@ test('tenants stay apart: the pizzeria owner only sees the pizzeria', async ({ p
   await expect(page.getByRole('heading', { level: 1, name: 'Pizzeria Test' })).toBeVisible();
   await page.context().addCookies([
     {
-      name: 'tawla_restaurant',
+      name: 'taply_restaurant',
       value: 'b0000000-0000-4000-8000-000000000001',
       domain: 'localhost',
       path: '/',

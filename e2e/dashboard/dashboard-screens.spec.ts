@@ -118,7 +118,7 @@ for (const scheme of ['light', 'dark'] as const) {
       // A restaurant outside the memberships: 403, then back to the user's own.
       await context.addCookies([
         {
-          name: 'tawla_restaurant',
+          name: 'taply_restaurant',
           value: '00000000-0000-4000-8000-0000000000ff',
           domain: 'localhost',
           path: '/',

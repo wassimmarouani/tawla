@@ -1,4 +1,4 @@
-# Tawla
+# Taply
 
 Multi-tenant SaaS for Tunisian cafés and restaurants: QR digital menu, table ordering, real-time staff notifications.
 

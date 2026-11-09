@@ -50,7 +50,7 @@ export default defineConfig({
             DATABASE_URL: LOCAL_DATABASE_URL,
             APP_DOMAIN: 'localhost:3000',
             NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
-            NEXT_PUBLIC_APP_NAME: 'Tawla',
+            NEXT_PUBLIC_APP_NAME: 'Taply',
             NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54321',
             NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH',
             CLIENT_SESSION_SECRET: 'local-development-client-session-secret-0123456789',

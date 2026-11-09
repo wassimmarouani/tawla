@@ -5,7 +5,7 @@
   "logout": "Se déconnecter",
   "forbidden": {
     "title": "Accès réservé",
-    "description": "Cette console est réservée à l’équipe Tawla."
+    "description": "Cette console est réservée à l’équipe Taply."
   },
   "mfa": {
     "title": "Double authentification",

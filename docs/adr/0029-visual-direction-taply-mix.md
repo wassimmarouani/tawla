@@ -1,4 +1,4 @@
-# ADR-0029 — Visual direction "Tawla": A's calm, B's menu-card lists, C's food grid
+# ADR-0029 — Visual direction "Taply": A's calm, B's menu-card lists, C's food grid
 
 - Status: Accepted
 - Date: 2026-10-12
@@ -42,6 +42,6 @@ Shape scale: 8 px (inputs, small controls), 14 px (media), 20 px (cards), 24 px 
 
 ## Consequences
 
-- P0-07 turns this table into `src/styles/tokens.css` and restyles the shadcn/Base UI components on it. The prototype CSS (`src/app/[locale]/dev/directions/_styles/m-tawla.css`) is the visual reference.
+- P0-07 turns this table into `src/styles/tokens.css` and restyles the shadcn/Base UI components on it. The prototype CSS (`src/app/[locale]/dev/directions/_styles/m-taply.css`) is the visual reference.
 - Back-office and staff app reuse the palette, type and shape scale. Staff adds display sizes and bolder status colours (ADR-0027).
 - Directions A, B and C stay in the repo as dev-only references until P1-07a ships the real customer menu, then they are deleted.

@@ -1,5 +1,5 @@
 /**
- * Design token source of truth — "Tawla" (ADR-0029).
+ * Design token source of truth — "Taply" (ADR-0029).
  * `pnpm tokens:build` generates src/styles/tokens.css from this file; tokens.test.ts checks every
  * text/UI contrast pair (WCAG 2.2 AA) and that the generated CSS is up to date.
  * Names follow shadcn/ui so components work unmodified. Tenant pages override `--brand-*` inline

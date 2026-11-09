@@ -100,7 +100,7 @@ export async function startTotpEnrolment(): Promise<
   }
   const { data, error } = await supabase.auth.mfa.enroll({
     factorType: 'totp',
-    friendlyName: `Tawla ${new Date().toISOString().slice(0, 10)}`,
+    friendlyName: `Taply ${new Date().toISOString().slice(0, 10)}`,
   });
   if (error) {
     log.error('platform.totp_enrol_failed', { code: error.code ?? null });

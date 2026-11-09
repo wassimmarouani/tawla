@@ -1,7 +1,7 @@
 # 10 — Design system, UX/UI, visual identity
 
 > Domain spec. Source: original spec §13, §14.3, amended by ADR-0021, 0026, 0027. ADRs win on conflict.
-> **Visual direction: ADR-0029 "Tawla"** (A's calm header and surfaces, B's menu-card lists, C's food grid). Its table is the source for `src/styles/tokens.css`.
+> **Visual direction: ADR-0029 "Taply"** (A's calm header and surfaces, B's menu-card lists, C's food grid). Its table is the source for `src/styles/tokens.css`.
 
 Target: native-app quality. Calm, fast, animated with restraint, customisable with each venue's colours without ever breaking legibility. Premium 2026 product, not a template.
 

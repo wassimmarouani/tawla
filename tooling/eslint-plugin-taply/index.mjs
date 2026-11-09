@@ -203,7 +203,7 @@ const clientModuleExports = {
 };
 
 const plugin = {
-  meta: { name: 'eslint-plugin-tawla', version: '0.0.0' },
+  meta: { name: 'eslint-plugin-taply', version: '0.0.0' },
   rules: {
     'no-physical-direction-classes': classTokenRule({
       description: 'Use logical Tailwind utilities (ms-, pe-, start-, text-start) for RTL support.',

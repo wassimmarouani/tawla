@@ -5,7 +5,7 @@
   "logout": "Sign out",
   "forbidden": {
     "title": "Restricted access",
-    "description": "This console is for the Tawla team only."
+    "description": "This console is for the Taply team only."
   },
   "mfa": {
     "title": "Two-factor authentication",

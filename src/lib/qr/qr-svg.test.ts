@@ -4,7 +4,7 @@ import { QR_QUIET_ZONE, qrSvg } from './qr-svg';
 
 describe('qrSvg', () => {
   it('draws every dark module once, inside the quiet zone', () => {
-    const text = 'https://tawla.tn/t/AbCdEfGhIjKlMnOpQrStUv';
+    const text = 'https://taply.tn/t/AbCdEfGhIjKlMnOpQrStUv';
     const { size, path } = qrSvg(text);
     const modules = QRCode.create(text, { errorCorrectionLevel: 'M' }).modules;
     expect(size).toBe(modules.size + QR_QUIET_ZONE * 2);

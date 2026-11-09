@@ -53,11 +53,11 @@ const menu: PublicMenu = {
 
 describe('menuJsonLd', () => {
   it('describes the venue, its sections, items, prices and availability', () => {
-    const data = menuJsonLd({ menu, url: 'https://tawla.tn/cafe-el-bahja', image: null });
+    const data = menuJsonLd({ menu, url: 'https://taply.tn/cafe-el-bahja', image: null });
     expect(data).toMatchObject({
       '@type': 'CafeOrCoffeeShop',
       name: 'Café El Bahja',
-      url: 'https://tawla.tn/cafe-el-bahja',
+      url: 'https://taply.tn/cafe-el-bahja',
       hasMenu: {
         '@type': 'Menu',
         hasMenuSection: [
@@ -89,7 +89,7 @@ describe('menuJsonLd', () => {
   it('uses Restaurant for restaurants and adds the cover image', () => {
     const data = menuJsonLd({
       menu: { ...menu, restaurant: { ...menu.restaurant, type: 'restaurant' } },
-      url: 'https://tawla.tn/x',
+      url: 'https://taply.tn/x',
       image: 'https://cdn/x.webp',
     });
     expect(data).toMatchObject({ '@type': 'Restaurant', image: 'https://cdn/x.webp' });

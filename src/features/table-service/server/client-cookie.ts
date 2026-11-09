@@ -12,8 +12,8 @@ export const CLIENT_SESSION_TTL_SECONDS = 3 * 60 * 60;
 export const DEVICE_TTL_SECONDS = 365 * 24 * 60 * 60;
 
 const secure = env.NEXT_PUBLIC_APP_URL.startsWith('https://');
-export const CLIENT_SESSION_COOKIE = secure ? '__Host-tawla_cs' : 'tawla_cs';
-export const DEVICE_COOKIE = secure ? '__Host-tawla_device' : 'tawla_device';
+export const CLIENT_SESSION_COOKIE = secure ? '__Host-taply_cs' : 'taply_cs';
+export const DEVICE_COOKIE = secure ? '__Host-taply_device' : 'taply_device';
 
 const claimsSchema = z.object({ cs: z.uuid(), ts: z.uuid(), r: z.uuid() });
 export type ClientSessionClaims = z.infer<typeof claimsSchema>;

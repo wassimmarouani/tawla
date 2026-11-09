@@ -6,7 +6,7 @@ Oct 11, 2026 · @Sbridge
 
 ## 1. Présentation du projet
 
-Le projet est une plateforme SaaS multi-établissements qui remplace le menu papier par un menu digital accessible via QR code, avec en option la commande à table transmise en temps réel au comptoir et aux serveurs. Nom de travail : **Tawla** (« table » en tunisien), à valider.
+Le projet est une plateforme SaaS multi-établissements qui remplace le menu papier par un menu digital accessible via QR code, avec en option la commande à table transmise en temps réel au comptoir et aux serveurs. Nom de travail : **Taply** (« table » en tunisien), à valider.
 
 ### 1.1 Contexte
 
@@ -138,7 +138,7 @@ La plateforme compte sept rôles : deux côté plateforme, quatre côté établi
 
 ## 4. Spécifications fonctionnelles — Client
 
-Le client accède à tout depuis le navigateur de son téléphone après le scan, sans application ni compte. L'URL scannée identifie l'établissement et la table : https://tawla.tn/{slug-etablissement}/t/{token-table}.
+Le client accède à tout depuis le navigateur de son téléphone après le scan, sans application ni compte. L'URL scannée identifie l'établissement et la table : https://taply.tn/{slug-etablissement}/t/{token-table}.
 
 ### 4.1 Page d'accueil du menu
 
@@ -525,7 +525,7 @@ Le temps réel (en pointillés) part directement de Supabase vers les navigateur
 
 - Une base partagée, isolation par restaurant_id + Row Level Security.
 
-- Le middleware Next.js résout l'établissement à partir du slug dans l'URL (et plus tard d'un sous-domaine cafe.tawla.tn ou d'un domaine personnalisé pour l'offre Premium).
+- Le middleware Next.js résout l'établissement à partir du slug dans l'URL (et plus tard d'un sous-domaine cafe.taply.tn ou d'un domaine personnalisé pour l'offre Premium).
 
 - Le contexte (établissement, rôle, flags) est chargé une fois par requête et passé explicitement aux services.
 
@@ -1031,7 +1031,7 @@ Le revenu repose sur un abonnement mensuel ou annuel par établissement, complé
 | Frais de mise en place | Offerts ou 100 à 200 DT | Photo, saisie, formation sur place |
 | Chevalets QR | Prix unitaire selon matière | Marge sur l'impression |
 
-Leviers d'acquisition : essai gratuit de 14 jours, démonstration en direct sur le téléphone du gérant, parrainage (un mois offert par établissement recommandé), badge discret « Menu propulsé par Tawla » sur l'offre Basic.
+Leviers d'acquisition : essai gratuit de 14 jours, démonstration en direct sur le téléphone du gérant, parrainage (un mois offert par établissement recommandé), badge discret « Menu propulsé par Taply » sur l'offre Basic.
 
 Indicateurs à suivre dès le premier client : MRR, conversion essai → payant, résiliation mensuelle, commandes par établissement et par jour, coût IA par établissement.
 
@@ -1041,7 +1041,7 @@ Le projet est une seule application Next.js organisée par espaces (client, staf
 
 ### 19.1 Arborescence
 
-tawla/\
+taply/\
 ├── CLAUDE.md \# règles du projet pour Claude Code\
 ├── docs/ \# ce cahier des charges découpé par section, décisions (ADR)\
 ├── supabase/\

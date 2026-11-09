@@ -11,7 +11,7 @@ test('home renders without console errors or horizontal overflow', async ({ page
 
   // The marketing home's headline, in whichever locale the browser negotiated.
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Tawla/ }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: /Taply/ }).first()).toBeVisible();
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

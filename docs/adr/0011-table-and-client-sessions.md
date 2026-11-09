@@ -15,7 +15,7 @@
 
 1. **Two tables:**
    - `table_sessions (id, restaurant_id, table_id, public_id, status open|bill_requested|closed, opened_at, last_activity_at, closed_at, closed_by, payment_method, total_snapshot)`. **At most one non-closed session per table**, via a partial unique index.
-   - `client_sessions (id, restaurant_id, table_session_id, device_id, created_at, last_seen_at, blocked_until)`. One per phone. The phone holds the signed cookie `__Host-tawla_cs` (jose JWT: `cs`, `ts`, `exp`; HttpOnly, Secure, SameSite=Lax).
+   - `client_sessions (id, restaurant_id, table_session_id, device_id, created_at, last_seen_at, blocked_until)`. One per phone. The phone holds the signed cookie `__Host-taply_cs` (jose JWT: `cs`, `ts`, `exp`; HttpOnly, Secure, SameSite=Lax).
 2. **GET is safe:** `/t/{token}` only verifies the token and renders the menu. Token routes are `noindex`.
 3. **Opening:** on the first meaningful action (add to cart, call waiter, view bill), the page calls `POST /api/public/sessions`. A Turnstile token is required only when the anomaly heuristic fires. The handler reuses the table's open session or opens one, then creates the client session.
 4. **Expiry:**

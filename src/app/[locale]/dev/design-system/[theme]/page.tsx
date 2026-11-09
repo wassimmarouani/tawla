@@ -70,7 +70,7 @@ export default async function DesignSystemPage({
     <div data-theme={theme} className="min-h-dvh bg-background text-foreground">
       <main className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-10 sm:px-6">
         <header className="flex flex-col gap-2">
-          <Badge variant="soft">ADR-0029 · Tawla</Badge>
+          <Badge variant="soft">ADR-0029 · Taply</Badge>
           <h1 className="text-3xl font-title tracking-title">Design system</h1>
           <p className="max-w-prose text-muted-foreground">
             Tokens, components and states. Every pair below is AA-checked in tokens.test.ts.

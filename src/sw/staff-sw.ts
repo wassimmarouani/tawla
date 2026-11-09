@@ -9,7 +9,7 @@
 
 const sw = globalThis as unknown as ServiceWorkerGlobalScope;
 
-const SHELL_CACHE = 'tawla-staff-shell-v1';
+const SHELL_CACHE = 'taply-staff-shell-v1';
 
 interface PushPayload {
   title: string;

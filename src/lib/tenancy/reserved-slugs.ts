@@ -20,7 +20,7 @@ const ADDITIONAL_RESERVED = [
   'contact',
   'terms',
   'privacy',
-  'tawla',
+  'taply',
   'menu',
   'ingest',
   'health',

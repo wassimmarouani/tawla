@@ -8,6 +8,7 @@ describe('dashboardNavigation', () => {
         'overview',
         'menu',
         'tables',
+        'analytics',
         'team',
         'settings',
       ]);

@@ -22,6 +22,7 @@ import { DashboardNoRestaurant } from './_components/dashboard-no-restaurant';
  */
 export default async function DashboardLayout({ children }: LayoutProps<'/[locale]/dashboard'>) {
   const messages = await clientMessages([
+    'analytics',
     'auth',
     'common',
     'dashboard',

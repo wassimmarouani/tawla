@@ -1,3 +1,4 @@
+import analytics from './analytics.json';
 import admin from './admin.json';
 import auth from './auth.json';
 import client from './client.json';
@@ -13,6 +14,7 @@ import team from './team.json';
 
 const messages = {
   admin,
+  analytics,
   auth,
   client,
   common,

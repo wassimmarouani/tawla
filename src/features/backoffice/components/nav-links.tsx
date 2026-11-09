@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpen, LayoutDashboard, QrCode, Settings2, Users } from 'lucide-react';
+import { BarChart3, BookOpen, LayoutDashboard, QrCode, Settings2, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ const ICONS: Readonly<Record<NavKey, typeof BookOpen>> = {
   overview: LayoutDashboard,
   menu: BookOpen,
   tables: QrCode,
+  analytics: BarChart3,
   team: Users,
   settings: Settings2,
 };

@@ -114,6 +114,11 @@
   max-block-size: 90dvh;
 }
 
+/* Phone-frame aspect ratio of the dashboard menu preview: close to iPhone 14 (390x844). */
+@utility aspect-phone {
+  aspect-ratio: 9 / 19;
+}
+
 html:has(dialog[open]) {
   overflow: hidden;
 }

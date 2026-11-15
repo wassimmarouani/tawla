@@ -39,9 +39,10 @@ describe('demo venue', () => {
     for (const statement of statements) expect(statement).toMatch(/^insert into public\./);
   });
 
-  it('is ready locally (seed and seed media) and never installed twice', async () => {
-    await expect(demoVenueState()).resolves.toBe('ready');
+  it('is partial locally (only Café El Bahja seeded, Pizzeria and Pâtisserie demos missing)', async () => {
+    await expect(demoVenueState()).resolves.toBe('partial');
     const statements = await menu();
+    // Re-running on El Bahja alone never duplicates it.
     await expect(rawDb().transaction((tx) => insertDemoVenue(tx, OWNER, statements))).resolves.toBe(
       false,
     );
@@ -82,15 +83,18 @@ describe('demo venue', () => {
     });
   });
 
-  it('completes an interrupted install by attaching the missing photos', async () => {
-    await rawDb().execute(
-      sql`update public.products set media_id = null where restaurant_id = ${DEMO_VENUE.restaurantId} and slug = 'ojja'`,
-    );
-    await expect(demoVenueState()).resolves.toBe('partial');
-    await expect(installDemoVenue(claims({}), localSupabase())).resolves.toEqual({
-      created: false,
-    });
+  it('creates the missing demo venues (Pizzeria + Pâtisserie) on install', async () => {
+    const result = await installDemoVenue(claims({}), localSupabase());
+    expect(result.created).toBeGreaterThanOrEqual(2);
     await expect(demoVenueState()).resolves.toBe('ready');
+    // Clean up so the next run finds the same local state as seeded.
+    await rawDb().execute(sql`
+      with gone as (
+        delete from public.restaurants where id in (
+          'b0000000-0000-4000-8000-000000000003',
+          'b0000000-0000-4000-8000-000000000004')
+        returning organization_id)
+      delete from public.organizations where id in (select organization_id from gone)`);
   });
 
   it('is reserved to Super Admins with two-factor authentication', async () => {

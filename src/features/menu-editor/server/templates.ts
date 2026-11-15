@@ -2,7 +2,7 @@ import 'server-only';
 import { and, eq, isNull, max } from 'drizzle-orm';
 import { withRls } from '@/lib/db/rls';
 import { categories, products } from '@/lib/db/schema/schema';
-import { findTemplate, templateI18n } from '../data/templates';
+import { findTemplate, templateI18n } from '@/lib/menu/templates';
 import { productSlug } from '../services/menu-text';
 import type { EditorScope } from './mutations';
 

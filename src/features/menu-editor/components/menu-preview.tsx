@@ -23,7 +23,8 @@ export function MenuPreview({ src, version }: MenuPreviewProps) {
   return (
     <aside
       aria-label={t('title')}
-      className="sticky top-24 hidden w-92 shrink-0 flex-col gap-3 xl:flex"
+      // Sticky on the right, capped to the viewport so nothing overflows on short laptops.
+      className="sticky top-24 hidden max-h-dvh w-80 shrink-0 flex-col gap-2 xl:flex"
     >
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold text-foreground">{t('title')}</h2>
@@ -49,16 +50,17 @@ export function MenuPreview({ src, version }: MenuPreviewProps) {
           </a>
         </div>
       </div>
-      <div className="overflow-hidden rounded-xl border-4 border-foreground bg-background shadow-lg">
+      {/* Phone-shaped frame, scales down with the viewport but keeps its aspect ratio. */}
+      <div className="relative mx-auto aspect-phone w-full overflow-hidden rounded-xl border-4 border-foreground bg-background shadow-lg max-h-sheet">
         <iframe
           key={`${String(version)}-${String(reloads)}`}
           src={src}
           title={t('frameTitle')}
           loading="lazy"
-          className="block h-160 w-full"
+          className="absolute inset-0 block size-full"
         />
       </div>
-      <p className="text-sm text-muted-foreground">{t('hint')}</p>
+      <p className="text-xs text-muted-foreground">{t('hint')}</p>
     </aside>
   );
 }

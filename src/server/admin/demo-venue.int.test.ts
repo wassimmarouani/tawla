@@ -83,16 +83,24 @@ describe('demo venue', () => {
     });
   });
 
-  it('creates the missing demo venues (Pizzeria + Pâtisserie) on install', async () => {
+  it('creates the missing demo venues (Pizzeria, Pâtisserie, Bar, Street, Glacier…) on install', async () => {
     const result = await installDemoVenue(claims({}), localSupabase());
     expect(result.created).toBeGreaterThanOrEqual(2);
     await expect(demoVenueState()).resolves.toBe('ready');
-    // Clean up so the next run finds the same local state as seeded.
+    // Clean up so the next run (and the demo-login test) finds the same local state as seeded:
+    // every demo venue id except Café El Bahja + its memberships + its organisations.
     await rawDb().execute(sql`
       with gone as (
         delete from public.restaurants where id in (
           'b0000000-0000-4000-8000-000000000003',
-          'b0000000-0000-4000-8000-000000000004')
+          'b0000000-0000-4000-8000-000000000004',
+          'b0000000-0000-4000-8000-000000000011',
+          'b0000000-0000-4000-8000-000000000012',
+          'b0000000-0000-4000-8000-000000000013',
+          'b0000000-0000-4000-8000-000000000014',
+          'b0000000-0000-4000-8000-000000000015',
+          'b0000000-0000-4000-8000-000000000016',
+          'b0000000-0000-4000-8000-000000000017')
         returning organization_id)
       delete from public.organizations where id in (select organization_id from gone)`);
   });

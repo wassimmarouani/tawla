@@ -39,6 +39,7 @@ import { publicPlans } from '../server/plans';
 import { marketingHref } from '../services/paths';
 import { planCards } from '../services/pricing';
 import { DemoPhone } from './demo-phone';
+import { DemosSection } from './demos-section';
 import { MockMenu, ServiceVisual } from './landing-visuals';
 import { whatsappHref } from './marketing-shell';
 
@@ -285,6 +286,11 @@ export async function Landing({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
+
+      {/* Live demos (A2): one card per installed demo venue, lazily loaded. */}
+      <Suspense fallback={null}>
+        <DemosSection locale={locale} />
+      </Suspense>
 
       {/* Numbers */}
       <section aria-labelledby="stats" className="mx-auto max-w-6xl px-gutter py-16 sm:py-20">

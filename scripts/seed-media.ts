@@ -8,7 +8,7 @@ import path from 'node:path';
 import { and, eq } from 'drizzle-orm';
 import { rawDb } from '@/lib/db/client';
 import { products, restaurants } from '@/lib/db/schema/schema';
-import { DEMO_MEDIA_DIR, DEMO_PHOTOS, DEMO_VENUE } from '@/server/admin/demo-venue';
+import { DEMO_MEDIA_DIR, DEMO_VENUE } from '@/server/admin/demo-venue';
 import { processImage } from '@/server/admin/media/process-image';
 import { storeProcessedImage } from '@/server/admin/media/storage';
 import { localSupabase } from '../tooling/testing/local-supabase';
@@ -19,7 +19,8 @@ const SOURCE = path.resolve(DEMO_MEDIA_DIR);
 const config = localSupabase();
 const db = rawDb();
 
-for (const [file, target] of Object.entries(DEMO_PHOTOS)) {
+if (!DEMO_VENUE.photos) throw new Error('DEMO_VENUE has no photos');
+for (const [file, target] of Object.entries(DEMO_VENUE.photos)) {
   const kind = 'cover' in target ? 'cover' : 'product';
   const image = await processImage(await readFile(path.join(SOURCE, file)), kind);
   const mediaId = await storeProcessedImage(config, EL_BAHJA, kind, image);

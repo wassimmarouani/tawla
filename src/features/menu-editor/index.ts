@@ -6,3 +6,11 @@ export { VenueMediaForm } from './components/venue-media-form';
 export type { VenueMediaLabels } from './components/venue-media-form';
 export { loadEditorMedia } from './queries/editor-menu';
 export type { EditorMedia } from './queries/editor-menu';
+export { findTemplate, MENU_TEMPLATES, templateI18n } from './data/templates';
+export type {
+  MenuTemplate,
+  TemplateCategory,
+  TemplateProduct,
+  TemplateText,
+} from './data/templates';
+export { productSlug } from './services/menu-text';

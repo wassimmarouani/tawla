@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { isLocale } from '@/i18n/locales';
 import { cn } from '@/lib/utils';
-import { MENU_TEMPLATES, type MenuTemplate } from '../data/templates';
+import { MENU_TEMPLATES, type MenuTemplate } from '@/lib/menu/templates';
 import { applyTemplate } from '../server/actions';
 
 /** "Start from a template" button + dialog: picks one template and applies it (menu-editor). */

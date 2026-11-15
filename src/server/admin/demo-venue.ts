@@ -2,7 +2,8 @@ import 'server-only';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { and, eq, isNull, or, sql } from 'drizzle-orm';
-import { findTemplate, productSlug, templateI18n, type MenuTemplate } from '@/features/menu-editor';
+import { findTemplate, templateI18n, type MenuTemplate } from '@/lib/menu/templates';
+import { slugify } from '@/lib/text/slugify';
 import type { SessionClaims } from '@/lib/auth/claims';
 import { rawDb } from '@/lib/db/client';
 import type { DbTransaction } from '@/lib/db/rls';
@@ -285,7 +286,7 @@ async function insertTemplate(
     let productOrder = 0;
     for (const product of category.products) {
       const name = templateI18n(product.name);
-      const slug = productSlug(name, taken);
+      const slug = uniqueSlug(slugify(product.name.fr || product.name.en || 'item', 80), taken);
       taken.add(slug);
       productOrder += ORDER_STEP;
       await tx.insert(products).values({
@@ -349,5 +350,16 @@ async function attachDemoPhotos(
           ),
         );
     }
+  }
+}
+
+/** Returns `base` unchanged when free, otherwise `base-2`, `base-3`, … like productSlug. */
+function uniqueSlug(base: string, taken: ReadonlySet<string>): string {
+  const start = base.length > 0 ? base : 'item';
+  if (!taken.has(start)) return start;
+  for (let suffix = 2; ; suffix += 1) {
+    const tail = `-${String(suffix)}`;
+    const candidate = `${start.slice(0, 80 - tail.length).replace(/-+$/, '')}${tail}`;
+    if (!taken.has(candidate)) return candidate;
   }
 }

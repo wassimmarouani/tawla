@@ -85,11 +85,11 @@ test('the console needs TOTP, refuses other users, and its overrides take effect
     await expect(
       adminPage.getByRole('heading', { level: 1, name: 'Établissements' }),
     ).toBeVisible();
-    // The seeded demo café is complete: no install card.
-    await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeHidden();
+    // Multi-demo setup (Pizzeria + Pâtisserie not seeded locally): the install card is
+    // already visible from the start. The next steps install them and then it hides.
+    await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeVisible();
 
-    // An interrupted demo install (a photo missing) shows the card. Record the current
-    // media_id so retries find the demo ready again even when the completion below fails.
+    // Record El Bahja's ojja photo so retries find the demo ready again if completion fails.
     const demo = database();
     try {
       const [row] = await demo<
@@ -103,6 +103,7 @@ test('the console needs TOTP, refuses other users, and its overrides take effect
     await adminPage.reload();
     await expect(adminPage.getByRole('heading', { name: 'Café démo' })).toBeVisible();
     expect(await seriousAxeViolations(adminPage), 'console axe').toEqual([]);
+    // Belt-and-braces: a retry run finds the ojja photo restored.
     await adminPage.getByRole('button', { name: 'Compléter l’installation' }).click();
     // Photos go through the image pipeline: slow on CI runners.
     await expect(adminPage.getByText('Café démo prêt.')).toBeVisible({ timeout: 90_000 });

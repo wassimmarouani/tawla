@@ -2,10 +2,12 @@ import 'server-only';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { and, eq, isNull, or, sql } from 'drizzle-orm';
+import { findTemplate, productSlug, templateI18n, type MenuTemplate } from '@/features/menu-editor';
 import type { SessionClaims } from '@/lib/auth/claims';
 import { rawDb } from '@/lib/db/client';
 import type { DbTransaction } from '@/lib/db/rls';
 import {
+  categories,
   memberships,
   organizations,
   plans,
@@ -22,32 +24,76 @@ import { storeProcessedImage, type StorageConfig } from './media/storage';
 import { requirePlatform } from './platform';
 
 /**
- * Sales demo venue "Café El Bahja" in hosted environments (marketing home, ADR-0031 §4).
- * A Super Admin installs it once from the console; the menu comes from the same SQL file as the
- * local seed and the photos go through the real media pipeline, so the demo matches local.
- * Fixed ids: the shared menu file references them.
+ * Sales demo venues (marketing home + /venues directory). The first one — Café El Bahja — has
+ * real photos; the others install their menu from one of the menu-editor templates with no
+ * photos. A Super Admin installs or completes them in one click from /admin. Fixed ids so links
+ * and the menu SQL file for the café match local.
  */
-export const DEMO_VENUE = {
+
+export interface DemoVenueDefinition {
+  organizationId: string;
+  restaurantId: string;
+  slug: string;
+  name: string;
+  type: 'cafe' | 'restaurant' | 'tea_room' | 'pastry' | 'fast_food';
+  brandColor: `#${string}`;
+  tables: number;
+  /** Menu source: the El Bahja SQL seed file (photographed), or a template id. */
+  menu: { kind: 'sql'; file: string } | { kind: 'template'; id: string };
+  /** Optional photos (only Café El Bahja has them today). */
+  photos?: Readonly<Record<string, { product: string } | { cover: true }>>;
+}
+
+const CAFE_EL_BAHJA: DemoVenueDefinition = {
   organizationId: 'a0000000-0000-4000-8000-000000000001',
   restaurantId: 'b0000000-0000-4000-8000-000000000001',
   slug: 'cafe-el-bahja',
   name: 'Café El Bahja',
+  type: 'cafe',
+  brandColor: '#b4532a',
   tables: 12,
-} as const;
-
-/** Shared with the local seed (`pnpm db:seed-media`). Credits: supabase/seed-media/ATTRIBUTION.md. */
-export const DEMO_PHOTOS: Readonly<Record<string, { product: string } | { cover: true }>> = {
-  'citronnade.jpg': { product: 'citronnade' },
-  'crepe-chocolat.jpg': { product: 'crepe-chocolat' },
-  'croissant.jpg': { product: 'croissant' },
-  'fricasse.jpg': { product: 'fricasse' },
-  'makroud.jpg': { product: 'makroudh' },
-  'ojja.jpg': { product: 'ojja' },
-  'cover-cafe-sidi-bou-said.jpg': { cover: true },
+  menu: { kind: 'sql', file: 'supabase/seeds/10_menu_el_bahja.sql' },
+  photos: {
+    'citronnade.jpg': { product: 'citronnade' },
+    'crepe-chocolat.jpg': { product: 'crepe-chocolat' },
+    'croissant.jpg': { product: 'croissant' },
+    'fricasse.jpg': { product: 'fricasse' },
+    'makroud.jpg': { product: 'makroudh' },
+    'ojja.jpg': { product: 'ojja' },
+    'cover-cafe-sidi-bou-said.jpg': { cover: true },
+  },
 };
 
+const PIZZERIA: DemoVenueDefinition = {
+  organizationId: 'a0000000-0000-4000-8000-000000000003',
+  restaurantId: 'b0000000-0000-4000-8000-000000000003',
+  slug: 'pizzeria-mediterranea',
+  name: 'Pizzeria Mediterranea',
+  type: 'restaurant',
+  brandColor: '#1f7a4d',
+  tables: 8,
+  menu: { kind: 'template', id: 'pizzeria' },
+};
+
+const PATISSERIE: DemoVenueDefinition = {
+  organizationId: 'a0000000-0000-4000-8000-000000000004',
+  restaurantId: 'b0000000-0000-4000-8000-000000000004',
+  slug: 'patisserie-la-rose',
+  name: 'Pâtisserie La Rose',
+  type: 'pastry',
+  brandColor: '#c2185b',
+  tables: 6,
+  menu: { kind: 'template', id: 'patisserie' },
+};
+
+/** Ordered list; the landing shows them in this order too. */
+export const DEMO_VENUES: readonly DemoVenueDefinition[] = [CAFE_EL_BAHJA, PIZZERIA, PATISSERIE];
+
+/** Kept for existing callers (DEMO_MENU_SLUG wiring, tests): the primary demo venue. */
+export const DEMO_VENUE = CAFE_EL_BAHJA;
+
 /** Traced into the deployment by `outputFileTracingIncludes` (next.config.ts). */
-export const DEMO_MENU_FILE = 'supabase/seeds/10_menu_el_bahja.sql';
+export const DEMO_MENU_FILE = CAFE_EL_BAHJA.menu.kind === 'sql' ? CAFE_EL_BAHJA.menu.file : '';
 export const DEMO_MEDIA_DIR = 'supabase/seed-media';
 
 /** Open every day so prospects always see a live menu. */
@@ -58,29 +104,43 @@ const DEMO_SCHEDULE = {
 
 export type DemoVenueState = 'missing' | 'partial' | 'ready';
 
-/** `partial`: the venue exists but its photos are not all attached (interrupted install). */
+/** Aggregates across every demo venue: ready when all are installed and their photos are in. */
 export async function demoVenueState(): Promise<DemoVenueState> {
+  const states = await Promise.all(DEMO_VENUES.map((definition) => singleVenueState(definition)));
+  if (states.every((state) => state === 'ready')) return 'ready';
+  if (states.every((state) => state === 'missing')) return 'missing';
+  return 'partial';
+}
+
+async function singleVenueState(definition: DemoVenueDefinition): Promise<DemoVenueState> {
   const [row] = await rawDb()
     .select({
       cover: restaurants.coverMediaId,
-      missingPhotos: sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${DEMO_VENUE.restaurantId} and p.slug in (${sql.join(
-        photoProductSlugs().map((slug) => sql`${slug}`),
-        sql`, `,
-      )}) and p.media_id is null)`,
+      productsCount: sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${definition.restaurantId} and p.deleted_at is null)`,
+      missingPhotos: definition.photos
+        ? sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${definition.restaurantId} and p.slug in (${sql.join(
+            photoProductSlugs(definition).map((slug) => sql`${slug}`),
+            sql`, `,
+          )}) and p.media_id is null)`
+        : sql<number>`0::int`,
     })
     .from(restaurants)
-    .where(and(eq(restaurants.id, DEMO_VENUE.restaurantId), isNull(restaurants.deletedAt)));
-  if (!row) return 'missing';
-  return row.cover && row.missingPhotos === 0 ? 'ready' : 'partial';
+    .where(and(eq(restaurants.id, definition.restaurantId), isNull(restaurants.deletedAt)));
+  if (!row || row.productsCount === 0) return 'missing';
+  if (definition.photos) {
+    return row.cover && row.missingPhotos === 0 ? 'ready' : 'partial';
+  }
+  return 'ready';
 }
 
-function photoProductSlugs(): string[] {
-  return Object.values(DEMO_PHOTOS).flatMap((target) =>
+function photoProductSlugs(definition: DemoVenueDefinition): string[] {
+  if (!definition.photos) return [];
+  return Object.values(definition.photos).flatMap((target) =>
     'product' in target ? [target.product] : [],
   );
 }
 
-/** SQL statements of the shared demo menu file (one `insert` each, no parameters). */
+/** SQL statements of the shared El Bahja menu file (one `insert` each, no parameters). */
 export function splitStatements(script: string): string[] {
   return script
     .split(/;\s*$/m)
@@ -94,106 +154,182 @@ export function splitStatements(script: string): string[] {
     .filter((statement) => statement.length > 0);
 }
 
-/**
- * Creates the demo venue with the caller as owner (Basic plan, 12 tables), then attaches the
- * photos. Re-running it completes an interrupted install and never duplicates anything.
- */
+/** Installs or completes every demo venue. Idempotent: never duplicates and never crashes. */
 export async function installDemoVenue(
   claims: SessionClaims | null,
   storage: StorageConfig = storageConfig(),
-): Promise<{ created: boolean }> {
+): Promise<{ created: number }> {
   const admin = requirePlatform(claims, true);
-  const menu = splitStatements(await readFile(path.join(process.cwd(), DEMO_MENU_FILE), 'utf8'));
-  const created = await rawDb().transaction((tx) => insertDemoVenue(tx, admin.sub, menu));
-  await attachDemoPhotos(storage);
-  return { created };
+  let createdCount = 0;
+  for (const definition of DEMO_VENUES) {
+    const menu = await loadMenuStatements(definition);
+    const created = await rawDb().transaction((tx) =>
+      insertDemoVenue(tx, admin.sub, menu, definition),
+    );
+    if (created) createdCount += 1;
+    if (definition.photos) await attachDemoPhotos(storage, definition);
+  }
+  return { created: createdCount };
 }
 
-/** Database part of the install, in the caller's transaction. Returns false when present. */
+async function loadMenuStatements(definition: DemoVenueDefinition): Promise<readonly string[]> {
+  if (definition.menu.kind === 'sql') {
+    return splitStatements(await readFile(path.join(process.cwd(), definition.menu.file), 'utf8'));
+  }
+  return [];
+}
+
+/**
+ * Database part of the install, in the caller's transaction. Returns false when present.
+ * For SQL-sourced menus (El Bahja) the pre-split statements are executed verbatim; for template
+ * menus we insert categories and products from the template definition.
+ */
 export async function insertDemoVenue(
   tx: DbTransaction,
   ownerId: string,
-  menu: readonly string[],
+  sqlStatements: readonly string[],
+  definition: DemoVenueDefinition = CAFE_EL_BAHJA,
 ): Promise<boolean> {
-  await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended('demo-venue', 0))`);
+  await tx.execute(
+    sql`select pg_advisory_xact_lock(hashtextextended(${`demo-venue:${definition.slug}`}, 0))`,
+  );
   const [existing] = await tx
     .select({ id: restaurants.id })
     .from(restaurants)
-    .where(or(eq(restaurants.id, DEMO_VENUE.restaurantId), eq(restaurants.slug, DEMO_VENUE.slug)));
+    .where(or(eq(restaurants.id, definition.restaurantId), eq(restaurants.slug, definition.slug)));
   if (existing) {
-    if (existing.id === DEMO_VENUE.restaurantId) return false;
+    if (existing.id === definition.restaurantId) return false;
     throw new AppError('VALIDATION_FAILED', 'Demo slug already used', { reason: 'slug_taken' });
   }
 
   const [plan] = await tx.select({ id: plans.id }).from(plans).where(eq(plans.code, 'basic'));
   if (!plan) throw new Error('Plan "basic" is missing');
 
-  await tx
-    .insert(organizations)
-    .values({ id: DEMO_VENUE.organizationId, name: `${DEMO_VENUE.name} (démo)` });
+  const [existingOrg] = await tx
+    .select({ id: organizations.id })
+    .from(organizations)
+    .where(eq(organizations.id, definition.organizationId));
+  if (!existingOrg) {
+    await tx
+      .insert(organizations)
+      .values({ id: definition.organizationId, name: `${definition.name} (démo)` });
+  }
   await tx.insert(restaurants).values({
-    id: DEMO_VENUE.restaurantId,
-    organizationId: DEMO_VENUE.organizationId,
-    slug: DEMO_VENUE.slug,
-    name: DEMO_VENUE.name,
-    type: 'cafe',
+    id: definition.restaurantId,
+    organizationId: definition.organizationId,
+    slug: definition.slug,
+    name: definition.name,
+    type: definition.type,
     defaultLocale: 'fr',
-    theme: { brand_color: '#b4532a' },
+    theme: { brand_color: definition.brandColor },
     openingSchedule: DEMO_SCHEDULE,
   });
   await tx
     .insert(memberships)
-    .values({ restaurantId: DEMO_VENUE.restaurantId, userId: ownerId, role: 'owner' });
+    .values({ restaurantId: definition.restaurantId, userId: ownerId, role: 'owner' });
   await tx
     .insert(subscriptions)
-    .values({ restaurantId: DEMO_VENUE.restaurantId, planId: plan.id, status: 'active' });
-  for (const statement of menu) await tx.execute(sql.raw(statement));
+    .values({ restaurantId: definition.restaurantId, planId: plan.id, status: 'active' });
+
+  if (definition.menu.kind === 'sql') {
+    for (const statement of sqlStatements) await tx.execute(sql.raw(statement));
+  } else {
+    const template = findTemplate(definition.menu.id);
+    if (!template) throw new Error(`Template "${definition.menu.id}" missing`);
+    await insertTemplate(tx, definition.restaurantId, template);
+  }
+
   // Tokens come from the insert trigger, like any venue's tables.
   await tx.insert(tables).values(
-    Array.from({ length: DEMO_VENUE.tables }, (_, index) => ({
-      restaurantId: DEMO_VENUE.restaurantId,
+    Array.from({ length: definition.tables }, (_, index) => ({
+      restaurantId: definition.restaurantId,
       number: index + 1,
     })),
   );
+
   await writeAudit(
     {
-      restaurantId: DEMO_VENUE.restaurantId,
+      restaurantId: definition.restaurantId,
       actorId: ownerId,
       action: 'platform.demo_install',
       entity: 'restaurant',
-      entityId: DEMO_VENUE.restaurantId,
-      diff: { slug: DEMO_VENUE.slug, plan: 'basic' },
+      entityId: definition.restaurantId,
+      diff: { slug: definition.slug, plan: 'basic', source: definition.menu.kind },
     },
     tx,
   );
   return true;
 }
 
-/** Attaches each photo that is still missing (idempotent: same content, same media row). */
-async function attachDemoPhotos(storage: StorageConfig): Promise<void> {
+const ORDER_STEP = 10;
+
+/** Inserts a menu template's categories and products into the given demo venue. */
+async function insertTemplate(
+  tx: DbTransaction,
+  restaurantId: string,
+  template: MenuTemplate,
+): Promise<void> {
+  const taken = new Set<string>();
+  let categoryOrder = 0;
+  for (const category of template.categories) {
+    categoryOrder += ORDER_STEP;
+    const [row] = await tx
+      .insert(categories)
+      .values({
+        restaurantId,
+        name: templateI18n(category.name),
+        sortOrder: categoryOrder,
+      })
+      .returning({ id: categories.id });
+    if (!row) continue;
+    let productOrder = 0;
+    for (const product of category.products) {
+      const name = templateI18n(product.name);
+      const slug = productSlug(name, taken);
+      taken.add(slug);
+      productOrder += ORDER_STEP;
+      await tx.insert(products).values({
+        restaurantId,
+        categoryId: row.id,
+        slug,
+        name,
+        description: product.description ? templateI18n(product.description) : {},
+        price: product.price,
+        sortOrder: productOrder,
+      });
+    }
+  }
+}
+
+/** Attaches each photo of a definition that is still missing. Idempotent (content hash). */
+async function attachDemoPhotos(
+  storage: StorageConfig,
+  definition: DemoVenueDefinition,
+): Promise<void> {
+  if (!definition.photos) return;
   const db = rawDb();
   const [venue] = await db
     .select({ cover: restaurants.coverMediaId })
     .from(restaurants)
-    .where(eq(restaurants.id, DEMO_VENUE.restaurantId));
+    .where(eq(restaurants.id, definition.restaurantId));
   if (!venue) return;
   const missing = new Set(
     (
       await db
         .select({ slug: products.slug })
         .from(products)
-        .where(and(eq(products.restaurantId, DEMO_VENUE.restaurantId), isNull(products.mediaId)))
+        .where(and(eq(products.restaurantId, definition.restaurantId), isNull(products.mediaId)))
     ).map((row) => row.slug),
   );
 
-  for (const [file, target] of Object.entries(DEMO_PHOTOS)) {
+  for (const [file, target] of Object.entries(definition.photos)) {
     const needed = 'cover' in target ? venue.cover === null : missing.has(target.product);
     if (!needed) continue;
     const kind = 'cover' in target ? 'cover' : 'product';
     const source = await readFile(path.join(process.cwd(), DEMO_MEDIA_DIR, file));
     const mediaId = await storeProcessedImage(
       storage,
-      DEMO_VENUE.restaurantId,
+      definition.restaurantId,
       kind,
       await processImage(source, kind),
     );
@@ -201,14 +337,14 @@ async function attachDemoPhotos(storage: StorageConfig): Promise<void> {
       await db
         .update(restaurants)
         .set({ coverMediaId: mediaId })
-        .where(eq(restaurants.id, DEMO_VENUE.restaurantId));
+        .where(eq(restaurants.id, definition.restaurantId));
     } else {
       await db
         .update(products)
         .set({ mediaId })
         .where(
           and(
-            eq(products.restaurantId, DEMO_VENUE.restaurantId),
+            eq(products.restaurantId, definition.restaurantId),
             eq(products.slug, target.product),
           ),
         );

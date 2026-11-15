@@ -410,5 +410,11 @@
       "title": "Aucun établissement encore",
       "description": "Les établissements inscrits sur Taply apparaîtront ici dès qu’ils auront publié leur menu."
     }
+  },
+  "demos": {
+    "eyebrow": "Démos en direct",
+    "title": "Scannez. Testez. Adoptez.",
+    "intro": "Chaque fiche ouvre le menu digital d'un établissement démo, prêt à être parcouru comme depuis la table.",
+    "try": "Essayer la démo"
   }
 }

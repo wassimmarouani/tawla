@@ -410,5 +410,11 @@
       "title": "No venues yet",
       "description": "Venues on Taply will appear here as soon as they publish their menu."
     }
+  },
+  "demos": {
+    "eyebrow": "Live demos",
+    "title": "Scan. Try. Adopt.",
+    "intro": "Each card opens a demo venue’s real digital menu, ready to browse as if you were at the table.",
+    "try": "Try the demo"
   }
 }

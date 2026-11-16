@@ -61,8 +61,9 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
     surface: decision.surface,
     isProduction: env.NODE_ENV === 'production',
     isHttps: env.NEXT_PUBLIC_APP_URL.startsWith('https://'),
-    // Menu images are served by Supabase Storage (ADR-0018).
-    imageSources: [SUPABASE_ORIGIN],
+    // Menu images are served by Supabase Storage (ADR-0018); demo covers are hotlinked from
+    // Unsplash's CDN on the marketing landing and the demo menu header.
+    imageSources: [SUPABASE_ORIGIN, 'https://images.unsplash.com'],
     // The back-office uploads photo originals to signed Storage URLs (ADR-0018); staff and
     // customers receive Realtime broadcasts (ADR-0008).
     connectSources: decision.surface === 'marketing' ? [] : [SUPABASE_ORIGIN, REALTIME_ORIGIN],

@@ -8,7 +8,8 @@ import { getSessionClaims } from '@/lib/auth/session';
 import { AppError, actionError, actionOk, validationError, type ActionResult } from '@/lib/errors';
 import { log } from '@/lib/log';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
-import { DEMO_VENUE, installDemoVenue } from '@/server/admin/demo-venue';
+import { DEMO_VENUES, installDemoVenue } from '@/server/admin/demo-venue';
+import { DEMOS_CACHE_TAG } from '@/server/admin/public-demos';
 import { assignPlan as writePlan, removeOverride, setOverride } from '@/server/admin/platform';
 import {
   overrideInputSchema,
@@ -72,13 +73,16 @@ export async function deleteOverride(input: {
   );
 }
 
-/** Installs (or completes) the sales demo venue, owned by the calling Super Admin. */
+/** Installs (or completes) every sales demo venue, owned by the calling Super Admin. */
 export async function installDemo(): Promise<ActionResult> {
   const claims = await getSessionClaims();
   return platformWrite('platform.demo_install', async () => {
     await installDemoVenue(claims);
-    // A visit before the install cached the slug as unknown.
-    for (const tag of menuCacheTags(DEMO_VENUE.slug)) updateTag(tag);
+    // Public menu cache per demo + the landing's demos list (read via cacheTag('demos')).
+    updateTag(DEMOS_CACHE_TAG);
+    for (const definition of DEMO_VENUES) {
+      for (const tag of menuCacheTags(definition.slug)) updateTag(tag);
+    }
   });
 }
 

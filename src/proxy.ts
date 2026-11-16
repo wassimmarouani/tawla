@@ -64,6 +64,9 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
     // Menu images are served by Supabase Storage (ADR-0018); demo covers are hotlinked from
     // Unsplash's CDN on the marketing landing and the demo menu header.
     imageSources: [SUPABASE_ORIGIN, 'https://images.unsplash.com'],
+    // Google Fonts (CSS + static files) for the public menu variants (spec 02 amended).
+    styleSources: ['https://fonts.googleapis.com'],
+    fontSources: ['https://fonts.gstatic.com'],
     // The back-office uploads photo originals to signed Storage URLs (ADR-0018); staff and
     // customers receive Realtime broadcasts (ADR-0008).
     connectSources: decision.surface === 'marketing' ? [] : [SUPABASE_ORIGIN, REALTIME_ORIGIN],

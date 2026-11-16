@@ -17,6 +17,7 @@ import { MenuFilters } from './menu-filters';
 import { MenuSearch, type SearchItem } from './menu-search';
 import { MenuSection, sectionLayout } from './menu-section';
 import { PoweredByBadge } from './powered-by-badge';
+import { VariantFonts } from './variant-fonts';
 import { formatMoney } from '@/lib/money';
 import { displayPrice } from '../services/pricing';
 
@@ -38,7 +39,9 @@ export async function PublicMenuView({
 }) {
   const t = await getTranslations('client');
   const scope = menu.restaurant.public_id;
-  const colorMode = restaurantThemeSchema.parse(menu.restaurant.theme).color_mode ?? 'auto';
+  const parsedTheme = restaurantThemeSchema.parse(menu.restaurant.theme);
+  const colorMode = parsedTheme.color_mode ?? 'auto';
+  const variant = parsedTheme.variant ?? 'default';
   // Photos above the fold only in the first photo section.
   const firstPhotoSection = menu.categories.findIndex(
     (category) => sectionLayout(category) === 'cards',
@@ -48,12 +51,14 @@ export async function PublicMenuView({
     <div
       data-tenant={scope}
       data-theme={colorMode === 'auto' ? undefined : colorMode}
+      data-variant={variant === 'default' ? undefined : variant}
       className={classes(
         'min-h-dvh bg-background text-foreground',
         serviceBar ? 'pb-40' : 'pb-safe',
       )}
     >
       <BrandStyle theme={menu.restaurant.theme} scope={scope} />
+      <VariantFonts variant={variant} />
       <AvailabilityLive
         slug={menu.restaurant.slug}
         menuPublicId={scope}

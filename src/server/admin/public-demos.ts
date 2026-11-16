@@ -3,7 +3,7 @@ import { cacheLife, cacheTag } from 'next/cache';
 import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { rawDb } from '@/lib/db/client';
 import { restaurants } from '@/lib/db/schema/schema';
-import { DEMO_VENUES } from '@/server/admin/demo-venue';
+import { DEMO_VENUES, type DemoVenueDefinition } from '@/server/admin/demo-venue';
 
 export const DEMOS_CACHE_TAG = 'demos';
 
@@ -12,9 +12,13 @@ export interface LandingDemo {
   slug: string;
   name: string;
   type: 'cafe' | 'restaurant' | 'tea_room' | 'pastry' | 'fast_food';
+  segment: DemoVenueDefinition['segment'];
   brandColor: string;
   productCount: number;
   categoryCount: number;
+  taglineFr: string;
+  taglineAr: string;
+  taglineEn: string;
 }
 
 /** Demo venues that are installed and have a menu — safe to render on the public landing. */
@@ -56,9 +60,13 @@ export async function landingDemos(): Promise<readonly LandingDemo[]> {
         slug: row.slug,
         name: row.name,
         type: row.type,
+        segment: definition.segment,
         brandColor: theme?.brand_color ?? definition.brandColor,
         productCount: row.productCount,
         categoryCount: row.categoryCount,
+        taglineFr: definition.taglineFr,
+        taglineAr: definition.taglineAr,
+        taglineEn: definition.taglineEn,
       },
     ];
   });

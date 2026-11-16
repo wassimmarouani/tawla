@@ -413,8 +413,20 @@
   },
   "demos": {
     "eyebrow": "Live demos",
-    "title": "Scan. Try. Adopt.",
-    "intro": "Each card opens a demo venue’s real digital menu, ready to browse as if you were at the table.",
-    "try": "Try the demo"
+    "title": "Scan, test, adopt",
+    "intro": "Each card opens a real demo venue’s digital menu. Pick the one closest to your business, try it like a customer, then ask us for your own on WhatsApp — we personalise it to your brand.",
+    "counts": "{categories} categories · {products} items",
+    "tryLive": "See the live menu",
+    "like": "I love this template",
+    "whatsappMessage": "Hi, I’m interested in the \"{name}\" template. Could you personalise it for me?",
+    "filters": {
+      "all": "All",
+      "cafe": "Café",
+      "italian": "Italian",
+      "pastry": "Pastry",
+      "bar": "Bar / Cocktails",
+      "street": "Street food",
+      "glacier": "Ice cream"
+    }
   }
 }

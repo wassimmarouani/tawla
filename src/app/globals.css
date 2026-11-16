@@ -119,6 +119,11 @@
   aspect-ratio: 9 / 19;
 }
 
+/* Dashboard side preview: fills what's left of the viewport under the sticky header. */
+@utility h-sidebar {
+  block-size: calc(100dvh - 7rem);
+}
+
 html:has(dialog[open]) {
   overflow: hidden;
 }

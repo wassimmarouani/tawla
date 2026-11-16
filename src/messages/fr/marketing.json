@@ -413,8 +413,20 @@
   },
   "demos": {
     "eyebrow": "Démos en direct",
-    "title": "Scannez. Testez. Adoptez.",
-    "intro": "Chaque fiche ouvre le menu digital d'un établissement démo, prêt à être parcouru comme depuis la table.",
-    "try": "Essayer la démo"
+    "title": "Scannez, testez, adoptez",
+    "intro": "Chaque fiche ouvre le menu digital d'un établissement démo. Choisissez celui qui ressemble le plus au vôtre, testez-le comme un client, puis demandez-nous votre version sur WhatsApp — on la personnalise à votre image.",
+    "counts": "{categories} catégories · {products} articles",
+    "tryLive": "Voir le menu live",
+    "like": "J’aime ce template",
+    "whatsappMessage": "Bonjour, je suis intéressé(e) par le template « {name} ». Pouvez-vous me le personnaliser ?",
+    "filters": {
+      "all": "Tout",
+      "cafe": "Café",
+      "italian": "Italien",
+      "pastry": "Pâtisserie",
+      "bar": "Bar / Cocktails",
+      "street": "Street food",
+      "glacier": "Glacier"
+    }
   }
 }

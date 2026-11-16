@@ -55,6 +55,7 @@ export async function DemosSection({ locale }: { locale: Locale }) {
           productCount: demo.productCount,
           categoryCount: demo.categoryCount,
           tagline: tagline(demo, locale),
+          coverImageUrl: demo.coverImageUrl,
         }))}
         segments={segments}
         labels={{

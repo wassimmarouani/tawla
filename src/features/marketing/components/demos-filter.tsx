@@ -24,6 +24,7 @@ export interface FilterableDemo {
   productCount: number;
   categoryCount: number;
   tagline: string;
+  coverImageUrl: string | null;
 }
 
 interface DemosFilterLabels {
@@ -111,15 +112,27 @@ export function DemosFilter({
               <article className="group flex h-full flex-col overflow-clip rounded-lg border border-border bg-card shadow-sm transition hover:-translate-y-1 hover:border-brand hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0">
                 <div
                   aria-hidden="true"
-                  className="relative h-36 overflow-clip border-b border-border"
+                  className="relative h-40 overflow-clip border-b border-border"
                   style={{ backgroundColor: demo.brandColor }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-background/15 via-transparent to-background/40" />
-                  <Icon
-                    aria-hidden="true"
-                    className="absolute -end-4 -bottom-4 size-40 text-background/20"
-                  />
-                  <span className="absolute start-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-foreground">
+                  {demo.coverImageUrl ? (
+                    // Hotlinked Unsplash cover; brand color under it as the loading fallback.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={demo.coverImageUrl}
+                      alt=""
+                      loading="lazy"
+                      className="absolute inset-0 size-full object-cover"
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-transparent to-foreground/60" />
+                  {demo.coverImageUrl ? null : (
+                    <Icon
+                      aria-hidden="true"
+                      className="absolute -end-4 -bottom-4 size-40 text-background/20"
+                    />
+                  )}
+                  <span className="absolute start-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-foreground backdrop-blur-sm">
                     <Icon aria-hidden="true" className="size-3.5" />
                     {segmentLabel(demo.segment)}
                   </span>

@@ -19,6 +19,7 @@ export interface LandingDemo {
   taglineFr: string;
   taglineAr: string;
   taglineEn: string;
+  coverImageUrl: string | null;
 }
 
 /** Demo venues that are installed and have a menu — safe to render on the public landing. */
@@ -67,6 +68,7 @@ export async function landingDemos(): Promise<readonly LandingDemo[]> {
         taglineFr: definition.taglineFr,
         taglineAr: definition.taglineAr,
         taglineEn: definition.taglineEn,
+        coverImageUrl: definition.coverImageUrl ?? null,
       },
     ];
   });

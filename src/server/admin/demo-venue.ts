@@ -49,6 +49,12 @@ export interface DemoVenueDefinition {
   menu: { kind: 'sql'; file: string } | { kind: 'template'; id: string };
   /** Optional photos (only Café El Bahja has them today). */
   photos?: Readonly<Record<string, { product: string } | { cover: true }>>;
+  /**
+   * Hotlinkable cover image used by the landing demo card (and the public menu header through
+   * `settings.cover_url`). Unsplash CDN URLs: licensed for free hotlinking (unsplash.com/license),
+   * served from a global CDN with `&auto=format&q=80` to keep bytes low.
+   */
+  coverImageUrl?: string;
 }
 
 const CAFE_EL_BAHJA: DemoVenueDefinition = {
@@ -88,6 +94,8 @@ const CAFE_MARINA: DemoVenueDefinition = {
   brandColor: '#0f766e',
   tables: 10,
   menu: { kind: 'template', id: 'cafe-modern' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&auto=format&fit=crop&q=80',
 };
 
 const PIZZERIA_MEDITERRANEA: DemoVenueDefinition = {
@@ -103,6 +111,8 @@ const PIZZERIA_MEDITERRANEA: DemoVenueDefinition = {
   brandColor: '#1f7a4d',
   tables: 8,
   menu: { kind: 'template', id: 'pizzeria' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&auto=format&fit=crop&q=80',
 };
 
 const TRATTORIA_VESUVIO: DemoVenueDefinition = {
@@ -118,6 +128,8 @@ const TRATTORIA_VESUVIO: DemoVenueDefinition = {
   brandColor: '#7c2d12',
   tables: 14,
   menu: { kind: 'template', id: 'trattoria' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?w=1200&auto=format&fit=crop&q=80',
 };
 
 const PATISSERIE_LA_ROSE: DemoVenueDefinition = {
@@ -133,6 +145,8 @@ const PATISSERIE_LA_ROSE: DemoVenueDefinition = {
   brandColor: '#c2185b',
   tables: 6,
   menu: { kind: 'template', id: 'patisserie' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=1200&auto=format&fit=crop&q=80',
 };
 
 const PATISSERIE_NORDIQUE: DemoVenueDefinition = {
@@ -148,6 +162,8 @@ const PATISSERIE_NORDIQUE: DemoVenueDefinition = {
   brandColor: '#1e40af',
   tables: 5,
   menu: { kind: 'template', id: 'patisserie-modern' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=1200&auto=format&fit=crop&q=80',
 };
 
 const BAR_CITADELLE: DemoVenueDefinition = {
@@ -163,6 +179,8 @@ const BAR_CITADELLE: DemoVenueDefinition = {
   brandColor: '#111827',
   tables: 14,
   menu: { kind: 'template', id: 'bar-cocktail' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=1200&auto=format&fit=crop&q=80',
 };
 
 const ROOFTOP_SIDI_BOU: DemoVenueDefinition = {
@@ -178,6 +196,8 @@ const ROOFTOP_SIDI_BOU: DemoVenueDefinition = {
   brandColor: '#1d4ed8',
   tables: 20,
   menu: { kind: 'template', id: 'bar-cocktail' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&auto=format&fit=crop&q=80',
 };
 
 const TUNIS_GRILL: DemoVenueDefinition = {
@@ -193,6 +213,8 @@ const TUNIS_GRILL: DemoVenueDefinition = {
   brandColor: '#ea580c',
   tables: 10,
   menu: { kind: 'template', id: 'street-food' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=1200&auto=format&fit=crop&q=80',
 };
 
 const GLACIER_SORBETTO: DemoVenueDefinition = {
@@ -208,6 +230,8 @@ const GLACIER_SORBETTO: DemoVenueDefinition = {
   brandColor: '#db2777',
   tables: 8,
   menu: { kind: 'template', id: 'glacier' },
+  coverImageUrl:
+    'https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=1200&auto=format&fit=crop&q=80',
 };
 
 /** Ordered list; the landing shows them in this order too. */

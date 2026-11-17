@@ -13,6 +13,10 @@ export interface SecurityHeaderOptions {
   scriptSources?: readonly string[];
   /** Origins allowed in frames (Turnstile's challenge iframe). */
   frameSources?: readonly string[];
+  /** Extra origins stylesheets may load from (Google Fonts for demo menu variants). */
+  styleSources?: readonly string[];
+  /** Extra origins font files may load from (Google Fonts CDN). */
+  fontSources?: readonly string[];
 }
 
 /**
@@ -37,9 +41,9 @@ export function buildSecurityHeaders(options: SecurityHeaderOptions): Record<str
   const directives: Record<string, string[]> = {
     'default-src': ["'self'"],
     'script-src': scripts,
-    'style-src': ["'self'", "'unsafe-inline'"],
+    'style-src': ["'self'", "'unsafe-inline'", ...(options.styleSources ?? [])],
     'img-src': ["'self'", 'data:', 'blob:', ...(options.imageSources ?? [])],
-    'font-src': ["'self'"],
+    'font-src': ["'self'", ...(options.fontSources ?? [])],
     'connect-src': connect,
     'frame-src': ["'self'", ...(options.frameSources ?? [])],
     'manifest-src': ["'self'"],

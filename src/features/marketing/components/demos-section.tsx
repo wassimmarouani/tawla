@@ -67,8 +67,10 @@ export async function DemosSection({ locale }: { locale: Locale }) {
           street: t('filters.street'),
           glacier: t('filters.glacier'),
           counts: t('counts'),
+          preview: t('preview'),
           tryLive: t('tryLive'),
           like: t('like'),
+          close: t('close'),
           whatsappHref: whatsapp ?? '',
           whatsappMessage: t('whatsappMessage'),
         }}

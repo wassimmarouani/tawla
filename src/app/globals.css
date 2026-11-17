@@ -499,3 +499,143 @@ html:has(dialog[open]) {
     animation: none;
   }
 }
+
+/**
+ * Menu variants (spec 02 amended): each variant customises the public menu's typography,
+ * radius scale and accent surfaces without touching components. Applied as `data-variant`
+ * on the PublicMenuView root. The default variant keeps Inter/Geist and the global tokens.
+ */
+
+[data-variant='traditional'] {
+  --font-title: 'Fraunces', serif;
+  --font-heading: 'Fraunces', serif;
+  --font-body: 'Lora', serif;
+  --tracking-title: -0.01em;
+  --radius: 1rem;
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  font-family: var(--font-body), var(--font-sans);
+}
+
+[data-variant='modern-minimal'] {
+  --font-title: var(--font-sans);
+  --font-heading: var(--font-sans);
+  --tracking-title: -0.045em;
+  --radius: 0.75rem;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --shadow-sm: 0 0 0 1px rgb(var(--shadow-color) / 0.04);
+  --shadow-md: 0 1px 1px rgb(var(--shadow-color) / 0.04), 0 0 0 1px rgb(var(--shadow-color) / 0.04);
+}
+
+[data-variant='bistro'] {
+  --font-title: 'Playfair Display', serif;
+  --font-heading: 'Playfair Display', serif;
+  --tracking-title: 0em;
+  --radius: 0.5rem;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
+}
+
+[data-variant='elegant-dark'] {
+  --font-title: 'Cormorant Garamond', serif;
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Lora', serif;
+  --tracking-title: 0.01em;
+  --tracking-heading: 0.02em;
+  --radius: 0.25rem;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  font-family: var(--font-body), var(--font-sans);
+}
+
+[data-variant='romantic-pastel'] {
+  --font-title: 'Dancing Script', cursive;
+  --font-heading: 'Dancing Script', cursive;
+  --font-body: 'Cormorant Garamond', serif;
+  --tracking-title: 0em;
+  --font-weight-title: 700;
+  --radius: 1.5rem;
+  --radius-xs: 0.75rem;
+  --radius-sm: 1rem;
+  --radius-md: 1.5rem;
+  --radius-lg: 2rem;
+  --radius-xl: 2.5rem;
+  font-family: var(--font-body), var(--font-sans);
+}
+
+[data-variant='scandinavian'] {
+  --font-title: 'Space Grotesk', sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
+  --tracking-title: -0.03em;
+  --radius: 0.125rem;
+  --radius-xs: 0;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.375rem;
+}
+
+[data-variant='dark-luxe'] {
+  --font-title: 'Playfair Display', serif;
+  --font-heading: 'Playfair Display', serif;
+  --tracking-title: 0.015em;
+  --tracking-heading: 0.04em;
+  --font-weight-title: 900;
+  --radius: 0.125rem;
+  --radius-xs: 0;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+[data-variant='mediterranean-airy'] {
+  --font-title: 'Libre Caslon Text', serif;
+  --font-heading: 'Libre Caslon Text', serif;
+  --tracking-title: 0.005em;
+  --radius: 1.5rem;
+  --radius-xs: 0.5rem;
+  --radius-sm: 1rem;
+  --radius-md: 1.5rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+}
+
+[data-variant='street-bold'] {
+  --font-title: 'Archivo Black', sans-serif;
+  --font-heading: 'Archivo Black', sans-serif;
+  --tracking-title: -0.02em;
+  --font-weight-title: 900;
+  --radius: 0.25rem;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.625rem;
+}
+
+[data-variant='playful-pastel'] {
+  --font-title: 'Fredoka', sans-serif;
+  --font-heading: 'Fredoka', sans-serif;
+  --tracking-title: -0.015em;
+  --font-weight-title: 600;
+  --radius: 1.75rem;
+  --radius-xs: 1rem;
+  --radius-sm: 1.25rem;
+  --radius-md: 1.75rem;
+  --radius-lg: 2.25rem;
+  --radius-xl: 3rem;
+}

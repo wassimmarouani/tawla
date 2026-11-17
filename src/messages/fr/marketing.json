@@ -427,6 +427,8 @@
       "bar": "Bar / Cocktails",
       "street": "Street food",
       "glacier": "Glacier"
-    }
+    },
+    "preview": "Prévisualiser",
+    "close": "Fermer"
   }
 }

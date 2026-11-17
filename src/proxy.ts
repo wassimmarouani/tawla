@@ -65,11 +65,17 @@ export default async function proxy(request: NextRequest): Promise<NextResponse>
     // Unsplash's CDN on the marketing landing and the demo menu header.
     imageSources: [SUPABASE_ORIGIN, 'https://images.unsplash.com'],
     // Google Fonts (CSS + static files) for the public menu variants (spec 02 amended).
+    // `connect-src` is needed too: Chromium fetches the stylesheet with a Fetch request that
+    // the browser checks against connect-src, not just style-src (CSP 3 spec, issue #336).
     styleSources: ['https://fonts.googleapis.com'],
     fontSources: ['https://fonts.gstatic.com'],
     // The back-office uploads photo originals to signed Storage URLs (ADR-0018); staff and
-    // customers receive Realtime broadcasts (ADR-0008).
-    connectSources: decision.surface === 'marketing' ? [] : [SUPABASE_ORIGIN, REALTIME_ORIGIN],
+    // customers receive Realtime broadcasts (ADR-0008). Google Fonts hostnames are on both
+    // customer and marketing surfaces for the variant stylesheets.
+    connectSources:
+      decision.surface === 'marketing'
+        ? ['https://fonts.googleapis.com']
+        : [SUPABASE_ORIGIN, REALTIME_ORIGIN, 'https://fonts.googleapis.com'],
     ...(decision.surface === 'customer'
       ? { scriptSources: [TURNSTILE_ORIGIN], frameSources: [TURNSTILE_ORIGIN] }
       : {}),

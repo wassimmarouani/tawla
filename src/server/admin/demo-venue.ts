@@ -1,7 +1,7 @@
 import 'server-only';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { and, eq, isNull, or, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNull, or, sql } from 'drizzle-orm';
 import { findTemplate, templateI18n, type MenuTemplate } from '@/lib/menu/templates';
 import { variantPrefersDark, type MenuVariant } from '@/lib/menu/variants';
 import { slugify } from '@/lib/text/slugify';
@@ -276,40 +276,36 @@ const DEMO_SCHEDULE = {
 
 export type DemoVenueState = 'missing' | 'partial' | 'ready';
 
-/** Aggregates across every demo venue: ready when all are installed and their photos are in. */
+/**
+ * Aggregates the install state across every demo venue in a single query. The /admin page used
+ * to run one round-trip per demo (× 10) which stacked up cold-start latency on hosted Supabase.
+ */
 export async function demoVenueState(): Promise<DemoVenueState> {
-  const states = await Promise.all(DEMO_VENUES.map((definition) => singleVenueState(definition)));
-  if (states.every((state) => state === 'ready')) return 'ready';
-  if (states.every((state) => state === 'missing')) return 'missing';
-  return 'partial';
-}
-
-async function singleVenueState(definition: DemoVenueDefinition): Promise<DemoVenueState> {
-  const [row] = await rawDb()
+  const ids = DEMO_VENUES.map((definition) => definition.restaurantId);
+  const rows = await rawDb()
     .select({
+      id: restaurants.id,
       cover: restaurants.coverMediaId,
-      productsCount: sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${definition.restaurantId} and p.deleted_at is null)`,
-      missingPhotos: definition.photos
-        ? sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${definition.restaurantId} and p.slug in (${sql.join(
-            photoProductSlugs(definition).map((slug) => sql`${slug}`),
-            sql`, `,
-          )}) and p.media_id is null)`
-        : sql<number>`0::int`,
+      productsCount: sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${restaurants.id} and p.deleted_at is null)`,
     })
     .from(restaurants)
-    .where(and(eq(restaurants.id, definition.restaurantId), isNull(restaurants.deletedAt)));
-  if (!row || row.productsCount === 0) return 'missing';
-  if (definition.photos) {
-    return row.cover && row.missingPhotos === 0 ? 'ready' : 'partial';
-  }
-  return 'ready';
-}
+    .where(and(inArray(restaurants.id, ids), isNull(restaurants.deletedAt)));
 
-function photoProductSlugs(definition: DemoVenueDefinition): string[] {
-  if (!definition.photos) return [];
-  return Object.values(definition.photos).flatMap((target) =>
-    'product' in target ? [target.product] : [],
-  );
+  const byId = new Map(rows.map((row) => [row.id, row]));
+  let ready = 0;
+  let missing = 0;
+  for (const definition of DEMO_VENUES) {
+    const row = byId.get(definition.restaurantId);
+    if (!row || row.productsCount === 0) {
+      missing += 1;
+      continue;
+    }
+    if (definition.photos && !row.cover) continue;
+    ready += 1;
+  }
+  if (ready === DEMO_VENUES.length) return 'ready';
+  if (missing === DEMO_VENUES.length) return 'missing';
+  return 'partial';
 }
 
 /** SQL statements of the shared El Bahja menu file (one `insert` each, no parameters). */

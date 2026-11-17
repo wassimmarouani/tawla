@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { and, eq, isNull, or, sql } from 'drizzle-orm';
 import { findTemplate, templateI18n, type MenuTemplate } from '@/lib/menu/templates';
+import { variantPrefersDark, type MenuVariant } from '@/lib/menu/variants';
 import { slugify } from '@/lib/text/slugify';
 import type { SessionClaims } from '@/lib/auth/claims';
 import { rawDb } from '@/lib/db/client';
@@ -44,6 +45,8 @@ export interface DemoVenueDefinition {
   taglineAr: string;
   taglineEn: string;
   brandColor: `#${string}`;
+  /** Public menu visual variant (fonts, radius, accents). See `src/lib/menu/variants.ts`. */
+  variant: MenuVariant;
   tables: number;
   /** Menu source: the El Bahja SQL seed file (photographed), or a template id. */
   menu: { kind: 'sql'; file: string } | { kind: 'template'; id: string };
@@ -68,6 +71,7 @@ const CAFE_EL_BAHJA: DemoVenueDefinition = {
   taglineAr: 'مقهى تونسي تقليدي، شاي بالنعناع وحلويات',
   taglineEn: 'Traditional Tunisian café, mint tea and pastries',
   brandColor: '#b4532a',
+  variant: 'traditional',
   tables: 12,
   menu: { kind: 'sql', file: 'supabase/seeds/10_menu_el_bahja.sql' },
   photos: {
@@ -92,6 +96,7 @@ const CAFE_MARINA: DemoVenueDefinition = {
   taglineAr: 'كوفي شوب عصري: قهوة مختصة، سموذي وبولز',
   taglineEn: 'Modern coffee shop: specialty coffee, smoothies and bowls',
   brandColor: '#0f766e',
+  variant: 'modern-minimal',
   tables: 10,
   menu: { kind: 'template', id: 'cafe-modern' },
   coverImageUrl:
@@ -109,6 +114,7 @@ const PIZZERIA_MEDITERRANEA: DemoVenueDefinition = {
   taglineAr: 'بيتزا بالحطب، معكرونة طازجة وسلطات',
   taglineEn: 'Wood-fired pizzas, fresh pasta and salads',
   brandColor: '#1f7a4d',
+  variant: 'bistro',
   tables: 8,
   menu: { kind: 'template', id: 'pizzeria' },
   coverImageUrl:
@@ -126,6 +132,7 @@ const TRATTORIA_VESUVIO: DemoVenueDefinition = {
   taglineAr: 'تراتوريا إيطالية راقية، قائمة نبيذ',
   taglineEn: 'Upscale Italian trattoria with wine list',
   brandColor: '#7c2d12',
+  variant: 'elegant-dark',
   tables: 14,
   menu: { kind: 'template', id: 'trattoria' },
   coverImageUrl:
@@ -143,6 +150,7 @@ const PATISSERIE_LA_ROSE: DemoVenueDefinition = {
   taglineAr: 'حلويات تونسية، معجنات وصالون شاي',
   taglineEn: 'Tunisian pastry, viennoiseries and tea room',
   brandColor: '#c2185b',
+  variant: 'romantic-pastel',
   tables: 6,
   menu: { kind: 'template', id: 'patisserie' },
   coverImageUrl:
@@ -160,6 +168,7 @@ const PATISSERIE_NORDIQUE: DemoVenueDefinition = {
   taglineAr: 'كيك مميّز، كرواسون بزبدة AOP',
   taglineEn: 'Signature layered cakes, AOP butter croissants',
   brandColor: '#1e40af',
+  variant: 'scandinavian',
   tables: 5,
   menu: { kind: 'template', id: 'patisserie-modern' },
   coverImageUrl:
@@ -177,6 +186,7 @@ const BAR_CITADELLE: DemoVenueDefinition = {
   taglineAr: 'بار كوكتيل مميّز وطاولات للمشاركة',
   taglineEn: 'Signature cocktail bar and sharing boards',
   brandColor: '#111827',
+  variant: 'dark-luxe',
   tables: 14,
   menu: { kind: 'template', id: 'bar-cocktail' },
   coverImageUrl:
@@ -194,6 +204,7 @@ const ROOFTOP_SIDI_BOU: DemoVenueDefinition = {
   taglineAr: 'تراس بانورامي، كوكتيل ومزّة متوسطية',
   taglineEn: 'Panoramic rooftop, cocktails and Mediterranean mezze',
   brandColor: '#1d4ed8',
+  variant: 'mediterranean-airy',
   tables: 20,
   menu: { kind: 'template', id: 'bar-cocktail' },
   coverImageUrl:
@@ -211,6 +222,7 @@ const TUNIS_GRILL: DemoVenueDefinition = {
   taglineAr: 'ستريت فود وغريل: سندويتشات، شياش، بطاطا',
   taglineEn: 'Street food & grill: sandwiches, skewers, fries',
   brandColor: '#ea580c',
+  variant: 'street-bold',
   tables: 10,
   menu: { kind: 'template', id: 'street-food' },
   coverImageUrl:
@@ -228,6 +240,7 @@ const GLACIER_SORBETTO: DemoVenueDefinition = {
   taglineAr: 'مثلجات حرفية، غوفر وسَنداي',
   taglineEn: 'Artisan ice cream, waffles and sundaes',
   brandColor: '#db2777',
+  variant: 'playful-pastel',
   tables: 8,
   menu: { kind: 'template', id: 'glacier' },
   coverImageUrl:
@@ -326,9 +339,25 @@ export async function installDemoVenue(
       insertDemoVenue(tx, admin.sub, menu, definition),
     );
     if (created) createdCount += 1;
+    // Always sync the theme so re-running the install picks up new variant / cover changes.
+    await syncDemoTheme(definition);
     if (definition.photos) await attachDemoPhotos(storage, definition);
   }
   return { created: createdCount };
+}
+
+/** Writes the latest theme (brand color, variant, color mode) for a demo even after creation. */
+async function syncDemoTheme(definition: DemoVenueDefinition): Promise<void> {
+  await rawDb()
+    .update(restaurants)
+    .set({
+      theme: {
+        brand_color: definition.brandColor,
+        variant: definition.variant,
+        color_mode: variantPrefersDark(definition.variant) ? 'dark' : 'auto',
+      },
+    })
+    .where(eq(restaurants.id, definition.restaurantId));
 }
 
 async function loadMenuStatements(definition: DemoVenueDefinition): Promise<readonly string[]> {
@@ -380,7 +409,11 @@ export async function insertDemoVenue(
     name: definition.name,
     type: definition.type,
     defaultLocale: 'fr',
-    theme: { brand_color: definition.brandColor },
+    theme: {
+      brand_color: definition.brandColor,
+      variant: definition.variant,
+      color_mode: variantPrefersDark(definition.variant) ? 'dark' : 'auto',
+    },
     openingSchedule: DEMO_SCHEDULE,
   });
   await tx

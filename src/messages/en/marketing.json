@@ -427,6 +427,8 @@
       "bar": "Bar / Cocktails",
       "street": "Street food",
       "glacier": "Ice cream"
-    }
+    },
+    "preview": "Preview",
+    "close": "Close"
   }
 }

@@ -66,8 +66,8 @@ export async function VariantShowcase({ locale }: { locale: Locale }) {
               href={`/${venue.slug}`}
               prefetch={false}
               className={cn(
-                'group relative flex h-full flex-col gap-4 overflow-clip rounded-lg border border-border bg-card p-4 shadow-sm transition outline-none',
-                'hover:-translate-y-1 hover:border-brand hover:shadow-xl',
+                'group relative flex h-full flex-col gap-5 overflow-clip rounded-xl border border-border bg-card p-5 shadow-md transition duration-300 outline-none',
+                'hover:-translate-y-2 hover:border-brand/60 hover:shadow-2xl',
                 'focus-visible:ring-2 focus-visible:ring-ring',
                 'motion-reduce:transition-none motion-reduce:hover:translate-y-0',
               )}
@@ -116,7 +116,7 @@ function ShowcasePhone({ brandColor, initials }: { brandColor: string; initials:
   return (
     <div
       aria-hidden="true"
-      className="relative mx-auto h-56 w-32 overflow-hidden rounded-xl border-4 border-foreground bg-foreground shadow-xl transition duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+      className="relative mx-auto h-64 w-36 overflow-hidden rounded-xl border-4 border-foreground bg-foreground shadow-2xl transition duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
     >
       <span className="absolute inset-x-0 top-1 z-10 mx-auto h-1 w-10 rounded-full bg-background/80" />
       <div

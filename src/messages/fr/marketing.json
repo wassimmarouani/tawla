@@ -257,24 +257,42 @@
     }
   },
   "stats": {
-    "title": "Le service à table, en chiffres",
+    "eyebrow": "Des résultats concrets",
+    "title": "Un service à table qui vous fait gagner du temps",
+    "description": "Quatre chiffres qui résument ce que nos premiers clients voient dès la première semaine.",
     "items": {
       "setup": {
         "value": "30 min",
-        "label": "pour publier votre menu"
+        "label": "Menu publié",
+        "body": "De la photo de votre carte au QR code posé sur la table."
       },
       "alert": {
         "value": "< 2 s",
-        "label": "pour prévenir le serveur"
+        "label": "Alerte serveur",
+        "body": "Son, vibration et notification sur la tablette et les téléphones."
       },
       "languages": {
         "value": "3",
-        "label": "langues : français, arabe, anglais"
+        "label": "Langues",
+        "body": "Français, arabe (droite à gauche) et anglais, inclus."
       },
       "app": {
         "value": "0",
-        "label": "application à installer"
+        "label": "Application à installer",
+        "body": "Le client scanne, le menu s’ouvre dans le navigateur."
       }
+    }
+  },
+  "socialProof": {
+    "eyebrow": "Fait pour vous",
+    "title": "Pensé pour tous les métiers de l’hospitalité tunisienne",
+    "items": {
+      "cafe": "Cafés",
+      "restaurant": "Restaurants",
+      "pastry": "Pâtisseries",
+      "bar": "Bars & lounges",
+      "pizzeria": "Pizzerias",
+      "fastfood": "Street food"
     }
   },
   "services": {

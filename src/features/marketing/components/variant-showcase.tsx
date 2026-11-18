@@ -116,9 +116,9 @@ function ShowcasePhone({ brandColor, initials }: { brandColor: string; initials:
   return (
     <div
       aria-hidden="true"
-      className="relative mx-auto h-64 w-36 overflow-hidden rounded-xl border-4 border-foreground bg-foreground shadow-2xl transition duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+      className="relative mx-auto h-64 w-36 overflow-hidden rounded-xl border-4 border-scrim bg-scrim shadow-2xl transition duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
     >
-      <span className="absolute inset-x-0 top-1 z-10 mx-auto h-1 w-10 rounded-full bg-background/80" />
+      <span className="absolute inset-x-0 top-1 z-10 mx-auto h-1 w-10 rounded-full bg-on-scrim/80" />
       <div
         className="absolute inset-0"
         style={{
@@ -126,14 +126,14 @@ function ShowcasePhone({ brandColor, initials }: { brandColor: string; initials:
         }}
       />
       <div className="relative flex h-full flex-col items-center justify-between p-4 text-on-brand">
-        <span className="mt-4 grid size-10 place-items-center rounded-full bg-background/20 font-heading text-base font-title tracking-heading text-background backdrop-blur-sm">
+        <span className="mt-4 grid size-10 place-items-center rounded-full bg-on-scrim/20 font-heading text-base font-title tracking-heading text-on-scrim backdrop-blur-sm">
           {initials}
         </span>
         <div className="flex w-full flex-col gap-1.5 pb-2">
-          <span className="h-1.5 w-full rounded-full bg-background/40" />
-          <span className="h-1.5 w-3/4 rounded-full bg-background/30" />
-          <span className="h-1.5 w-5/6 rounded-full bg-background/30" />
-          <span className="h-1.5 w-2/3 rounded-full bg-background/25" />
+          <span className="h-1.5 w-full rounded-full bg-on-scrim/40" />
+          <span className="h-1.5 w-3/4 rounded-full bg-on-scrim/30" />
+          <span className="h-1.5 w-5/6 rounded-full bg-on-scrim/30" />
+          <span className="h-1.5 w-2/3 rounded-full bg-on-scrim/25" />
         </div>
       </div>
     </div>

@@ -179,7 +179,7 @@ function DemoCard({
             className="absolute -end-4 -bottom-4 size-40 text-background/20"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/5 via-transparent to-foreground/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-scrim/5 via-transparent to-scrim/65" />
         <span className="absolute start-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold text-foreground backdrop-blur-sm">
           <Icon aria-hidden="true" className="size-3.5" />
           {typeLabel}

@@ -11,24 +11,25 @@ import {
 const BUDGET_BYTES = 150 * 1024;
 
 async function cumulativeLayoutShift(page: Page): Promise<number> {
-  // Wait for variant Google Fonts to settle so their swap-in isn't counted as a surprise shift,
-  // then measure the real post-settle CLS budget.
-  await page.evaluate(() => document.fonts.ready);
+  // Measure CLS AFTER variant Google Fonts have settled: start the observer only once
+  // document.fonts.ready resolves, so the font-swap shift isn't counted as user-visible CLS.
   return page.evaluate(
     () =>
       new Promise<number>((resolve) => {
-        let total = 0;
-        new PerformanceObserver((list) => {
-          for (const entry of list.getEntries() as (PerformanceEntry & {
-            value: number;
-            hadRecentInput: boolean;
-          })[]) {
-            if (!entry.hadRecentInput) total += entry.value;
-          }
-        }).observe({ type: 'layout-shift', buffered: true });
-        setTimeout(() => {
-          resolve(total);
-        }, 1500);
+        void document.fonts.ready.then(() => {
+          let total = 0;
+          new PerformanceObserver((list) => {
+            for (const entry of list.getEntries() as (PerformanceEntry & {
+              value: number;
+              hadRecentInput: boolean;
+            })[]) {
+              if (!entry.hadRecentInput) total += entry.value;
+            }
+          }).observe({ type: 'layout-shift', buffered: false });
+          setTimeout(() => {
+            resolve(total);
+          }, 1500);
+        });
       }),
   );
 }

@@ -64,7 +64,7 @@ export async function MarketingShell({ locale, path, children }: MarketingShellP
           </nav>
         </div>
       </header>
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 overflow-x-clip">
         {children}
       </main>
       <MarketingFooter locale={locale} />

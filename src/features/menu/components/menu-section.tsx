@@ -15,7 +15,9 @@ type Translator = Awaited<ReturnType<typeof getTranslations<'client'>>>;
 
 /** ADR-0029: photo grid when at least half the dishes have a photo, printed list otherwise. */
 export function sectionLayout(category: Pick<PublicCategory, 'products'>): 'cards' | 'list' {
-  const withPhoto = category.products.filter((product) => product.media !== null).length;
+  const withPhoto = category.products.filter(
+    (product) => product.media !== null || Boolean(product.photo_url),
+  ).length;
   return withPhoto > 0 && withPhoto * 2 >= category.products.length ? 'cards' : 'list';
 }
 
@@ -137,6 +139,18 @@ function ProductCard({
             sizes="(min-width: 768px) 15rem, (min-width: 640px) 30vw, 45vw"
             priority={priority}
             className={cn('size-full', !available && 'opacity-45 grayscale')}
+          />
+        ) : product.photo_url ? (
+          // Demo venues ship curated external photos (ADR exemption: seed data only); no
+          // intrinsic size — the aspect-square container reserves the space to avoid CLS.
+          // eslint-disable-next-line @next/next/no-img-element -- external URL, no Next loader
+          <img
+            src={product.photo_url}
+            alt=""
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
+            decoding="async"
+            className={cn('size-full object-cover', !available && 'opacity-45 grayscale')}
           />
         ) : (
           <span

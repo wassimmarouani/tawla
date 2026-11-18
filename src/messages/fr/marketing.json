@@ -32,6 +32,11 @@
       "call": "Table 4 · Appel serveur",
       "bill": "Table 7 · Addition par carte",
       "translated": "Menu traduit en 3 langues"
+    },
+    "watchDemo": "Voir la démo en 30 s",
+    "collage": {
+      "cafe": "Terrasse de café ensoleillée",
+      "pastry": "Pâtisseries fraîches sur plateau"
     }
   },
   "steps": {
@@ -400,7 +405,29 @@
     }
   },
   "testimonials": {
+    "eyebrow": "Retours des pilotes",
     "title": "Ils nous font confiance"
+  },
+  "matrix": {
+    "eyebrow": "Comparaison des formules",
+    "title": "Voyez ce que chaque formule débloque",
+    "description": "Commencez avec le Menu QR, passez à Basic quand vos serveurs doivent recevoir les appels, à Pro pour la commande à table, à Premium pour l’écran cuisine et le multi-établissement.",
+    "featureLabel": "Fonctionnalité",
+    "included": "Inclus",
+    "excluded": "Non inclus",
+    "footnote": "Toutes les formules sans engagement. Prix en dinars, hors taxes."
+  },
+  "showcase": {
+    "eyebrow": "Variantes de design",
+    "title": "Un look qui ressemble à votre maison",
+    "description": "Chaque établissement a son identité. Taply s’adapte : couleurs, typographie, ambiance. Voici quatre styles réels, prêts à être personnalisés.",
+    "view": "Voir le menu de {name}",
+    "items": {
+      "cafe-el-bahja": "Café traditionnel, thé à la menthe et chaleur orientale.",
+      "bar-citadelle": "Bar à cocktails, ambiance nocturne et planches à partager.",
+      "patisserie-nordique": "Pâtisserie fine, croissants au beurre et entremets.",
+      "glacier-sorbetto": "Glacier artisanal, coupes colorées et gaufres."
+    }
   },
   "directory": {
     "eyebrow": "Annuaire",

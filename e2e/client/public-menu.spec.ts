@@ -11,6 +11,9 @@ import {
 const BUDGET_BYTES = 150 * 1024;
 
 async function cumulativeLayoutShift(page: Page): Promise<number> {
+  // Wait for variant Google Fonts to settle so their swap-in isn't counted as a surprise shift,
+  // then measure the real post-settle CLS budget.
+  await page.evaluate(() => document.fonts.ready);
   return page.evaluate(
     () =>
       new Promise<number>((resolve) => {

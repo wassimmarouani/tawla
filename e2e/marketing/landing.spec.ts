@@ -25,8 +25,11 @@ test('the home page explains the product and leads to sign-up', async ({ page },
     page.getByRole('link', { name: 'Nous écrire sur WhatsApp' }).first(),
   ).toHaveAttribute('href', /^https:\/\/wa\.me\/\d+$/);
 
-  // FAQ answers fold out.
-  await page.getByText('Mes clients doivent-ils installer une application ?').click();
+  // FAQ answers fold out. Scroll the summary into view first — WebKit iPhone intermittently
+  // reports the element "not stable" otherwise because the page is still animating in.
+  const faqTrigger = page.getByText('Mes clients doivent-ils installer une application ?');
+  await faqTrigger.scrollIntoViewIfNeeded();
+  await faqTrigger.click();
   await expect(page.getByText('Non. Ils scannent le QR code', { exact: false })).toBeVisible();
 
   const wide = (page.viewportSize()?.width ?? 0) >= 1024;

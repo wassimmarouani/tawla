@@ -195,7 +195,7 @@ export async function Landing({ locale }: { locale: Locale }) {
               </span>
               {t('hero.eyebrow')}
             </p>
-            <h1 className="animate-pop-in font-heading text-4xl font-title tracking-title text-balance text-foreground anim-delay-1 sm:text-5xl lg:text-display-sm xl:text-display">
+            <h1 className="animate-pop-in font-heading text-3xl font-title tracking-title text-balance text-foreground anim-delay-1 sm:text-4xl lg:text-5xl xl:text-display-sm">
               {t('hero.title')} <span className="text-gradient-brand">{t('hero.titleAccent')}</span>
             </h1>
             <p className="max-w-xl animate-pop-in text-lg text-pretty text-muted-foreground anim-delay-2">

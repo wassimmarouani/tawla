@@ -27,6 +27,7 @@ export interface FilterableDemo {
   categoryCount: number;
   tagline: string;
   coverImageUrl: string | null;
+  planLabel: string | null;
 }
 
 interface DemosFilterLabels {
@@ -201,6 +202,11 @@ function DemoCard({
               .replace('{categories}', String(demo.categoryCount))
               .replace('{products}', String(demo.productCount))}
           </p>
+          {demo.planLabel ? (
+            <span className="inline-flex items-center gap-1 self-start rounded-full border border-border bg-background px-2 py-0.5 text-2xs font-semibold tracking-label text-foreground uppercase">
+              {demo.planLabel}
+            </span>
+          ) : null}
         </div>
         <div className="mt-auto flex flex-col gap-2 pt-2 sm:flex-row">
           <button

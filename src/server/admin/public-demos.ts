@@ -2,7 +2,7 @@ import 'server-only';
 import { cacheLife, cacheTag } from 'next/cache';
 import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { rawDb } from '@/lib/db/client';
-import { restaurants } from '@/lib/db/schema/schema';
+import { plans, restaurants, subscriptions } from '@/lib/db/schema/schema';
 import { DEMO_VENUES, type DemoVenueDefinition } from '@/server/admin/demo-venue';
 
 export const DEMOS_CACHE_TAG = 'demos';
@@ -20,6 +20,8 @@ export interface LandingDemo {
   taglineAr: string;
   taglineEn: string;
   coverImageUrl: string | null;
+  /** Plan code (menu_qr / basic / pro / premium) currently assigned, or null when none. */
+  planCode: string | null;
 }
 
 /** Demo venues that are installed and have a menu — safe to render on the public landing. */
@@ -36,10 +38,13 @@ export async function landingDemos(): Promise<readonly LandingDemo[]> {
       name: restaurants.name,
       type: restaurants.type,
       theme: restaurants.theme,
+      planCode: plans.code,
       productCount: sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${restaurants.id} and p.deleted_at is null)`,
       categoryCount: sql<number>`(select count(*)::int from public.categories c where c.restaurant_id = ${restaurants.id} and c.deleted_at is null)`,
     })
     .from(restaurants)
+    .leftJoin(subscriptions, eq(subscriptions.restaurantId, restaurants.id))
+    .leftJoin(plans, eq(plans.id, subscriptions.planId))
     .where(
       and(
         eq(restaurants.status, 'active'),
@@ -69,6 +74,7 @@ export async function landingDemos(): Promise<readonly LandingDemo[]> {
         taglineAr: definition.taglineAr,
         taglineEn: definition.taglineEn,
         coverImageUrl: definition.coverImageUrl ?? null,
+        planCode: row.planCode,
       },
     ];
   });

@@ -32,6 +32,11 @@
       "call": "Table 4 · Waiter call",
       "bill": "Table 7 · Bill by card",
       "translated": "Menu in 3 languages"
+    },
+    "watchDemo": "Watch the 30s demo",
+    "collage": {
+      "cafe": "Sunlit café terrace",
+      "pastry": "Fresh pastries on a tray"
     }
   },
   "steps": {
@@ -400,7 +405,29 @@
     }
   },
   "testimonials": {
+    "eyebrow": "Pilot customers",
     "title": "Trusted by local venues"
+  },
+  "matrix": {
+    "eyebrow": "Compare plans",
+    "title": "See what each tier unlocks",
+    "description": "Start with Menu QR, move to Basic when your waiters need live calls, Pro for table ordering, Premium for the kitchen display and multi-site.",
+    "featureLabel": "Feature",
+    "included": "Included",
+    "excluded": "Not included",
+    "footnote": "Every plan without commitment. Prices in dinars, taxes excluded."
+  },
+  "showcase": {
+    "eyebrow": "Design variants",
+    "title": "A look that matches your venue",
+    "description": "Every venue has its own identity. Taply adapts: colours, typography, mood. Here are four real styles, ready to be customised.",
+    "view": "See the menu of {name}",
+    "items": {
+      "cafe-el-bahja": "Traditional café, mint tea and oriental warmth.",
+      "bar-citadelle": "Cocktail bar, nightlife vibe and sharing boards.",
+      "patisserie-nordique": "Fine pastry, butter croissants and layered cakes.",
+      "glacier-sorbetto": "Artisan ice cream, colourful cups and waffles."
+    }
   },
   "directory": {
     "eyebrow": "Directory",

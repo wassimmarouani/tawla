@@ -15,6 +15,7 @@ import {
   LayoutDashboard,
   MessageCircle,
   Palette,
+  Play,
   QrCode,
   Sandwich,
   Sparkles,
@@ -42,6 +43,8 @@ import { DemoPhone } from './demo-phone';
 import { DemosSection } from './demos-section';
 import { MockMenu, ServiceVisual } from './landing-visuals';
 import { whatsappHref } from './marketing-shell';
+import { PlanMatrix } from './plan-matrix';
+import { VariantShowcase } from './variant-showcase';
 
 const MARQUEE = [
   { key: 'cafe', Icon: Coffee },
@@ -192,15 +195,27 @@ export async function Landing({ locale }: { locale: Locale }) {
               </span>
               {t('hero.eyebrow')}
             </p>
-            <h1 className="animate-pop-in font-heading text-3xl font-title tracking-title text-balance text-foreground anim-delay-1 sm:text-4xl xl:text-display-sm">
+            <h1 className="animate-pop-in font-heading text-4xl font-title tracking-title text-balance text-foreground anim-delay-1 sm:text-5xl lg:text-display-sm xl:text-display">
               {t('hero.title')} <span className="text-gradient-brand">{t('hero.titleAccent')}</span>
             </h1>
             <p className="max-w-xl animate-pop-in text-lg text-pretty text-muted-foreground anim-delay-2">
               {t('hero.description')}
             </p>
-            <div className="flex w-full animate-pop-in flex-col gap-3 anim-delay-3 sm:w-auto sm:flex-row sm:flex-wrap">
+            <div className="flex w-full animate-pop-in flex-col gap-3 anim-delay-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
               <StartButton label={t('hero.start')} />
               {whatsapp ? <WhatsAppButton href={whatsapp} label={t('hero.whatsapp')} /> : null}
+              <a
+                href="#demos"
+                className={cn(
+                  buttonVariants({ variant: 'ghost', size: 'lg' }),
+                  'group gap-2 text-brand-text',
+                )}
+              >
+                <span className="grid size-7 place-items-center rounded-full bg-brand-subtle text-brand-on-subtle transition group-hover:bg-brand group-hover:text-on-brand">
+                  <Play aria-hidden="true" className="size-3.5 rtl:-scale-x-100" />
+                </span>
+                {t('hero.watchDemo')}
+              </a>
             </div>
             <ul className="flex animate-pop-in flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-muted-foreground anim-delay-4">
               {(['app', 'commitment', 'languages'] as const).map((key) => (
@@ -221,8 +236,26 @@ export async function Landing({ locale }: { locale: Locale }) {
             ) : null}
           </div>
 
-          <div className="relative flex justify-center lg:col-span-5">
-            <div className="animate-float-slow">
+          <div className="relative flex min-h-136 justify-center lg:col-span-5">
+            <HeroCollage
+              photos={[
+                {
+                  src: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=480&auto=format&q=70',
+                  alt: t('hero.collage.cafe'),
+                  className:
+                    '-start-6 top-4 h-44 w-36 -rotate-6 anim-delay-6 max-sm:hidden lg:-start-10',
+                  float: 'float',
+                },
+                {
+                  src: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=480&auto=format&q=70',
+                  alt: t('hero.collage.pastry'),
+                  className:
+                    '-end-6 bottom-6 h-48 w-40 rotate-6 anim-delay-8 max-sm:hidden lg:-end-10',
+                  float: 'float-slow',
+                },
+              ]}
+            />
+            <div className="relative z-10 animate-float-slow">
               <DemoPhone
                 src={demo}
                 title={t('hero.frame')}
@@ -233,16 +266,19 @@ export async function Landing({ locale }: { locale: Locale }) {
               icon={<BellRing className="size-4" />}
               label={t('hero.chips.call')}
               live
+              float="float"
               className="start-0 top-16 anim-delay-5 sm:-start-2"
             />
             <HeroChip
               icon={<CreditCard className="size-4" />}
               label={t('hero.chips.bill')}
+              float="float-slow"
               className="end-0 bottom-24 anim-delay-7 sm:-end-2 lg:top-1/2 lg:bottom-auto"
             />
             <HeroChip
               icon={<Languages className="size-4" />}
               label={t('hero.chips.translated')}
+              float="float"
               className="start-0 bottom-12 anim-delay-9 max-sm:hidden"
             />
             {demo ? (
@@ -291,6 +327,9 @@ export async function Landing({ locale }: { locale: Locale }) {
       <Suspense fallback={null}>
         <DemosSection locale={locale} />
       </Suspense>
+
+      {/* Variant showcase: 4 hand-picked demos as mini-phones to prove template range. */}
+      <VariantShowcase locale={locale} />
 
       {/* Numbers */}
       <section aria-labelledby="stats" className="mx-auto max-w-6xl px-gutter py-16 sm:py-20">
@@ -344,6 +383,9 @@ export async function Landing({ locale }: { locale: Locale }) {
           ))}
         </ul>
       </section>
+
+      {/* Feature matrix: what each tier unlocks, side by side. */}
+      <PlanMatrix locale={locale} />
 
       {/* Plans */}
       <section aria-labelledby="offers" className="border-y border-border bg-card">
@@ -406,12 +448,16 @@ export async function Landing({ locale }: { locale: Locale }) {
           aria-labelledby="testimonials"
           className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24"
         >
-          <SectionHeading id="testimonials" title={t('testimonials.title')} />
+          <SectionHeading
+            id="testimonials"
+            eyebrow={t('testimonials.eyebrow')}
+            title={t('testimonials.title')}
+          />
           <ul className="mt-8 grid gap-5 md:grid-cols-3">
             {TESTIMONIALS.map((item) => (
               <li
                 key={item.id}
-                className="flex reveal flex-col gap-4 rounded-lg border border-border bg-card p-6"
+                className="flex reveal flex-col gap-4 rounded-lg border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               >
                 <Quote aria-hidden="true" className="size-6 text-brand-text" />
                 <blockquote
@@ -420,13 +466,21 @@ export async function Landing({ locale }: { locale: Locale }) {
                 >
                   “{item.quote[locale]}”
                 </blockquote>
-                <div className="mt-auto flex flex-col text-sm">
-                  <span className="font-semibold text-foreground" dir="auto">
-                    {item.author}
+                <div className="mt-auto flex items-center gap-3 text-sm">
+                  <span
+                    aria-hidden="true"
+                    className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-subtle font-semibold text-brand-on-subtle"
+                  >
+                    {initialsOf(item.author)}
                   </span>
-                  <span className="text-muted-foreground" dir="auto">
-                    {item.role[locale]}
-                    {item.city ? ` · ${item.city}` : ''}
+                  <span className="flex min-w-0 flex-col">
+                    <span className="truncate font-semibold text-foreground" dir="auto">
+                      {item.author}
+                    </span>
+                    <span className="truncate text-muted-foreground" dir="auto">
+                      {item.role[locale]}
+                      {item.city ? ` · ${item.city}` : ''}
+                    </span>
                   </span>
                 </div>
               </li>
@@ -556,30 +610,88 @@ function HeroChip({
   icon,
   label,
   live = false,
+  float,
   className,
 }: {
   icon: ReactNode;
   label: string;
   live?: boolean;
+  float?: 'float' | 'float-slow';
   className?: string;
 }) {
+  // Outer div owns the entry (pop-in). The inner span owns the continuous float so both
+  // animations can run on the transform without fighting over the same property.
   return (
-    <div
-      aria-hidden="true"
-      className={cn(
-        'absolute z-10 flex animate-pop-in items-center gap-2.5 rounded-full border border-border bg-card/95 py-2 ps-2 pe-4 text-sm font-semibold whitespace-nowrap text-foreground shadow-xl backdrop-blur-sm',
-        className,
-      )}
-    >
-      <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-brand text-on-brand">
-        {live ? (
-          <span className="absolute inset-0 animate-ping-soft rounded-full bg-brand/60" />
-        ) : null}
-        <span className="relative">{icon}</span>
+    <div aria-hidden="true" className={cn('absolute z-10 animate-pop-in', className)}>
+      <span
+        className={cn(
+          'flex items-center gap-2.5 rounded-full border border-border bg-card/95 py-2 ps-2 pe-4 text-sm font-semibold whitespace-nowrap text-foreground shadow-xl backdrop-blur-sm',
+          float === 'float' && 'animate-float',
+          float === 'float-slow' && 'animate-float-slow',
+        )}
+      >
+        <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-brand text-on-brand">
+          {live ? (
+            <span className="absolute inset-0 animate-ping-soft rounded-full bg-brand/60" />
+          ) : null}
+          <span className="relative">{icon}</span>
+        </span>
+        {label}
       </span>
-      {label}
     </div>
   );
+}
+
+/**
+ * Two Unsplash photos stacked behind the phone to turn the hero into a premium collage.
+ * Each tile floats gently; a warm gradient overlay keeps the phone in the foreground. Hidden
+ * on `motion-reduce` isn't needed — the float itself already respects it through CSS.
+ */
+function HeroCollage({
+  photos,
+}: {
+  photos: readonly {
+    src: string;
+    alt: string;
+    className: string;
+    float: 'float' | 'float-slow';
+  }[];
+}) {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-0">
+      {photos.map((photo) => (
+        <div
+          key={photo.src}
+          className={cn(
+            'absolute animate-pop-in overflow-clip rounded-lg shadow-2xl ring-1 ring-border/60',
+            photo.className,
+          )}
+        >
+          <div
+            className={cn(
+              'relative size-full',
+              photo.float === 'float' ? 'animate-float' : 'animate-float-slow',
+            )}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element -- Unsplash hotlink, external CDN (CSP allows it). */}
+            <img
+              src={photo.src}
+              alt={photo.alt}
+              className="size-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-foreground/40 via-foreground/10 to-transparent" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Two-letter initials for avatar fallbacks; keeps diacritics and RTL text intact. */
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).slice(0, 2);
+  return parts.map((part) => part.charAt(0).toUpperCase()).join('');
 }
 
 /** Large screens: a QR code to open the demo on a real phone. */

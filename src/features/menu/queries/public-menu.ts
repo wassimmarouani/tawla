@@ -4,6 +4,7 @@ import { cacheLife, cacheTag } from 'next/cache';
 import type { Locale } from '@/i18n/locales';
 import { withRls } from '@/lib/db/rls';
 import { log } from '@/lib/log';
+import { demoPhotoForProduct } from '@/lib/menu/demo-photos';
 import { publicMenuSchema, type PublicMenu } from '../schemas/public-menu';
 
 /** Cache tags of a public menu (ADR-0017): editors revalidate both after every change. */
@@ -35,5 +36,24 @@ export async function getPublicMenu(slug: string, locale: Locale): Promise<Publi
   }
   cacheLife('max');
   cacheTag(...menuCacheTags(slug, parsed.data.restaurant.public_id));
-  return parsed.data;
+  return withDemoPhotos(parsed.data, slug);
+}
+
+/**
+ * Seeded demo venues have no uploaded media yet. Inject a curated Unsplash URL for every
+ * product that lacks one, keyed by the product's Latin slug, so the demo tiles show real food
+ * photos instead of the first-grapheme placeholder.
+ */
+function withDemoPhotos(menu: PublicMenu, venueSlug: string): PublicMenu {
+  return {
+    ...menu,
+    categories: menu.categories.map((category) => ({
+      ...category,
+      products: category.products.map((product) => {
+        if (product.media !== null || product.photo_url) return product;
+        const url = demoPhotoForProduct(venueSlug, product.slug);
+        return url ? { ...product, photo_url: url } : product;
+      }),
+    })),
+  };
 }

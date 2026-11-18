@@ -54,6 +54,7 @@ export const publicProductSchema = z.object({
   description: localizedTextSchema.nullable(),
   price: millimesSchema,
   media: publicMediaSchema.nullable(),
+  photo_url: z.url().nullable().optional(),
   badges: z.array(z.enum(BADGES)),
   allergens: z.array(z.enum(ALLERGENS)),
   dietary: z.array(z.enum(DIETARY)),

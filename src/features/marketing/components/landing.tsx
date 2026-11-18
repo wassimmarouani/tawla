@@ -685,7 +685,7 @@ function HeroCollage({
               className="size-full object-cover"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-linear-to-t from-foreground/40 via-foreground/10 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-scrim/40 via-scrim/10 to-transparent" />
           </div>
         </div>
       ))}

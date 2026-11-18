@@ -30,10 +30,10 @@ export function DemoPhone({ src, title, fallback }: DemoPhoneProps) {
     () => false,
   );
   return (
-    <div className="relative h-136 w-68 overflow-hidden rounded-xl border-8 border-foreground bg-card shadow-2xl sm:h-160 sm:w-80">
+    <div className="relative h-136 w-68 overflow-hidden rounded-xl border-8 border-scrim bg-card shadow-2xl sm:h-160 sm:w-80">
       <span
         aria-hidden="true"
-        className="absolute inset-x-0 top-2 z-10 mx-auto h-1.5 w-16 rounded-full bg-foreground/80"
+        className="absolute inset-x-0 top-2 z-10 mx-auto h-1.5 w-16 rounded-full bg-on-scrim/80"
       />
       {wide && src ? <iframe src={src} title={title} className="size-full" /> : fallback}
     </div>

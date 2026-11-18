@@ -22,6 +22,8 @@
     "test:watch": "vitest --project node --project dom",
     "test:coverage": "vitest run --project node --project dom --coverage",
     "test:e2e": "playwright test",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
+    "verify:full": "pnpm verify && pnpm check:rls && pnpm test:db && pnpm test:integration && pnpm test:e2e",
     "check:versions": "node scripts/check-versions.mjs",
     "prepare": "husky",
     "db:start": "supabase start -x vector,logflare",

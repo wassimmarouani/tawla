@@ -85,7 +85,7 @@ export async function VariantShowcase({ locale }: { locale: Locale }) {
                       {t(`demos.filters.${venue.segmentKey}`)}
                     </span>
                   </span>
-                  <h3 className="truncate text-lg font-semibold text-foreground" dir="auto">
+                  <h3 className="text-lg font-semibold text-balance text-foreground" dir="auto">
                     {venue.name}
                   </h3>
                   <p className="text-sm text-pretty text-muted-foreground">

@@ -49,7 +49,10 @@ export async function PlanMatrix({ locale }: { locale: Locale }) {
           role="region"
           aria-label={t('matrix.title')}
           tabIndex={0}
-          className="mt-10 reveal overflow-x-auto rounded-lg border border-border bg-card shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          // `contain-paint` keeps the wide min-content table from extending the document scroll
+          // width: an `overflow-x-auto` table alone leaks its intrinsic width past the viewport
+          // on mobile (even under an `overflow-x-clip` ancestor); paint containment stops it.
+          className="mt-10 reveal overflow-x-auto rounded-lg border border-border bg-card shadow-sm contain-paint focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           <table className="w-full border-separate border-spacing-0 text-md">
             <thead>

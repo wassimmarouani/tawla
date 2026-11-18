@@ -471,7 +471,7 @@ export async function Landing({ locale }: { locale: Locale }) {
                     <span className="truncate font-semibold text-foreground" dir="auto">
                       {item.author}
                     </span>
-                    <span className="truncate text-muted-foreground" dir="auto">
+                    <span className="text-pretty text-muted-foreground" dir="auto">
                       {item.role[locale]}
                       {item.city ? ` · ${item.city}` : ''}
                     </span>

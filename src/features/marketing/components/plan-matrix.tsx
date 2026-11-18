@@ -45,7 +45,12 @@ export async function PlanMatrix({ locale }: { locale: Locale }) {
           <p className="text-lg text-pretty text-muted-foreground">{t('matrix.description')}</p>
         </div>
 
-        <div className="mt-10 reveal overflow-x-auto rounded-lg border border-border bg-card shadow-sm">
+        <div
+          role="region"
+          aria-label={t('matrix.title')}
+          tabIndex={0}
+          className="mt-10 reveal overflow-x-auto rounded-lg border border-border bg-card shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        >
           <table className="w-full border-separate border-spacing-0 text-md">
             <thead>
               <tr>

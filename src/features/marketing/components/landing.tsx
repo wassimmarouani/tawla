@@ -1,8 +1,6 @@
 import {
   ArrowRight,
   BellRing,
-  BookOpenText,
-  Bot,
   CakeSlice,
   Camera,
   Check,
@@ -12,38 +10,41 @@ import {
   CupSoda,
   Hotel,
   Languages,
-  LayoutDashboard,
   MessageCircle,
   Palette,
+  Pizza,
   Play,
   QrCode,
+  Quote,
   Sandwich,
   Sparkles,
+  Star,
   Sun,
   UtensilsCrossed,
   Wine,
 } from 'lucide-react';
-import { Quote } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { connection } from 'next/server';
 import { Suspense, type ReactNode } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { Locale } from '@/i18n/locales';
-import { TESTIMONIALS } from '../services/testimonials';
 import { env } from '@/lib/env';
+import type { Locale } from '@/i18n/locales';
 import { formatMoney } from '@/lib/money/format';
 import { qrSvg } from '@/lib/qr/qr-svg';
 import { cn } from '@/lib/utils';
 import { publicPlans } from '../server/plans';
 import { marketingHref } from '../services/paths';
 import { planCards } from '../services/pricing';
+import { TESTIMONIALS } from '../services/testimonials';
 import { DemoPhone } from './demo-phone';
 import { DemosSection } from './demos-section';
-import { MockMenu, ServiceVisual } from './landing-visuals';
+import { HeroStats } from './hero-stats';
+import { MockMenu } from './landing-visuals';
 import { whatsappHref } from './marketing-shell';
 import { PlanMatrix } from './plan-matrix';
+import { ServicesBento } from './services-bento';
 import { VariantShowcase } from './variant-showcase';
 
 const MARQUEE = [
@@ -57,17 +58,6 @@ const MARQUEE = [
   { key: 'beach', Icon: Sun },
 ] as const;
 
-const STATS = ['setup', 'alert', 'languages', 'app'] as const;
-
-const SERVICES = [
-  { key: 'menu', Icon: BookOpenText },
-  { key: 'qr', Icon: QrCode },
-  { key: 'service', Icon: BellRing },
-  { key: 'languages', Icon: Languages },
-  { key: 'ai', Icon: Bot },
-  { key: 'team', Icon: LayoutDashboard },
-] as const;
-
 const STEPS = [
   { key: 'photo', Icon: Camera },
   { key: 'brand', Icon: Palette },
@@ -77,6 +67,15 @@ const STEPS = [
 const SEGMENTS = [
   { key: 'cafe', Icon: Coffee },
   { key: 'restaurant', Icon: UtensilsCrossed },
+] as const;
+
+const SOCIAL_PROOF = [
+  { key: 'cafe', Icon: Coffee },
+  { key: 'restaurant', Icon: UtensilsCrossed },
+  { key: 'pastry', Icon: CakeSlice },
+  { key: 'bar', Icon: Wine },
+  { key: 'pizzeria', Icon: Pizza },
+  { key: 'fastfood', Icon: Sandwich },
 ] as const;
 
 const SUPPORT = ['menu', 'print', 'train', 'help'] as const;
@@ -171,7 +170,7 @@ function WhatsAppButton({
   );
 }
 
-/** Marketing home (P1-16): what we do, for whom, how, and for how much. */
+/** Marketing home (P1-16): editorial + bento redesign. Hero → proof → outcomes → products. */
 export async function Landing({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'marketing' });
   const demo = demoMenuPath();
@@ -186,7 +185,7 @@ export async function Landing({ locale }: { locale: Locale }) {
           <div className="absolute -inset-1/4 animate-drift bg-aurora" />
           <div className="absolute inset-0 bg-grid-fade" />
         </div>
-        <div className="mx-auto grid max-w-6xl items-center gap-14 px-gutter pt-12 pb-16 sm:pt-16 lg:grid-cols-12 lg:gap-8 lg:pt-20 lg:pb-24">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-gutter pt-12 pb-16 sm:pt-16 lg:grid-cols-12 lg:gap-8 lg:pt-24 lg:pb-28">
           <div className="flex min-w-0 flex-col items-start gap-6 lg:col-span-7">
             <p className="flex animate-pop-in items-center gap-2 rounded-full border border-border bg-card/80 py-1 ps-1.5 pe-3 text-sm font-semibold text-foreground shadow-sm backdrop-blur-sm">
               <span className="relative grid size-6 shrink-0 place-items-center rounded-full bg-brand text-on-brand">
@@ -294,7 +293,7 @@ export async function Landing({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* Venue types */}
+      {/* Venue marquee */}
       <section aria-label={t('marquee.label')} className="border-y border-border bg-card py-6">
         <p className="mb-4 px-gutter text-center text-sm font-semibold text-muted-foreground">
           {t('marquee.label')}
@@ -323,69 +322,55 @@ export async function Landing({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      {/* Hero stats — four big outcomes right under the marquee. */}
+      <HeroStats locale={locale} />
+
       {/* Live demos (A2): one card per installed demo venue, lazily loaded. */}
       <Suspense fallback={null}>
         <DemosSection locale={locale} />
       </Suspense>
 
-      {/* Variant showcase: 4 hand-picked demos as mini-phones to prove template range. */}
+      {/* Variant showcase: four hand-picked demos to prove template range. */}
       <VariantShowcase locale={locale} />
 
-      {/* Numbers */}
-      <section aria-labelledby="stats" className="mx-auto max-w-6xl px-gutter py-16 sm:py-20">
-        <h2 id="stats" className="sr-only">
-          {t('stats.title')}
-        </h2>
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4">
-          {STATS.map((key) => (
-            <div key={key} className="flex reveal flex-col gap-1">
-              <dt className="order-2 text-sm text-pretty text-muted-foreground sm:text-md">
-                {t(`stats.items.${key}.label`)}
-              </dt>
-              <dd className="order-1 text-gradient-brand font-heading text-4xl font-title tracking-title tabular-nums">
-                {t(`stats.items.${key}.value`)}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      {/* Services bento: one hero card + five small cells. */}
+      <ServicesBento locale={locale} qrUrl={qrTarget} />
 
-      {/* Services */}
-      <section aria-labelledby="services" className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24">
-        <SectionHeading
-          id="services"
-          eyebrow={t('services.eyebrow')}
-          title={t('services.title')}
-          description={t('services.description')}
-        />
-        <ul className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map(({ key, Icon }) => (
-            <li
-              key={key}
-              className="group flex reveal flex-col gap-5 rounded-lg p-5 shadow-sm transition duration-300 border-gradient hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-            >
-              <ServiceVisual kind={key} locale={locale} qrUrl={qrTarget} />
-              <div className="flex flex-col gap-2">
-                <h3 className="flex items-center gap-2.5 text-lg font-semibold text-foreground">
+      {/* How it works — horizontal timeline on desktop, vertical on mobile. */}
+      <section aria-labelledby="steps" className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24">
+        <SectionHeading id="steps" title={t('steps.title')} />
+        <div className="relative mt-12">
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-12 top-6 hidden h-0.5 reveal-line rounded-full bg-brand/30 md:block"
+          />
+          <ol className="relative grid gap-10 md:grid-cols-3 md:gap-6">
+            {STEPS.map(({ key, Icon }, index) => (
+              <li key={key} className="relative flex reveal flex-col gap-4">
+                <span className="flex items-center gap-3">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-full bg-brand text-lg font-semibold text-on-brand shadow-lg ring-4 shadow-brand/30 ring-background">
+                    {index + 1}
+                  </span>
                   <span
                     aria-hidden="true"
-                    className="grid size-8 shrink-0 place-items-center rounded-xs bg-brand-subtle text-brand-on-subtle transition-colors group-hover:bg-brand group-hover:text-on-brand"
+                    className="grid size-9 place-items-center rounded-full bg-brand-subtle text-brand-on-subtle"
                   >
-                    <Icon className="size-4" />
+                    <Icon aria-hidden="true" className="size-4" />
                   </span>
-                  {t(`services.items.${key}.title`)}
+                </span>
+                <h3 className="text-xl font-semibold text-foreground">
+                  {t(`steps.items.${key}.title`)}
                 </h3>
                 <p className="text-md text-pretty text-muted-foreground">
-                  {t(`services.items.${key}.body`)}
+                  {t(`steps.items.${key}.body`)}
                 </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
-      {/* Feature matrix: what each tier unlocks, side by side. Suspense keeps the DB read off
-          the static prerender so the marketing shell builds without the database. */}
+      {/* Feature matrix. */}
       <Suspense fallback={null}>
         <PlanMatrix locale={locale} />
       </Suspense>
@@ -416,36 +401,33 @@ export async function Landing({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* How it works */}
-      <section aria-labelledby="steps" className="mx-auto max-w-6xl px-gutter py-16 sm:py-24">
-        <SectionHeading id="steps" title={t('steps.title')} />
-        <div className="relative mt-12">
-          <span
-            aria-hidden="true"
-            className="absolute inset-x-12 top-6 hidden h-0.5 reveal-line rounded-full bg-brand/30 md:block"
-          />
-          <ol className="relative grid gap-10 md:grid-cols-3 md:gap-6">
-            {STEPS.map(({ key, Icon }, index) => (
-              <li key={key} className="relative flex reveal flex-col gap-3">
-                <span className="flex items-center gap-3">
-                  <span className="grid size-12 shrink-0 place-items-center rounded-full bg-brand text-lg font-semibold text-on-brand shadow-lg ring-4 shadow-brand/30 ring-background">
-                    {index + 1}
-                  </span>
-                  <Icon aria-hidden="true" className="size-5 text-brand-text" />
-                </span>
-                <h3 className="text-xl font-semibold text-foreground">
-                  {t(`steps.items.${key}.title`)}
-                </h3>
-                <p className="text-md text-pretty text-muted-foreground">
-                  {t(`steps.items.${key}.body`)}
-                </p>
+      {/* Social proof strip: a thin honest row of venue-type chips. No fake company logos. */}
+      <section
+        aria-labelledby="social-proof"
+        className="mx-auto max-w-6xl px-gutter py-14 sm:py-20"
+      >
+        <div className="flex reveal flex-col items-center gap-5 text-center">
+          <p className="text-sm font-semibold tracking-label text-brand-text uppercase">
+            {t('socialProof.eyebrow')}
+          </p>
+          <h2
+            id="social-proof"
+            className="max-w-2xl font-heading text-xl font-title tracking-heading text-balance text-foreground sm:text-2xl"
+          >
+            {t('socialProof.title')}
+          </h2>
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-semibold text-muted-foreground">
+            {SOCIAL_PROOF.map(({ key, Icon }) => (
+              <li key={key} className="flex items-center gap-2">
+                <Icon aria-hidden="true" className="size-5 text-muted-foreground/70" />
+                <span>{t(`socialProof.items.${key}`)}</span>
               </li>
             ))}
-          </ol>
+          </ul>
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials — upgraded cards: brand-colored start-border, stars row, initials avatar. */}
       {TESTIMONIALS.length > 0 ? (
         <section
           aria-labelledby="testimonials"
@@ -456,23 +438,32 @@ export async function Landing({ locale }: { locale: Locale }) {
             eyebrow={t('testimonials.eyebrow')}
             title={t('testimonials.title')}
           />
-          <ul className="mt-8 grid gap-5 md:grid-cols-3">
+          <ul className="mt-10 grid gap-5 md:grid-cols-3">
             {TESTIMONIALS.map((item) => (
               <li
                 key={item.id}
-                className="flex reveal flex-col gap-4 rounded-lg border border-border bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                className="relative flex reveal flex-col gap-4 rounded-xl border border-s-4 border-border border-s-brand bg-card p-6 shadow-md transition hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               >
-                <Quote aria-hidden="true" className="size-6 text-brand-text" />
+                <Quote aria-hidden="true" className="size-8 text-brand-text/80" />
+                <ul aria-hidden="true" className="flex gap-0.5 text-brand-text">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <li key={i}>
+                      <Star className="size-4 fill-current" />
+                    </li>
+                  ))}
+                </ul>
                 <blockquote
                   dir="auto"
                   className="text-md leading-relaxed text-pretty text-foreground"
                 >
-                  “{item.quote[locale]}”
+                  {'“'}
+                  {item.quote[locale]}
+                  {'”'}
                 </blockquote>
                 <div className="mt-auto flex items-center gap-3 text-sm">
                   <span
                     aria-hidden="true"
-                    className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-subtle font-semibold text-brand-on-subtle"
+                    className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-subtle font-semibold text-brand-on-subtle"
                   >
                     {initialsOf(item.author)}
                   </span>
@@ -495,18 +486,25 @@ export async function Landing({ locale }: { locale: Locale }) {
       {/* Segments */}
       <section aria-labelledby="segments" className="mx-auto max-w-6xl px-gutter pb-16 sm:pb-24">
         <SectionHeading id="segments" title={t('segments.title')} />
-        <ul className="mt-8 grid gap-5 md:grid-cols-2">
+        <ul className="mt-10 grid gap-5 md:grid-cols-2">
           {SEGMENTS.map(({ key, Icon }) => (
             <li
               key={key}
-              className="relative isolate flex reveal flex-col gap-3 overflow-clip rounded-lg bg-brand-subtle p-6 text-brand-on-subtle sm:p-8"
+              className="relative isolate flex reveal flex-col gap-4 overflow-clip rounded-xl bg-brand-subtle p-6 text-brand-on-subtle sm:p-8"
             >
               <Icon
                 aria-hidden="true"
-                className="absolute -end-4 -bottom-4 -z-10 size-32 opacity-10"
+                className="absolute -end-6 -bottom-6 -z-10 size-40 opacity-15"
               />
-              <Icon aria-hidden="true" className="size-8" />
-              <h3 className="text-xl font-semibold">{t(`segments.items.${key}.title`)}</h3>
+              <span
+                aria-hidden="true"
+                className="grid size-12 place-items-center rounded-full bg-brand text-on-brand shadow-md"
+              >
+                <Icon aria-hidden="true" className="size-6" />
+              </span>
+              <h3 className="font-heading text-xl font-title tracking-heading sm:text-2xl">
+                {t(`segments.items.${key}.title`)}
+              </h3>
               <p className="text-md text-pretty">{t(`segments.items.${key}.body`)}</p>
             </li>
           ))}
@@ -581,14 +579,21 @@ export async function Landing({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/* Closing call to action */}
+      {/* Closing call to action — bold panel on brand surface. */}
       <section className="mx-auto max-w-6xl px-gutter pb-20 sm:pb-28">
-        <div className="relative isolate reveal overflow-clip rounded-xl border border-border bg-card px-6 py-14 text-center shadow-xl sm:px-12 sm:py-20">
-          <div aria-hidden="true" className="absolute -inset-1/4 -z-10 animate-drift bg-aurora" />
-          <h2 className="mx-auto max-w-2xl font-heading text-3xl font-title tracking-title text-balance text-foreground sm:text-4xl">
+        <div className="relative isolate overflow-clip rounded-xl bg-brand-panel px-6 py-14 text-center text-brand-on-panel shadow-2xl shadow-brand/25 sm:px-12 sm:py-20">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 -z-10 bg-dots opacity-20"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-1/4 -z-10 animate-drift bg-aurora opacity-40"
+          />
+          <h2 className="mx-auto max-w-3xl font-heading text-3xl font-title tracking-title text-balance sm:text-4xl lg:text-5xl">
             {t('finalCta.title')}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-pretty text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-pretty text-brand-on-panel/85">
             {t('finalCta.description')}
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
@@ -622,8 +627,6 @@ function HeroChip({
   float?: 'float' | 'float-slow';
   className?: string;
 }) {
-  // Outer div owns the entry (pop-in). The inner span owns the continuous float so both
-  // animations can run on the transform without fighting over the same property.
   return (
     <div aria-hidden="true" className={cn('absolute z-10 animate-pop-in', className)}>
       <span
@@ -647,8 +650,7 @@ function HeroChip({
 
 /**
  * Two Unsplash photos stacked behind the phone to turn the hero into a premium collage.
- * Each tile floats gently; a warm gradient overlay keeps the phone in the foreground. Hidden
- * on `motion-reduce` isn't needed — the float itself already respects it through CSS.
+ * Hidden on `max-sm` to avoid pushing past the viewport at 360 px.
  */
 function HeroCollage({
   photos,
@@ -738,8 +740,8 @@ function DemoQr({
 function OfferSkeletons() {
   return (
     <div className="mx-auto mt-10 grid max-w-4xl gap-5 md:grid-cols-2">
-      <Skeleton className="h-96 rounded-lg" />
-      <Skeleton className="h-96 rounded-lg" />
+      <Skeleton className="h-96 rounded-xl" />
+      <Skeleton className="h-96 rounded-xl" />
     </div>
   );
 }
@@ -780,9 +782,9 @@ async function Offers({ locale }: { locale: Locale }) {
           <li
             key={card.code}
             className={cn(
-              'relative flex reveal flex-col gap-6 rounded-lg p-6 sm:p-8',
+              'relative flex reveal flex-col gap-6 rounded-xl p-6 sm:p-8',
               card.recommended
-                ? 'shadow-2xl shadow-brand/15 border-gradient'
+                ? 'shadow-2xl shadow-brand/30 border-gradient'
                 : 'border border-border bg-background',
             )}
           >

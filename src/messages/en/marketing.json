@@ -257,24 +257,42 @@
     }
   },
   "stats": {
-    "title": "Table service, by the numbers",
+    "eyebrow": "Real outcomes",
+    "title": "Table service that gives you time back",
+    "description": "Four numbers that sum up what our first customers see from week one.",
     "items": {
       "setup": {
         "value": "30 min",
-        "label": "to publish your menu"
+        "label": "Menu published",
+        "body": "From a photo of your menu to the QR code on the table."
       },
       "alert": {
         "value": "< 2 s",
-        "label": "to alert the waiter"
+        "label": "Waiter alert",
+        "body": "Sound, vibration and a notification on the tablet and phones."
       },
       "languages": {
         "value": "3",
-        "label": "languages: French, Arabic, English"
+        "label": "Languages",
+        "body": "French, Arabic (right-to-left) and English, all included."
       },
       "app": {
         "value": "0",
-        "label": "apps to install"
+        "label": "Apps to install",
+        "body": "The customer scans; the menu opens in the browser."
       }
+    }
+  },
+  "socialProof": {
+    "eyebrow": "Built for you",
+    "title": "Designed for every corner of Tunisian hospitality",
+    "items": {
+      "cafe": "Cafés",
+      "restaurant": "Restaurants",
+      "pastry": "Pastry shops",
+      "bar": "Bars & lounges",
+      "pizzeria": "Pizzerias",
+      "fastfood": "Street food"
     }
   },
   "services": {

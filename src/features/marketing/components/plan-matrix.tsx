@@ -1,5 +1,6 @@
 import { Check, Minus } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { connection } from 'next/server';
 import type { Locale } from '@/i18n/locales';
 import { cn } from '@/lib/utils';
 import { publicPlans } from '../server/plans';
@@ -17,6 +18,9 @@ const MATRIX_PLAN_CODES = ['menu_qr', 'basic', 'pro', 'premium'] as const;
  * sticky first column on mobile so long feature labels stay anchored while plans scroll.
  */
 export async function PlanMatrix({ locale }: { locale: Locale }) {
+  // Opt out of the marketing shell's static prerender: the DB isn't up during `next build`
+  // in CI, same reason the `Offers` tile does it.
+  await connection();
   const t = await getTranslations({ locale, namespace: 'marketing' });
   const plans = await publicPlans();
   const byCode = new Map(plans.map((plan) => [plan.code, plan]));

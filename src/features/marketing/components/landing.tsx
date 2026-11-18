@@ -384,8 +384,11 @@ export async function Landing({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      {/* Feature matrix: what each tier unlocks, side by side. */}
-      <PlanMatrix locale={locale} />
+      {/* Feature matrix: what each tier unlocks, side by side. Suspense keeps the DB read off
+          the static prerender so the marketing shell builds without the database. */}
+      <Suspense fallback={null}>
+        <PlanMatrix locale={locale} />
+      </Suspense>
 
       {/* Plans */}
       <section aria-labelledby="offers" className="border-y border-border bg-card">

@@ -58,7 +58,11 @@ test('the home page explains the product and leads to sign-up', async ({ page },
     expect(await seriousAxeViolations(page), 'axe').toEqual([]);
   }
   // The call to action opens the sign-up form (another surface: no locale prefix).
-  await page.getByRole('main').getByRole('link', { name: 'Créer mon menu' }).first().click();
+  // WebKit iPhone trips the stability check while the hero reveal animations are still
+  // running — scroll then force-click, same pattern as the FAQ toggle above.
+  const cta = page.getByRole('main').getByRole('link', { name: 'Créer mon menu' }).first();
+  await cta.scrollIntoViewIfNeeded();
+  await cta.click({ force: true });
   await expect(page).toHaveURL(/\/signup$/);
   await expect(
     page.getByRole('heading', { level: 1, name: 'Créez votre menu digital' }),

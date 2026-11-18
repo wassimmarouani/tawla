@@ -1,7 +1,7 @@
 import 'server-only';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { and, eq, inArray, isNull, or, sql } from 'drizzle-orm';
+import { and, eq, isNull, or, sql } from 'drizzle-orm';
 import { findTemplate, templateI18n, type MenuTemplate } from '@/lib/menu/templates';
 import { variantPrefersDark, type MenuVariant } from '@/lib/menu/variants';
 import { slugify } from '@/lib/text/slugify';
@@ -277,26 +277,39 @@ const DEMO_SCHEDULE = {
 export type DemoVenueState = 'missing' | 'partial' | 'ready';
 
 /**
- * Aggregates the install state across every demo venue in a single query. The /admin page used
- * to run one round-trip per demo (× 10) which stacked up cold-start latency on hosted Supabase.
+ * Aggregates the install state across every demo venue in a single raw SQL round-trip.
+ *
+ * The earlier Drizzle version used `inArray(restaurants.id, [...uuids])` + a correlated subquery
+ * for the product count; in CI that returned zero rows (parameter placeholder count mismatch
+ * when Drizzle serialises the array into `$1, $2, …` while the subquery also captures
+ * `restaurants.id`), so the admin page reported 'missing' even when El Bahja was seeded.
  */
 export async function demoVenueState(): Promise<DemoVenueState> {
   const ids = DEMO_VENUES.map((definition) => definition.restaurantId);
-  const rows = await rawDb()
-    .select({
-      id: restaurants.id,
-      cover: restaurants.coverMediaId,
-      productsCount: sql<number>`(select count(*)::int from public.products p where p.restaurant_id = ${restaurants.id} and p.deleted_at is null)`,
-    })
-    .from(restaurants)
-    .where(and(inArray(restaurants.id, ids), isNull(restaurants.deletedAt)));
+  const rows = await rawDb().execute<{
+    id: string;
+    cover: string | null;
+    products_count: number;
+  }>(sql`
+    select
+      r.id,
+      r.cover_media_id as cover,
+      coalesce((select count(*)::int from public.products p
+        where p.restaurant_id = r.id and p.deleted_at is null), 0) as products_count
+    from public.restaurants r
+    where r.deleted_at is null
+      and r.id = any (${sql`array[${sql.join(
+        ids.map((id) => sql`${id}`),
+        sql`, `,
+      )}]::uuid[]`})
+  `);
 
   const byId = new Map(rows.map((row) => [row.id, row]));
   let ready = 0;
   let missing = 0;
   for (const definition of DEMO_VENUES) {
     const row = byId.get(definition.restaurantId);
-    if (!row || row.productsCount === 0) {
+    if (!row || row.products_count === 0) {
       missing += 1;
       continue;
     }

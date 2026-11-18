@@ -56,6 +56,7 @@ export async function DemosSection({ locale }: { locale: Locale }) {
           categoryCount: demo.categoryCount,
           tagline: tagline(demo, locale),
           coverImageUrl: demo.coverImageUrl,
+          planLabel: demo.planCode ? planLabel(demo.planCode, locale) : null,
         }))}
         segments={segments}
         labels={{
@@ -83,6 +84,17 @@ function tagline(demo: LandingDemo, locale: Locale): string {
   if (locale === 'ar') return demo.taglineAr;
   if (locale === 'en') return demo.taglineEn;
   return demo.taglineFr;
+}
+
+/** Short badge label for a plan code; falls back to the raw code when unknown. */
+function planLabel(code: string, locale: Locale): string {
+  const labels: Record<string, Record<Locale, string>> = {
+    menu_qr: { fr: 'Menu QR', ar: 'قائمة QR', en: 'QR Menu' },
+    basic: { fr: 'Basic', ar: 'أساسي', en: 'Basic' },
+    pro: { fr: 'Pro', ar: 'برو', en: 'Pro' },
+    premium: { fr: 'Premium', ar: 'بريميوم', en: 'Premium' },
+  };
+  return labels[code]?.[locale] ?? code;
 }
 
 /** Icons per segment, mirrored by the client DemosFilter component. */

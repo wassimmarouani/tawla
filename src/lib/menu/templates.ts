@@ -501,9 +501,9 @@ const BAR_COCKTAIL: MenuTemplate = {
   id: 'bar-cocktail',
   title: { fr: 'Bar cocktails', ar: 'بار كوكتيل', en: 'Cocktail bar' },
   description: {
-    fr: 'Signatures, classiques, mocktails et bites. 18 articles.',
-    ar: 'كوكتيل مميّز، كلاسيكيات، مشروبات بلا كحول ومقبّلات — 18 عنصرًا.',
-    en: 'Signature cocktails, classics, mocktails and bites — 18 items.',
+    fr: 'Signatures, classiques, mocktails et planches à grignoter. 18 articles.',
+    ar: 'كوكتيل مميّز، كلاسيكيات، مشروبات بلا كحول وأطباق للمشاركة — 18 عنصرًا.',
+    en: 'Signature cocktails, classics, mocktails and small bites — 18 items.',
   },
   categories: [
     {
@@ -511,14 +511,29 @@ const BAR_COCKTAIL: MenuTemplate = {
       products: [
         {
           name: { fr: 'Carthage Sunset', ar: 'كارثاج سنسِت', en: 'Carthage Sunset' },
+          description: {
+            fr: 'Rhum ambré, jus d’orange sanguine, grenadine, citron.',
+            ar: 'روم معتّق، عصير برتقال أحمر، رمان، ليمون.',
+            en: 'Aged rum, blood-orange juice, grenadine, lemon.',
+          },
           price: 28000,
         },
         {
           name: { fr: 'Sidi Bou Breeze', ar: 'سيدي بو بريز', en: 'Sidi Bou Breeze' },
+          description: {
+            fr: 'Gin, curaçao bleu, citron vert, eau tonique.',
+            ar: 'جين، كوراساو أزرق، ليمون أخضر، ماء تونيك.',
+            en: 'Gin, blue curaçao, lime, tonic water.',
+          },
           price: 26000,
         },
         {
           name: { fr: 'Medina Negroni', ar: 'ميدينا نيغروني', en: 'Medina Negroni' },
+          description: {
+            fr: 'Gin, Campari, vermouth rouge, zeste d’orange.',
+            ar: 'جين، كامباري، فيرموت أحمر، قشر برتقال.',
+            en: 'Gin, Campari, red vermouth, orange zest.',
+          },
           price: 30000,
         },
       ],
@@ -526,32 +541,82 @@ const BAR_COCKTAIL: MenuTemplate = {
     {
       name: { fr: 'Classiques', ar: 'كلاسيكيات', en: 'Classics' },
       products: [
-        { name: { fr: 'Mojito', ar: 'موهيتو', en: 'Mojito' }, price: 22000 },
-        { name: { fr: 'Old Fashioned', ar: 'أولد فاشِن', en: 'Old Fashioned' }, price: 28000 },
-        { name: { fr: 'Margarita', ar: 'مارغريتا', en: 'Margarita' }, price: 24000 },
-        { name: { fr: 'Spritz Aperol', ar: 'سبريتز أبيرول', en: 'Aperol Spritz' }, price: 24000 },
+        {
+          name: { fr: 'Mojito', ar: 'موهيتو', en: 'Mojito' },
+          description: {
+            fr: 'Rhum blanc, menthe fraîche, citron vert, sucre de canne.',
+            ar: 'روم أبيض، نعناع طازج، ليمون أخضر، سكر القصب.',
+            en: 'White rum, fresh mint, lime, cane sugar.',
+          },
+          price: 22000,
+        },
+        {
+          name: { fr: 'Old Fashioned', ar: 'أولد فاشِن', en: 'Old Fashioned' },
+          description: {
+            fr: 'Bourbon, sucre, bitters, zeste d’orange.',
+            ar: 'بوربون، سكر، بيترز، قشر برتقال.',
+            en: 'Bourbon, sugar, bitters, orange zest.',
+          },
+          price: 28000,
+        },
+        {
+          name: { fr: 'Margarita', ar: 'مارغريتا', en: 'Margarita' },
+          description: {
+            fr: 'Tequila, triple sec, jus de citron vert, sel.',
+            ar: 'تيكيلا، تريبل سيك، عصير ليمون أخضر، ملح.',
+            en: 'Tequila, triple sec, lime juice, salt rim.',
+          },
+          price: 24000,
+        },
+        {
+          name: { fr: 'Spritz Aperol', ar: 'سبريتز أبيرول', en: 'Aperol Spritz' },
+          description: {
+            fr: 'Aperol, prosecco, eau gazeuse, tranche d’orange.',
+            ar: 'أبيرول، بروسيكو، ماء غازي، شريحة برتقال.',
+            en: 'Aperol, prosecco, soda, orange slice.',
+          },
+          price: 24000,
+        },
       ],
     },
     {
       name: { fr: 'Mocktails', ar: 'بدون كحول', en: 'Mocktails' },
       products: [
-        { name: { fr: 'Virgin mojito', ar: 'فيرجين موهيتو', en: 'Virgin mojito' }, price: 12000 },
+        {
+          name: { fr: 'Virgin mojito', ar: 'فيرجين موهيتو', en: 'Virgin mojito' },
+          description: {
+            fr: 'Menthe fraîche, citron vert, sucre de canne, eau gazeuse.',
+            ar: 'نعناع طازج، ليمون أخضر، سكر القصب، ماء غازي.',
+            en: 'Fresh mint, lime, cane sugar, soda.',
+          },
+          price: 12000,
+        },
         {
           name: {
             fr: 'Pink lady sans alcool',
             ar: 'بينك ليدي بدون كحول',
             en: 'Pink lady mocktail',
           },
+          description: {
+            fr: 'Jus de cranberry, citron, sirop de fraise, tonic.',
+            ar: 'عصير التوت البري، ليمون، شراب الفراولة، تونيك.',
+            en: 'Cranberry juice, lemon, strawberry syrup, tonic.',
+          },
           price: 13000,
         },
         {
           name: { fr: 'Ginger lemon fizz', ar: 'زنجبيل وليمون', en: 'Ginger lemon fizz' },
+          description: {
+            fr: 'Gingembre frais, citron, miel, eau pétillante.',
+            ar: 'زنجبيل طازج، ليمون، عسل، ماء فوّار.',
+            en: 'Fresh ginger, lemon, honey, sparkling water.',
+          },
           price: 10000,
         },
       ],
     },
     {
-      name: { fr: 'Bites', ar: 'مقبّلات', en: 'Bites' },
+      name: { fr: 'À grignoter', ar: 'مقبّلات', en: 'Small bites' },
       products: [
         { name: { fr: 'Olives marinées', ar: 'زيتون منقوع', en: 'Marinated olives' }, price: 7000 },
         {

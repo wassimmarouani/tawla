@@ -109,7 +109,9 @@ export async function PublicMenuView({
                 Object.fromEntries(
                   MENU_FILTERS.map((filter) => [
                     filter,
-                    filter === 'new' ? t('badges.new') : t(`dietary.${filter}`),
+                    filter === 'new' || filter === 'recommended'
+                      ? t(`badges.${filter}`)
+                      : t(`dietary.${filter}`),
                   ]),
                 ) as Record<MenuFilter, string>
               }

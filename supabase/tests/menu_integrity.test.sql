@@ -4,7 +4,7 @@
 -- public.product_option_groups, public.price_history, public.media
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(23);
+select plan(24);
 
 create function pg_temp.act_as(uid uuid, memberships jsonb)
 returns void
@@ -68,6 +68,9 @@ select throws_ok(
 select throws_ok(
   $$ update public.products set badges = '{bestseller}' where id = '43000000-0000-4000-8000-0000000000a1' $$,
   '23514', null, 'unknown badges are rejected');
+select lives_ok(
+  $$ update public.products set badges = '{recommended}' where id = '43000000-0000-4000-8000-0000000000a1' $$,
+  'the recommended badge is accepted');
 select throws_ok(
   $$ update public.products set allergens = '{bananas}' where id = '43000000-0000-4000-8000-0000000000a1' $$,
   '23514', null, 'unknown allergens are rejected');

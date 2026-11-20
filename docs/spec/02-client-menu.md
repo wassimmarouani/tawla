@@ -29,7 +29,7 @@ The customer uses their phone's browser after scanning: no app, no account.
 - Instant search, typo- and accent-tolerant in FR/AR/EN and Latin-script derja (ADR-0026). Loaded on focus.
 - Optional filters: vegetarian, gluten-free, spicy, new.
 - **Layout adapts to photo coverage per category** (ADR-0027): ≥ 50 % photos → cards (list or grid per restaurant setting); otherwise an elegant typographic list. Photo-less items in photo categories get a branded monogram tile.
-- Product card: photo (if any), name, short description, price ("from …" when sizes differ), badges (New, Popular, Spicy, Unavailable).
+- Product card: photo (if any), name, short description, price ("from …" when sizes differ), badges (Recommended, New, Popular, Spicy, Unavailable). "Recommended" (Coup de cœur) is an owner-set signature marker rendered with the Jasmin badge and offered as a filter (ADR-0032).
 - **Unavailable products are greyed with "Unavailable"**, never hidden silently. They update within 5 s of the toggle (ADR-0008 strategy).
 - **Product sheet** (bottom sheet, drag to close, URL-synced so Back closes it): large photo, full description, allergens, option groups validated live with the price updated, quantity, free note ("no sugar").
 

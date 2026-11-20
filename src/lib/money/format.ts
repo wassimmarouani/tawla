@@ -54,6 +54,28 @@ export function formatMoney(millimes: number, locale: MoneyLocale): string {
   return style.wrap(formatNumber(millimes, style));
 }
 
+/**
+ * Context-aware money formatter (redesign). Wraps {@link formatMoney} with per-surface rules:
+ * - `menu` / `console`: always three decimals, exactly like {@link formatMoney}
+ *   (console is rendered with `tabular-nums` by the caller, e.g. `<PriceTag>`).
+ * - `marketing`: drops the millimes when they are zero, so a round plan price reads
+ *   `39 DT` instead of `39,000 DT`; non-round amounts keep all three decimals.
+ */
+export type MoneyContext = 'menu' | 'marketing' | 'console';
+
+export function formatTND(
+  millimes: number,
+  { context, locale }: { context: MoneyContext; locale: MoneyLocale },
+): string {
+  assertMillimes(millimes);
+  const style = STYLES[locale];
+  if (context === 'marketing' && millimes % 1000 === 0) {
+    const dinars = groupDigits(String(Math.abs(millimes) / 1000), style.group);
+    return style.wrap(millimes < 0 ? `-${dinars}` : dinars);
+  }
+  return style.wrap(formatNumber(millimes, style));
+}
+
 /** Signed variant for option price deltas: `+1,500 DT`, `-0,500 DT`. Zero renders without a sign. */
 export function formatMoneyDelta(millimes: number, locale: MoneyLocale): string {
   assertMillimes(millimes);

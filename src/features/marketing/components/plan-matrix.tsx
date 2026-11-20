@@ -79,7 +79,7 @@ export async function PlanMatrix({ locale }: { locale: Locale }) {
                         {col.name}
                       </span>
                       {col.code === 'basic' ? (
-                        <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-semibold tracking-label text-on-brand uppercase">
+                        <span className="rounded-full bg-highlight-jasmin px-2 py-0.5 text-xs font-semibold tracking-label text-on-highlight-jasmin uppercase">
                           {t('offers.recommended')}
                         </span>
                       ) : null}

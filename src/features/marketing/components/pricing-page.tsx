@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Locale } from '@/i18n/locales';
-import { formatMoney } from '@/lib/money/format';
+import { formatTND } from '@/lib/money/format';
 import { cn } from '@/lib/utils';
 import { publicPlans } from '../server/plans';
 import { planCards, type PlanCard } from '../services/pricing';
@@ -79,25 +79,27 @@ async function PlanCardView({ card, locale }: { card: PlanCard; locale: Locale }
           <h2 id={titleId} className="text-xl font-semibold text-foreground">
             {name}
           </h2>
-          {card.recommended ? <Badge variant="success">{t('popular')}</Badge> : null}
+          {card.recommended ? <Badge variant="jasmin">{t('popular')}</Badge> : null}
         </div>
         {card.priceOnce === null ? (
           <>
             <p className="flex flex-wrap items-baseline gap-x-1.5">
               <span className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">
-                {formatMoney(card.priceMonthly, locale)}
+                {formatTND(card.priceMonthly, { context: 'marketing', locale })}
               </span>
               <span className="text-md text-muted-foreground">{t('perMonth')}</span>
             </p>
             <p className="text-sm text-muted-foreground tabular-nums">
-              {t('perYear', { price: formatMoney(card.priceYearly, locale) })}
+              {t('perYear', {
+                price: formatTND(card.priceYearly, { context: 'marketing', locale }),
+              })}
             </p>
           </>
         ) : (
           <>
             <p className="flex flex-wrap items-baseline gap-x-1.5">
               <span className="font-heading text-3xl font-title tracking-title text-foreground tabular-nums">
-                {formatMoney(card.priceOnce, locale)}
+                {formatTND(card.priceOnce, { context: 'marketing', locale })}
               </span>
               <span className="text-md text-muted-foreground">{t('once')}</span>
             </p>

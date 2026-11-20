@@ -31,7 +31,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { env } from '@/lib/env';
 import type { Locale } from '@/i18n/locales';
-import { formatMoney } from '@/lib/money/format';
+import { formatTND } from '@/lib/money/format';
 import { qrSvg } from '@/lib/qr/qr-svg';
 import { cn } from '@/lib/utils';
 import { publicPlans } from '../server/plans';
@@ -789,7 +789,7 @@ async function Offers({ locale }: { locale: Locale }) {
             )}
           >
             {card.recommended ? (
-              <span className="absolute start-6 -top-3 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-on-brand shadow-md">
+              <span className="absolute start-6 -top-3 rounded-full bg-highlight-jasmin px-3 py-1 text-xs font-semibold text-on-highlight-jasmin shadow-md">
                 {t('offers.recommended')}
               </span>
             ) : null}
@@ -799,8 +799,12 @@ async function Offers({ locale }: { locale: Locale }) {
             </div>
             <p className="font-heading text-2xl font-title tracking-title text-foreground tabular-nums sm:text-3xl">
               {card.priceOnce === null
-                ? t('offers.from', { price: formatMoney(card.priceMonthly, locale) })
-                : t('offers.once', { price: formatMoney(card.priceOnce, locale) })}
+                ? t('offers.from', {
+                    price: formatTND(card.priceMonthly, { context: 'marketing', locale }),
+                  })
+                : t('offers.once', {
+                    price: formatTND(card.priceOnce, { context: 'marketing', locale }),
+                  })}
             </p>
             <ul className="flex flex-1 flex-col gap-3">
               {copy.points.map((point) => (

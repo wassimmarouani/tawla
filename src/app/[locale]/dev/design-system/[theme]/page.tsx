@@ -161,6 +161,7 @@ export default async function DesignSystemPage({
           <div className="flex flex-wrap gap-2">
             <Badge>Nouveau</Badge>
             <Badge variant="soft">Populaire</Badge>
+            <Badge variant="jasmin">Recommandé</Badge>
             <Badge variant="secondary">Café</Badge>
             <Badge variant="outline">Outline</Badge>
             <Badge variant="success">Servie</Badge>

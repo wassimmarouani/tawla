@@ -6,6 +6,7 @@ import type { Locale } from '@/i18n/locales';
 import { env } from '@/lib/env';
 import { classes } from '@/lib/classes';
 import { demoVariantForSlug } from '@/lib/menu/demo-variants';
+import { variantPrefersDark } from '@/lib/menu/variants';
 import type { PublicMenu } from '../schemas/public-menu';
 import { restaurantThemeSchema } from '../schemas/restaurant-theme';
 import { AvailabilityLive } from './availability-live';
@@ -41,11 +42,17 @@ export async function PublicMenuView({
   const t = await getTranslations('client');
   const scope = menu.restaurant.public_id;
   const parsedTheme = restaurantThemeSchema.parse(menu.restaurant.theme);
-  const colorMode = parsedTheme.color_mode ?? 'auto';
   // Fallback: the demo venues ship with a known variant per slug. If the DB theme hasn't been
   // synced yet (install button not clicked), resolve from the shared demo list so each demo
   // still renders in its own identity.
   const variant = parsedTheme.variant ?? demoVariantForSlug(menu.restaurant.slug) ?? 'default';
+  // Night presets (Nocturne) are always dark: if the venue left the mode on `auto` (or its theme
+  // isn't synced), pin dark so the brand resolver and surfaces agree instead of a light brand on a
+  // night page.
+  const colorMode =
+    (parsedTheme.color_mode ?? 'auto') === 'auto' && variantPrefersDark(variant)
+      ? 'dark'
+      : (parsedTheme.color_mode ?? 'auto');
   // Photos above the fold only in the first photo section.
   const firstPhotoSection = menu.categories.findIndex(
     (category) => sectionLayout(category) === 'cards',
@@ -61,7 +68,7 @@ export async function PublicMenuView({
         serviceBar ? 'pb-40' : 'pb-safe',
       )}
     >
-      <BrandStyle theme={menu.restaurant.theme} scope={scope} />
+      <BrandStyle theme={menu.restaurant.theme} scope={scope} forceMode={colorMode} />
       <VariantFonts variant={variant} />
       <AvailabilityLive
         slug={menu.restaurant.slug}

@@ -12,8 +12,19 @@ function declarations(theme: BrandTheme): string {
  * Tenant brand colours (ADR-0027) for light and dark surfaces, scoped to `[data-tenant]`.
  * Values come from the AA-checked resolver, never from raw input; the scope is a base64url id.
  */
-export function BrandStyle({ theme, scope }: { theme: unknown; scope: string }) {
-  const { brand_color: color, color_mode: mode } = restaurantThemeSchema.parse(theme);
+export function BrandStyle({
+  theme,
+  scope,
+  forceMode,
+}: {
+  theme: unknown;
+  scope: string;
+  /** Overrides the theme's own `color_mode` (e.g. a Night preset pinned dark). */
+  forceMode?: 'auto' | 'light' | 'dark';
+}) {
+  const parsed = restaurantThemeSchema.parse(theme);
+  const color = parsed.brand_color;
+  const mode = forceMode ?? parsed.color_mode;
   if (!color || !/^[\w-]+$/.test(scope)) return null;
 
   const ink = PALETTE.light.foreground;

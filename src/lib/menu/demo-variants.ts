@@ -8,16 +8,16 @@ import type { MenuVariant } from './variants';
  * Keep in sync with `src/server/admin/demo-venue.ts` (DEMO_VENUES).
  */
 const DEMO_VARIANTS: Readonly<Record<string, MenuVariant>> = {
-  'cafe-el-bahja': 'traditional',
-  'cafe-marina': 'modern-minimal',
-  'pizzeria-mediterranea': 'bistro',
-  'trattoria-vesuvio': 'elegant-dark',
-  'patisserie-la-rose': 'romantic-pastel',
-  'patisserie-nordique': 'scandinavian',
-  'bar-citadelle': 'dark-luxe',
-  'rooftop-sidi-bou': 'mediterranean-airy',
-  'tunis-grill': 'street-bold',
-  'glacier-sorbetto': 'playful-pastel',
+  'cafe-el-bahja': 'medina',
+  'patisserie-la-rose': 'medina',
+  'cafe-marina': 'specialty',
+  'pizzeria-mediterranea': 'trattoria',
+  'trattoria-vesuvio': 'trattoria',
+  'patisserie-nordique': 'atelier',
+  'bar-citadelle': 'nocturne',
+  'rooftop-sidi-bou': 'nocturne',
+  'tunis-grill': 'street',
+  'glacier-sorbetto': 'gelato',
 };
 
 export function demoVariantForSlug(slug: string): MenuVariant | null {

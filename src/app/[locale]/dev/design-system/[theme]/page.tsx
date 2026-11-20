@@ -1,4 +1,14 @@
-import { Bell, Inbox, Plus, ReceiptText, Search, Settings2, Trash2 } from 'lucide-react';
+import {
+  Bell,
+  Inbox,
+  LayoutGrid,
+  List,
+  Plus,
+  ReceiptText,
+  Search,
+  Settings2,
+  Trash2,
+} from 'lucide-react';
 import { hasLocale } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -26,8 +36,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import { Monogram } from '@/components/ui/monogram';
+import { PageHeader } from '@/components/ui/page-header';
+import { Pagination } from '@/components/ui/pagination';
+import { PriceTag } from '@/components/ui/price-tag';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { StatCard } from '@/components/ui/stat-card';
+import { StatusDot } from '@/components/ui/status-dot';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
@@ -273,6 +291,164 @@ export default async function DesignSystemPage({
                 </div>
               </LoadingRegion>
             </div>
+          </div>
+        </Section>
+
+        <Section title="Page header">
+          <PageHeader
+            eyebrow={<Badge variant="soft">Console</Badge>}
+            title="Café El Bahja · مقهى البهجة"
+            subtitle="Vue d’ensemble du restaurant et de son activité récente."
+            actions={
+              <>
+                <Button variant="outline">Exporter</Button>
+                <Button>
+                  <Plus /> Nouvelle table
+                </Button>
+              </>
+            }
+          />
+        </Section>
+
+        <Section title="Breadcrumbs">
+          <div className="flex flex-col gap-3">
+            <Breadcrumbs
+              label="Fil d’Ariane"
+              items={[
+                { label: 'Restaurants', href: '#' },
+                { label: 'Café El Bahja', href: '#' },
+                { label: 'Tables' },
+              ]}
+            />
+            <Breadcrumbs
+              label="مسار التنقل"
+              items={[
+                { label: 'المطاعم', href: '#' },
+                { label: 'مقهى البهجة', href: '#' },
+                { label: 'الطاولات' },
+              ]}
+            />
+          </div>
+        </Section>
+
+        <Section title="Stat cards">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard
+              label="Commandes du jour"
+              value="128"
+              delta={{ value: '+12 %', direction: 'up', label: 'vs. hier' }}
+              footnote="Mis à jour il y a 2 min"
+            />
+            <StatCard
+              label="Panier moyen"
+              value={<PriceTag millimes={18500} locale={locale} context="console" size="lg" />}
+              delta={{ value: '-4 %', direction: 'down', label: 'vs. hier' }}
+            />
+            <StatCard
+              label="Tables actives"
+              value="9"
+              delta={{ value: '0', direction: 'neutral' }}
+            />
+            <StatCard label="Chargement" value="—" loading />
+          </div>
+        </Section>
+
+        <Section title="Status dots">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <StatusDot variant="success" label="Disponible" />
+            <StatusDot variant="warning" label="En attente" />
+            <StatusDot variant="danger" label="En rupture" />
+            <StatusDot variant="info" label="En préparation" />
+            <StatusDot variant="neutral" label="Hors service" />
+            <StatusDot variant="success" label="متوفر" />
+          </div>
+        </Section>
+
+        <Section title="Monograms">
+          <div className="flex flex-wrap items-center gap-3">
+            <Monogram size="sm" name="Café El Bahja" />
+            <Monogram size="md" name="Yasmine Ben Ali" />
+            <Monogram size="lg" name="Trattoria Sidi Bou" />
+            <Monogram size="md" name="مقهى البهجة" />
+            <Monogram size="md" name="Karim" />
+          </div>
+        </Section>
+
+        <Section title="Price tags">
+          <div className="flex flex-wrap items-center gap-6">
+            <PriceTag millimes={3500} locale={locale} context="menu" />
+            <PriceTag millimes={39000} locale={locale} context="marketing" size="lg" />
+            <PriceTag millimes={18500} locale={locale} context="console" />
+            <PriceTag
+              millimes={2500}
+              locale={locale}
+              context="menu"
+              prefix={locale === 'ar' ? 'ابتداءً من' : 'À partir de'}
+            />
+          </div>
+        </Section>
+
+        <Section title="Segmented control">
+          <div className="flex flex-col items-start gap-4">
+            <SegmentedControl
+              label="Période"
+              defaultValue="week"
+              options={[
+                { value: 'day', label: 'Jour' },
+                { value: 'week', label: 'Semaine' },
+                { value: 'month', label: 'Mois' },
+              ]}
+            />
+            <SegmentedControl
+              label="Affichage"
+              defaultValue="grid"
+              options={[
+                { value: 'grid', label: 'Grille', icon: <LayoutGrid /> },
+                { value: 'list', label: 'Liste', icon: <List /> },
+              ]}
+            />
+            <SegmentedControl
+              label="عرض"
+              defaultValue="grid"
+              options={[
+                { value: 'grid', label: 'شبكة', icon: <LayoutGrid /> },
+                { value: 'list', label: 'قائمة', icon: <List /> },
+              ]}
+            />
+            <SegmentedControl
+              label="Désactivé"
+              defaultValue="a"
+              disabled
+              options={[
+                { value: 'a', label: 'Option A' },
+                { value: 'b', label: 'Option B' },
+              ]}
+            />
+          </div>
+        </Section>
+
+        <Section title="Pagination">
+          <div className="flex flex-col gap-4">
+            <Pagination
+              label="Pagination"
+              summary="1–25 sur 240"
+              previousLabel="Page précédente"
+              nextLabel="Page suivante"
+              hasPrevious={false}
+            />
+            <Pagination
+              label="Pagination"
+              summary="26–50 sur 240"
+              previousLabel="Page précédente"
+              nextLabel="Page suivante"
+            />
+            <Pagination
+              label="ترقيم الصفحات"
+              summary="226–240 من 240"
+              previousLabel="الصفحة السابقة"
+              nextLabel="الصفحة التالية"
+              hasNext={false}
+            />
           </div>
         </Section>
       </main>

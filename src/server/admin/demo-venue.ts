@@ -2,6 +2,7 @@ import 'server-only';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { and, eq, isNull, or, sql } from 'drizzle-orm';
+import type { MenuTemplateId } from '@/features/menu';
 import { findTemplate, templateI18n, type MenuTemplate } from '@/lib/menu/templates';
 import { variantPrefersDark, type MenuVariant } from '@/lib/menu/variants';
 import { slugify } from '@/lib/text/slugify';
@@ -47,6 +48,11 @@ export interface DemoVenueDefinition {
   brandColor: `#${string}`;
   /** Public menu visual variant (fonts, radius, accents). See `src/lib/menu/variants.ts`. */
   variant: MenuVariant;
+  /**
+   * Presentation template (distinct layout), when the demo opts into one. Orthogonal to `variant`;
+   * absent means the default layout. See `src/features/menu/templates/ids.ts`.
+   */
+  template?: MenuTemplateId;
   tables: number;
   /** Menu source: the El Bahja SQL seed file (photographed), or a template id. */
   menu: { kind: 'sql'; file: string } | { kind: 'template'; id: string };
@@ -131,8 +137,9 @@ const TRATTORIA_VESUVIO: DemoVenueDefinition = {
   taglineFr: 'Trattoria italienne haut de gamme, carte des vins',
   taglineAr: 'تراتوريا إيطالية راقية، قائمة نبيذ',
   taglineEn: 'Upscale Italian trattoria with wine list',
-  brandColor: '#3e6b35',
+  brandColor: '#6e1f22',
   variant: 'trattoria',
+  template: 'vesuvio',
   tables: 14,
   menu: { kind: 'template', id: 'trattoria' },
   coverImageUrl:
@@ -364,6 +371,7 @@ async function syncDemoTheme(definition: DemoVenueDefinition): Promise<void> {
         brand_color: definition.brandColor,
         variant: definition.variant,
         color_mode: variantPrefersDark(definition.variant) ? 'dark' : 'auto',
+        ...(definition.template ? { template: definition.template } : {}),
       },
     })
     .where(eq(restaurants.id, definition.restaurantId));

@@ -29,5 +29,6 @@ export { ProductSheetSlot } from './components/product-sheet-slot';
 export { JsonLd } from './components/json-ld';
 export { menuJsonLd } from './services/structured-data';
 export { restaurantThemeSchema, type RestaurantTheme } from './schemas/restaurant-theme';
+export { MENU_TEMPLATE_IDS, type MenuTemplateId, demoTemplateForSlug } from './templates/ids';
 export type { TableBadge } from './components/menu-header';
 export { MenuSkeleton } from './components/menu-skeleton';

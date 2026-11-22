@@ -50,8 +50,21 @@ const FRAUNCES = {
 /** Each preset's font package. Only families actually used are declared; others return null. */
 export function variantFonts(variant: MenuVariant): VariantFontLoad {
   switch (variant) {
-    case 'medina':
     case 'trattoria':
+      // Trattoria resolves to the Vesuvio template (printed-carte editorial). Classic serif:
+      // Cormorant for Latin display, Amiri for Arabic — the `--font-title` stack lists both so the
+      // browser picks Amiri for Arabic glyphs. Both faces are loaded here (display + body slots).
+      return {
+        display: {
+          family: 'Cormorant',
+          url: 'https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap',
+        },
+        body: {
+          family: 'Amiri',
+          url: 'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap',
+        },
+      };
+    case 'medina':
     case 'atelier':
     case 'nocturne':
       // Shared serif display face; body stays on the already-loaded sans / Arabic stack.

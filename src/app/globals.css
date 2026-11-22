@@ -903,3 +903,263 @@ html:has(dialog[open]) {
   display: inline-flex;
   align-items: center;
 }
+
+/* ───────────────────────── Vesuvio template — printed carte (trattoria) ─────────────────────────
+ * The one structurally-distinct template so far (brief §6.2, MATRIX row 4). Scoped under
+ * `[data-template='vesuvio']` (the shell drops `data-variant` for named templates) so nothing leaks
+ * into the default layout. Palette: ivory / charcoal / oxblood / gold, light + a refined dark. */
+[data-template='vesuvio'] {
+  --font-title: 'Cormorant', 'Amiri', serif;
+  --font-heading: 'Cormorant', 'Amiri', serif;
+  --tracking-title: 0.01em;
+  --tracking-heading: 0.08em;
+  --font-weight-title: 600;
+  --radius: 0.25rem;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.375rem;
+  --radius-xl: 0.5rem;
+  --vesuvio-gold: #9c7b2e;
+  --vesuvio-oxblood: #6e1f22;
+}
+[data-template='vesuvio']:not([data-theme='dark']) {
+  --background: #f7f1e3;
+  --foreground: #241f1a;
+  --card: #fbf6ea;
+  --card-foreground: #241f1a;
+  --popover: #fbf6ea;
+  --popover-foreground: #241f1a;
+  --muted: #ece2ca;
+  --muted-foreground: #5a5042;
+  --secondary: #ece2ca;
+  --secondary-foreground: #241f1a;
+  --accent: #e4d8bd;
+  --accent-foreground: #3a2f1e;
+  --border: #d8c9a6;
+  --input: #8a7c5f;
+}
+/* Refined dark — applied both when forced (`data-theme='dark'`) and in auto mode under OS dark.
+ * The light block above also matches in auto+OS-dark (no attribute), so this media block must come
+ * after it to win the cascade (same pattern as the `[data-variant]` presets). */
+[data-template='vesuvio'][data-theme='dark'] {
+  --background: #1a1512;
+  --foreground: #efe7d6;
+  --card: #221b16;
+  --card-foreground: #efe7d6;
+  --popover: #221b16;
+  --popover-foreground: #efe7d6;
+  --muted: #2a2219;
+  --muted-foreground: #c3b79c;
+  --secondary: #2a2219;
+  --secondary-foreground: #efe7d6;
+  --accent: #33291d;
+  --accent-foreground: #efe7d6;
+  --border: #3c3326;
+  --input: #8a7c5f;
+  --vesuvio-gold: #cda44e;
+  --vesuvio-oxblood: #d98b8e;
+}
+@media (prefers-color-scheme: dark) {
+  [data-template='vesuvio']:not([data-theme='light']) {
+    --background: #1a1512;
+    --foreground: #efe7d6;
+    --card: #221b16;
+    --card-foreground: #efe7d6;
+    --popover: #221b16;
+    --popover-foreground: #efe7d6;
+    --muted: #2a2219;
+    --muted-foreground: #c3b79c;
+    --secondary: #2a2219;
+    --secondary-foreground: #efe7d6;
+    --accent: #33291d;
+    --accent-foreground: #efe7d6;
+    --border: #3c3326;
+    --input: #8a7c5f;
+    --vesuvio-gold: #cda44e;
+    --vesuvio-oxblood: #d98b8e;
+  }
+}
+
+/* Table of contents — small-caps chapter anchors under a gold hairline */
+[data-template='vesuvio'] .vesuvio-toc {
+  margin-block: 1.25rem 2rem;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--vesuvio-gold);
+}
+[data-template='vesuvio'] .vesuvio-toc ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.25rem;
+}
+[data-template='vesuvio'] .vesuvio-toc-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: 0.25rem;
+  font-family: var(--font-heading);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  font-size: 1rem;
+  color: var(--color-muted-foreground);
+  text-decoration: none;
+}
+[data-template='vesuvio'] .vesuvio-toc-link:hover {
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-toc-link:focus-visible {
+  outline: 2px solid var(--vesuvio-oxblood);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Chapter header — illuminated initial + small-caps title + gold rule */
+[data-template='vesuvio'] .vesuvio-chapter {
+  margin-block-start: 2.5rem;
+}
+[data-template='vesuvio'] .vesuvio-chapter-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-block-end: 0.75rem;
+}
+[data-template='vesuvio'] .vesuvio-initial {
+  flex: 0 0 auto;
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  line-height: 0.85;
+  font-weight: 600;
+  color: var(--vesuvio-oxblood);
+}
+[data-template='vesuvio'] .vesuvio-chapter-titles {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+[data-template='vesuvio'] .vesuvio-chapter-title {
+  font-family: var(--font-heading);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  font-size: 1.6rem;
+  font-weight: var(--font-weight-title);
+  line-height: 1.15;
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-chapter-hours {
+  margin-block-start: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--color-muted-foreground);
+}
+[data-template='vesuvio'] .vesuvio-rule {
+  flex: 0 0 auto;
+  align-self: center;
+  inline-size: 2.5rem;
+  block-size: 1px;
+  background: var(--vesuvio-gold);
+}
+
+/* Dish rows — typographic line, price end-aligned, quiet inline accordion */
+[data-template='vesuvio'] .vesuvio-list {
+  list-style: none;
+}
+[data-template='vesuvio'] .vesuvio-row + .vesuvio-row {
+  border-block-start: 1px solid color-mix(in oklab, var(--vesuvio-gold) 35%, transparent);
+}
+[data-template='vesuvio'] .vesuvio-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-block: 0.8rem;
+  cursor: pointer;
+  list-style: none;
+}
+[data-template='vesuvio'] .vesuvio-summary::-webkit-details-marker {
+  display: none;
+}
+[data-template='vesuvio'] .vesuvio-summary--static {
+  cursor: default;
+}
+[data-template='vesuvio'] .vesuvio-disclosure .vesuvio-summary:focus-visible {
+  outline: 2px solid var(--vesuvio-oxblood);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+[data-template='vesuvio'] .vesuvio-name {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-lead {
+  flex: 1 1 auto;
+  min-inline-size: 1rem;
+}
+[data-template='vesuvio'] .vesuvio-price {
+  flex: 0 0 auto;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-price--out {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  color: var(--color-muted-foreground);
+}
+[data-template='vesuvio'] .vesuvio-out {
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  color: var(--vesuvio-oxblood);
+}
+/* Expand affordance — a small gold caret that flips when open */
+[data-template='vesuvio'] .vesuvio-disclosure .vesuvio-summary::after {
+  content: '';
+  flex: 0 0 auto;
+  align-self: center;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-inline-start: 0.1rem;
+  border-inline-end: 1.5px solid var(--vesuvio-gold);
+  border-block-end: 1.5px solid var(--vesuvio-gold);
+  transform: rotate(45deg);
+  transition: transform 150ms ease;
+}
+[data-template='vesuvio'] .vesuvio-disclosure[open] .vesuvio-summary::after {
+  transform: rotate(-135deg);
+}
+[data-template='vesuvio'] .vesuvio-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-block: 0.1rem 0.9rem;
+  padding-inline-end: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--color-muted-foreground);
+}
+[data-template='vesuvio'] .vesuvio-desc {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+[data-template='vesuvio'] .vesuvio-options {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+[data-template='vesuvio'] .vesuvio-option-group,
+[data-template='vesuvio'] .vesuvio-meta-label {
+  font-family: var(--font-heading);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.04em;
+  font-size: 1rem;
+  color: var(--color-foreground);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-template='vesuvio'] .vesuvio-disclosure .vesuvio-summary::after {
+    transition: none;
+  }
+}

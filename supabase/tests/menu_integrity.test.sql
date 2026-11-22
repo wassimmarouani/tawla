@@ -68,9 +68,6 @@ select throws_ok(
 select throws_ok(
   $$ update public.products set badges = '{bestseller}' where id = '43000000-0000-4000-8000-0000000000a1' $$,
   '23514', null, 'unknown badges are rejected');
-select lives_ok(
-  $$ update public.products set badges = '{recommended}' where id = '43000000-0000-4000-8000-0000000000a1' $$,
-  'the recommended badge is accepted');
 select throws_ok(
   $$ update public.products set allergens = '{bananas}' where id = '43000000-0000-4000-8000-0000000000a1' $$,
   '23514', null, 'unknown allergens are rejected');
@@ -126,6 +123,12 @@ select is(
    where entity_id = '43000000-0000-4000-8000-0000000000a1' and action = 'product.price_change'),
   '00000000-0000-4000-8000-0000000003a1'::uuid,
   'the audit entry names the manager');
+
+-- The `recommended` badge is accepted (ADR-0032). Placed last: a successful update bumps the
+-- realtime version, so it must run after the version/price-history assertions above.
+select lives_ok(
+  $$ update public.products set badges = '{recommended}' where id = '43000000-0000-4000-8000-0000000000a1' $$,
+  'the recommended badge is accepted');
 
 select * from finish();
 rollback;

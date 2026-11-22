@@ -100,7 +100,11 @@ test('switches to Arabic from the venue pills, right to left', async ({ page }) 
 test('jumps to a category from the sticky bar', async ({ page }) => {
   await page.goto('/cafe-el-bahja');
   const nav = page.getByRole('navigation', { name: 'Catégories' });
-  await nav.getByRole('link', { name: 'Glaces' }).click();
+  // The bar auto-scrolls its active chip into view on mount; wait for that to settle before
+  // tapping, so WebKit does not drop the anchor's default navigation mid horizontal-scroll.
+  const glaces = nav.getByRole('link', { name: 'Glaces' });
+  await glaces.scrollIntoViewIfNeeded();
+  await glaces.click();
   await expect(page).toHaveURL(/#cat-/);
   await expect(page.getByRole('heading', { level: 2, name: 'Glaces' })).toBeInViewport();
   await expect(nav.getByRole('link', { name: 'Glaces' })).toHaveAttribute('aria-current', 'true');

@@ -84,13 +84,13 @@ test('the language menu switches the URL prefix and direction', async ({ page })
 test('pricing lists the plan catalogue in dinars', async ({ page }, testInfo) => {
   await page.goto('/pricing');
   const basic = page.getByRole('article', { name: 'Basic' });
-  await expect(basic.getByText('39,000 DT', { exact: true })).toBeVisible();
+  await expect(basic.getByText('39 DT', { exact: true })).toBeVisible();
   await expect(basic.getByText('Recommandé')).toBeVisible();
   await expect(basic.getByRole('link', { name: 'Commencer' })).toHaveAttribute('href', '/signup');
 
   // Menu QR (ADR-0031): the menu only, then Basic adds table service.
   const menuQr = page.getByRole('article', { name: 'Menu QR' });
-  await expect(menuQr.getByText('200,000 DT', { exact: true })).toBeVisible();
+  await expect(menuQr.getByText('200 DT', { exact: true })).toBeVisible();
   await expect(menuQr.getByText('Sans abonnement')).toBeVisible();
   await expect(menuQr.getByRole('link', { name: 'Commander' })).toHaveAttribute(
     'href',
@@ -101,7 +101,7 @@ test('pricing lists the plan catalogue in dinars', async ({ page }, testInfo) =>
   await expect(basic.getByText('Appel serveur et demande d’addition')).toBeVisible();
 
   const pro = page.getByRole('article', { name: 'Pro' });
-  await expect(pro.getByText('99,000 DT', { exact: true })).toBeVisible();
+  await expect(pro.getByText('99 DT', { exact: true })).toBeVisible();
   await expect(pro.getByText('Tout Basic, plus :')).toBeVisible();
   await expect(pro.getByText('Bientôt').first()).toBeVisible();
   await expect(pro.getByRole('link', { name: 'Nous contacter' })).toHaveAttribute(

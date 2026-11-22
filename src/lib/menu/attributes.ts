@@ -2,7 +2,7 @@
  * Product attributes (spec 02, spec 04): badges, the EU 14 allergens and dietary flags. Same
  * lists as the `products` check constraints; shared by the public menu and the editor.
  */
-export const BADGES = ['new', 'popular', 'house', 'seasonal'] as const;
+export const BADGES = ['recommended', 'new', 'popular', 'house', 'seasonal'] as const;
 export const ALLERGENS = [
   'gluten',
   'crustaceans',

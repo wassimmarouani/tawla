@@ -1,4 +1,4 @@
-import { Flame, Leaf, Sparkles, Star, UtensilsCrossed } from 'lucide-react';
+import { Flame, Heart, Leaf, Sparkles, Star, UtensilsCrossed } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { MenuImage } from '@/components/media/menu-image';
@@ -30,6 +30,7 @@ function Price({ product, locale, t }: { product: PublicProduct; locale: Locale;
 
 /** Small lucide glyph per badge kind, so chips read as icon + label (never colour alone). */
 const TAG_ICON: Record<string, typeof Star> = {
+  recommended: Heart,
   new: Sparkles,
   popular: Star,
   house: UtensilsCrossed,
@@ -56,8 +57,9 @@ function Tags({ product, t }: { product: PublicProduct; t: Translator }) {
             key={tag.key}
             className={cn(
               'inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs leading-none font-semibold',
+              tag.kind === 'recommended' && 'bg-highlight-jasmin text-on-highlight-jasmin',
               tag.kind === 'new' && 'bg-brand-solid text-brand-on-solid',
-              tag.kind === 'popular' && 'bg-highlight-jasmin text-on-highlight-jasmin',
+              tag.kind === 'popular' && 'bg-brand-subtle text-brand-on-subtle',
               (tag.kind === 'house' || tag.kind === 'seasonal') && 'bg-muted text-foreground',
               tag.kind === 'spicy' && 'bg-destructive-subtle text-destructive-text',
             )}
@@ -105,6 +107,7 @@ export function filterTags(product: PublicProduct): string {
   if (product.dietary.includes('gluten_free')) tags.add('gluten_free');
   if (product.dietary.includes('spicy')) tags.add('spicy');
   if (product.badges.includes('new')) tags.add('new');
+  if (product.badges.includes('recommended')) tags.add('recommended');
   return [...tags].join(' ');
 }
 

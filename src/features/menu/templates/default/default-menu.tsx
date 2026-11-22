@@ -42,7 +42,9 @@ export function DefaultMenuBody({ menu, locale, t }: MenuTemplateProps) {
             Object.fromEntries(
               MENU_FILTERS.map((filter) => [
                 filter,
-                filter === 'new' ? t('badges.new') : t(`dietary.${filter}`),
+                filter === 'new' || filter === 'recommended'
+                  ? t(`badges.${filter}`)
+                  : t(`dietary.${filter}`),
               ]),
             ) as Record<MenuFilter, string>
           }

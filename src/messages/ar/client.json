@@ -18,6 +18,7 @@
   "language": "اللغة",
   "categories": "الأقسام",
   "badges": {
+    "recommended": "موصى به",
     "new": "جديد",
     "popular": "الأكثر طلبًا",
     "spicy": "حار",

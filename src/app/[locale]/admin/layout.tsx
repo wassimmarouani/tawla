@@ -8,7 +8,9 @@ import { Logo } from '@/components/brand/logo';
 import { EmptyState } from '@/components/states/empty-state';
 import { Toaster } from '@/components/ui/sonner';
 import { logOut } from '@/features/auth';
+
 import { ConsoleNav, ConsoleNavFallback } from '@/features/platform';
+
 import { clientMessages } from '@/i18n/client-messages';
 import { requireSessionClaims } from '@/lib/auth/session';
 import { env } from '@/lib/env';
@@ -41,6 +43,7 @@ export default async function AdminLayout({ children }: LayoutProps<'/[locale]/a
               <Suspense fallback={<ConsoleNavFallback />}>
                 <ConsoleNav />
               </Suspense>
+
               <form action={logOut}>
                 <button type="submit" className={link}>
                   {t('logout')}

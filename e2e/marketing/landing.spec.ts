@@ -59,8 +59,14 @@ test('the home page explains the product and leads to sign-up', async ({ page },
     expect(await undersizedTargets(page), 'targets').toEqual([]);
     expect(await seriousAxeViolations(page), 'axe').toEqual([]);
   }
-  // The call to action opens the sign-up form (another surface: no locale prefix).
-  await page.getByRole('main').getByRole('link', { name: 'Créer mon menu' }).first().click();
+  // The call to action opens the sign-up form (another surface: no locale prefix). WebKit iPhone
+  // keeps the hero animating, so a normal click never passes the actionability "stable" wait;
+  // scroll with a plain DOM call and force-click instead.
+  const cta = page.getByRole('main').getByRole('link', { name: 'Créer mon menu' }).first();
+  await cta.evaluate((el) => {
+    el.scrollIntoView({ block: 'center' });
+  });
+  await cta.click({ force: true });
   await expect(page).toHaveURL(/\/signup$/);
   await expect(
     page.getByRole('heading', { level: 1, name: 'Créez votre menu digital' }),

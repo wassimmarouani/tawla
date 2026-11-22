@@ -501,43 +501,89 @@ html:has(dialog[open]) {
 }
 
 /**
- * Menu variants (spec 02 amended): each variant customises the public menu's typography,
- * radius scale and accent surfaces without touching components. Applied as `data-variant`
- * on the PublicMenuView root. The default variant keeps Inter/Geist and the global tokens.
+ * Menu presets (spec 02 §6.4 / 7, "Méditerranée moderne"): seven named identities for the public
+ * menu. Each `[data-variant]` scope overrides the surface + text tokens (palette), display font,
+ * radius scale and section decoration without touching a single component. `globals.css` variant
+ * blocks are the one place raw colour literals are allowed (the per-venue brand accent still comes
+ * from the AA-checked `BrandStyle` resolver, scoped to `[data-tenant]`). The ten demo venues each
+ * pick one preset; several share one (see `src/lib/menu/demo-variants.ts`).
+ *
+ * Light presets set their surfaces under `:not([data-theme='dark'])`, so a forced-dark menu, or an
+ * `auto` menu under a dark system (the media block far below), falls through to the shared Night
+ * palette instead of forcing an ivory page into dark mode. Titles pick up the display face through
+ * the `font-heading` utility on the heading elements; `--font-title` is kept for the printed tent.
  */
 
-[data-variant='traditional'] {
+/* ── Médina — ivory, terracotta & deep green; zellige header; Fraunces + IBM Plex Sans Arabic ── */
+[data-variant='medina'] {
   --font-title: 'Fraunces', serif;
   --font-heading: 'Fraunces', serif;
-  --font-body: 'Lora', serif;
   --tracking-title: -0.01em;
+  --tracking-heading: -0.005em;
+  --font-weight-title: 600;
   --radius: 1rem;
   --radius-xs: 0.375rem;
   --radius-sm: 0.625rem;
   --radius-md: 1rem;
   --radius-lg: 1.25rem;
   --radius-xl: 1.5rem;
-  font-family: var(--font-body), var(--font-sans);
+}
+[data-variant='medina']:not([data-theme='dark']) {
+  --background: #fbf6ee;
+  --foreground: #2a1e14;
+  --card: #fffdf8;
+  --card-foreground: #2a1e14;
+  --popover: #fffdf8;
+  --popover-foreground: #2a1e14;
+  --muted: #f3ead9;
+  --muted-foreground: #695540;
+  --secondary: #f3ead9;
+  --secondary-foreground: #2a1e14;
+  --accent: #efe3cf;
+  --accent-foreground: #2a1e14;
+  --border: #e7dcc8;
+  --input: #897a63;
 }
 
-[data-variant='modern-minimal'] {
+/* ── Specialty — off-white, espresso & oat; clean Geist; square photos ── */
+[data-variant='specialty'] {
   --font-title: var(--font-sans);
   --font-heading: var(--font-sans);
-  --tracking-title: -0.045em;
-  --radius: 0.75rem;
+  --tracking-title: -0.035em;
+  --tracking-heading: -0.02em;
+  --radius: 0.625rem;
   --radius-xs: 0.25rem;
   --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
-  --shadow-sm: 0 0 0 1px rgb(var(--shadow-color) / 0.04);
-  --shadow-md: 0 1px 1px rgb(var(--shadow-color) / 0.04), 0 0 0 1px rgb(var(--shadow-color) / 0.04);
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1rem;
+  --shadow-sm: 0 0 0 1px rgb(var(--shadow-color) / 0.05);
+  --shadow-md: 0 1px 1px rgb(var(--shadow-color) / 0.04), 0 0 0 1px rgb(var(--shadow-color) / 0.05);
+}
+[data-variant='specialty']:not([data-theme='dark']) {
+  --background: #faf9f7;
+  --foreground: #231a12;
+  --card: #ffffff;
+  --card-foreground: #231a12;
+  --popover: #ffffff;
+  --popover-foreground: #231a12;
+  --muted: #efe7da;
+  --muted-foreground: #6b5e4f;
+  --secondary: #efe7da;
+  --secondary-foreground: #231a12;
+  --accent: #e9dfd3;
+  --accent-foreground: #231a12;
+  --border: #e6ded2;
+  --input: #887b6a;
 }
 
-[data-variant='bistro'] {
-  --font-title: 'Playfair Display', serif;
-  --font-heading: 'Playfair Display', serif;
+/* ── Trattoria — cream, tomato & basil; serif italic titles; dotted price leaders ── */
+[data-variant='trattoria'] {
+  --font-title: 'Fraunces', serif;
+  --font-heading: 'Fraunces', serif;
   --tracking-title: 0em;
+  --tracking-heading: 0em;
+  --font-weight-title: 600;
   --radius: 0.5rem;
   --radius-xs: 0.25rem;
   --radius-sm: 0.375rem;
@@ -545,79 +591,89 @@ html:has(dialog[open]) {
   --radius-lg: 0.625rem;
   --radius-xl: 0.75rem;
 }
+[data-variant='trattoria']:not([data-theme='dark']) {
+  --background: #faf5ea;
+  --foreground: #2a2016;
+  --card: #fffdf7;
+  --card-foreground: #2a2016;
+  --popover: #fffdf7;
+  --popover-foreground: #2a2016;
+  --muted: #f1e8d6;
+  --muted-foreground: #6d5e49;
+  --secondary: #f1e8d6;
+  --secondary-foreground: #2a2016;
+  --accent: #e9ddc6;
+  --accent-foreground: #2a2016;
+  --border: #e7dcc3;
+  --input: #897a60;
+}
 
-[data-variant='elegant-dark'] {
-  --font-title: 'Cormorant Garamond', serif;
-  --font-heading: 'Cormorant Garamond', serif;
-  --font-body: 'Lora', serif;
-  --tracking-title: 0.01em;
+/* ── Atelier — porcelain, blush & charcoal; thin serif; airy; large portrait photos ── */
+[data-variant='atelier'] {
+  --font-title: 'Fraunces', serif;
+  --font-heading: 'Fraunces', serif;
+  --tracking-title: 0em;
+  --tracking-heading: 0.01em;
+  --font-weight-title: 420;
+  --radius: 1rem;
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+}
+[data-variant='atelier']:not([data-theme='dark']) {
+  --background: #faf8f6;
+  --foreground: #222222;
+  --card: #ffffff;
+  --card-foreground: #222222;
+  --popover: #ffffff;
+  --popover-foreground: #222222;
+  --muted: #f4efec;
+  --muted-foreground: #6a625d;
+  --secondary: #f4efec;
+  --secondary-foreground: #222222;
+  --accent: #f3e2de;
+  --accent-foreground: #5a3f3b;
+  --border: #ece6e2;
+  --input: #8b837e;
+}
+
+/* ── Nocturne — Night palette (always dark): bar & rooftop; Fraunces display ── */
+[data-variant='nocturne'] {
+  --font-title: 'Fraunces', serif;
+  --font-heading: 'Fraunces', serif;
+  --tracking-title: 0.005em;
   --tracking-heading: 0.02em;
-  --radius: 0.25rem;
+  --font-weight-title: 500;
+  --radius: 0.375rem;
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
-  --radius-md: 0.25rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  font-family: var(--font-body), var(--font-sans);
+  --radius-md: 0.375rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+  --background: #0b0e1f;
+  --foreground: #f4f1ea;
+  --card: #151a33;
+  --card-foreground: #f4f1ea;
+  --popover: #1b2142;
+  --popover-foreground: #f4f1ea;
+  --muted: #1e2440;
+  --muted-foreground: #aab0c8;
+  --secondary: #1e2440;
+  --secondary-foreground: #f4f1ea;
+  --accent: #232a4d;
+  --accent-foreground: #f4f1ea;
+  --border: #2a3157;
+  --input: #808aa8;
 }
 
-[data-variant='romantic-pastel'] {
-  --font-title: 'Dancing Script', cursive;
-  --font-heading: 'Dancing Script', cursive;
-  --font-body: 'Cormorant Garamond', serif;
-  --tracking-title: 0em;
-  --font-weight-title: 700;
-  --radius: 1.5rem;
-  --radius-xs: 0.75rem;
-  --radius-sm: 1rem;
-  --radius-md: 1.5rem;
-  --radius-lg: 2rem;
-  --radius-xl: 2.5rem;
-  font-family: var(--font-body), var(--font-sans);
-}
-
-[data-variant='scandinavian'] {
-  --font-title: 'Space Grotesk', sans-serif;
-  --font-heading: 'Space Grotesk', sans-serif;
-  --tracking-title: -0.03em;
-  --radius: 0.125rem;
-  --radius-xs: 0;
-  --radius-sm: 0.125rem;
-  --radius-md: 0.125rem;
-  --radius-lg: 0.25rem;
-  --radius-xl: 0.375rem;
-}
-
-[data-variant='dark-luxe'] {
-  --font-title: 'Playfair Display', serif;
-  --font-heading: 'Playfair Display', serif;
-  --tracking-title: 0.015em;
-  --tracking-heading: 0.04em;
-  --font-weight-title: 900;
-  --radius: 0.125rem;
-  --radius-xs: 0;
-  --radius-sm: 0.125rem;
-  --radius-md: 0.25rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-}
-
-[data-variant='mediterranean-airy'] {
-  --font-title: 'Libre Caslon Text', serif;
-  --font-heading: 'Libre Caslon Text', serif;
-  --tracking-title: 0.005em;
-  --radius: 1.5rem;
-  --radius-xs: 0.5rem;
-  --radius-sm: 1rem;
-  --radius-md: 1.5rem;
-  --radius-lg: 2rem;
-  --radius-xl: 3rem;
-}
-
-[data-variant='street-bold'] {
+/* ── Street — white, ink, mustard & chili; bold condensed headings; big tap targets ── */
+[data-variant='street'] {
   --font-title: 'Archivo Black', sans-serif;
   --font-heading: 'Archivo Black', sans-serif;
   --tracking-title: -0.02em;
+  --tracking-heading: -0.01em;
   --font-weight-title: 900;
   --radius: 0.25rem;
   --radius-xs: 0.125rem;
@@ -625,169 +681,108 @@ html:has(dialog[open]) {
   --radius-md: 0.25rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.625rem;
+  --spacing-target: 3rem;
+}
+[data-variant='street']:not([data-theme='dark']) {
+  --background: #fafafa;
+  --foreground: #111111;
+  --card: #ffffff;
+  --card-foreground: #111111;
+  --popover: #ffffff;
+  --popover-foreground: #111111;
+  --muted: #f4f4f5;
+  --muted-foreground: #4f4f57;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #111111;
+  --accent: #f4f4f5;
+  --accent-foreground: #111111;
+  --border: #e3e3e7;
+  --input: #78787f;
 }
 
-[data-variant='playful-pastel'] {
+/* ── Gelato — cream, pistachio & strawberry; 20px rounded cards; playful ── */
+[data-variant='gelato'] {
   --font-title: 'Fredoka', sans-serif;
   --font-heading: 'Fredoka', sans-serif;
-  --tracking-title: -0.015em;
+  --tracking-title: -0.01em;
+  --tracking-heading: -0.005em;
   --font-weight-title: 600;
-  --radius: 1.75rem;
-  --radius-xs: 1rem;
-  --radius-sm: 1.25rem;
-  --radius-md: 1.75rem;
-  --radius-lg: 2.25rem;
-  --radius-xl: 3rem;
+  --radius: 1.25rem;
+  --radius-xs: 0.625rem;
+  --radius-sm: 0.875rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+}
+[data-variant='gelato']:not([data-theme='dark']) {
+  --background: #fffdf9;
+  --foreground: #3a2e33;
+  --card: #ffffff;
+  --card-foreground: #3a2e33;
+  --popover: #ffffff;
+  --popover-foreground: #3a2e33;
+  --muted: #fbf0f4;
+  --muted-foreground: #6f5d66;
+  --secondary: #eef6e8;
+  --secondary-foreground: #33402c;
+  --accent: #fbe3ec;
+  --accent-foreground: #7a3350;
+  --border: #f1e2e9;
+  --input: #8d7a84;
 }
 
 /**
- * Variant-specific decorations: pseudo-elements and overrides that differentiate the menus
- * structurally, not just by typography. Each selector sits under a `data-variant` scope so it
- * never leaks into other venues.
+ * Dark fall-through: an `auto` light preset under a dark system reverts its surfaces to the
+ * inherited Night palette (from the root dark tokens), so no preset forces an ivory page into
+ * dark mode. Placed after the light blocks so it wins at equal specificity.
+ */
+@media (prefers-color-scheme: dark) {
+  [data-variant='medina']:not([data-theme='light']),
+  [data-variant='specialty']:not([data-theme='light']),
+  [data-variant='trattoria']:not([data-theme='light']),
+  [data-variant='atelier']:not([data-theme='light']),
+  [data-variant='street']:not([data-theme='light']),
+  [data-variant='gelato']:not([data-theme='light']) {
+    --background: inherit;
+    --foreground: inherit;
+    --card: inherit;
+    --card-foreground: inherit;
+    --popover: inherit;
+    --popover-foreground: inherit;
+    --muted: inherit;
+    --muted-foreground: inherit;
+    --secondary: inherit;
+    --secondary-foreground: inherit;
+    --accent: inherit;
+    --accent-foreground: inherit;
+    --border: inherit;
+    --input: inherit;
+  }
+}
+
+/**
+ * Preset decorations: pseudo-elements and overrides that differentiate the menus structurally,
+ * not just by typography. Each selector sits under a `[data-variant]` scope so it never leaks into
+ * another venue. The section header row is `[data-section=''] > div:first-child`, its index number
+ * `> span:first-child`, its title the `h2`.
  */
 
-/* Bistro — chalkboard dotted leader between product name and price */
-[data-variant='bistro'] [data-section=''] h2::before {
-  content: '';
-  display: inline-block;
-  inline-size: 1.5rem;
-  block-size: 2px;
-  margin-inline-end: 0.5rem;
-  margin-block-end: 0.35em;
-  background: currentColor;
-  opacity: 0.6;
-  vertical-align: middle;
+/* Médina — woven zellige lattice on the brand header band; terracotta medallion index */
+[data-variant='medina'] header .bg-dots {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in oklab, var(--color-brand-on-subtle) 12%, transparent) 0 2px,
+      transparent 2px 11px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in oklab, var(--color-brand-on-subtle) 12%, transparent) 0 2px,
+      transparent 2px 11px
+    );
+  background-size: 22px 22px;
 }
-
-/* Elegant dark — ornamental small-caps above each section title */
-[data-variant='elegant-dark'] [data-section=''] {
-  text-align: center;
-}
-[data-variant='elegant-dark'] [data-section=''] > div:first-child {
-  justify-content: center;
-  border-block-start: none;
-  padding-block-start: 1.5rem;
-}
-[data-variant='elegant-dark'] [data-section=''] > div:first-child::before {
-  content: '— § —';
-  display: block;
-  inline-size: 100%;
-  font-size: 0.75rem;
-  letter-spacing: 0.3em;
-  color: var(--color-brand-text);
-  margin-block-end: 0.75rem;
-  opacity: 0.7;
-}
-[data-variant='elegant-dark'] [data-section=''] h2 {
-  font-variant: small-caps;
-  letter-spacing: 0.08em;
-}
-
-/* Romantic pastel — decorative flourish above section titles */
-[data-variant='romantic-pastel'] [data-section=''] > div:first-child {
-  justify-content: center;
-  text-align: center;
-  border-block-start: none;
-  padding-block-start: 1.75rem;
-  position: relative;
-}
-[data-variant='romantic-pastel'] [data-section=''] > div:first-child::before {
-  content: '❦';
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 50%;
-  transform: translateX(-50%);
-  color: var(--color-brand-text);
-  font-size: 1.25rem;
-  opacity: 0.6;
-}
-
-/* Scandinavian — huge, bold section numbers as a visual anchor */
-[data-variant='scandinavian'] [data-section=''] > div:first-child {
-  border-block-start: 4px solid currentColor;
-  padding-block-start: 1rem;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-[data-variant='scandinavian'] [data-section=''] > div:first-child > span:first-child {
-  font-size: 2.5rem;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  font-weight: 700;
-  color: var(--color-foreground);
-  opacity: 0.25;
-}
-
-/* Dark luxe — gold hairline divider + all-caps */
-[data-variant='dark-luxe'] [data-section=''] > div:first-child {
-  justify-content: center;
-  text-align: center;
-  border-block-start: 1px solid currentColor;
-  padding-block: 1.5rem 0.75rem;
-}
-[data-variant='dark-luxe'] [data-section=''] h2 {
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 1rem;
-}
-[data-variant='dark-luxe'] [data-section=''] > div:first-child > span:first-child {
-  display: none;
-}
-
-/* Mediterranean airy — left-aligned title with a horizontal line extending to the right */
-[data-variant='mediterranean-airy'] [data-section=''] > div:first-child {
-  border-block-start: none;
-  padding-block-start: 0.5rem;
-  gap: 1rem;
-  position: relative;
-}
-[data-variant='mediterranean-airy'] [data-section=''] > div:first-child::after {
-  content: '';
-  flex: 1;
-  block-size: 1px;
-  background: currentColor;
-  opacity: 0.25;
-  align-self: center;
-}
-
-/* Street bold — chunky highlight bar under the h2 */
-[data-variant='street-bold'] [data-section=''] > div:first-child {
-  border-block-start: none;
-  padding-block-start: 0;
-  gap: 0.5rem;
-  align-items: center;
-}
-[data-variant='street-bold'] [data-section=''] > div:first-child > span:first-child {
-  background: var(--color-brand-solid);
-  color: var(--color-brand-on-solid);
-  padding: 0.125rem 0.5rem;
-  border-radius: 0;
-  font-size: 1rem;
-}
-[data-variant='street-bold'] [data-section=''] h2 {
-  text-transform: uppercase;
-  background: var(--color-foreground);
-  color: var(--color-background);
-  padding: 0.25rem 0.75rem;
-  display: inline-block;
-}
-
-/* Playful pastel — rounded pill around the section title */
-[data-variant='playful-pastel'] [data-section=''] > div:first-child {
-  border-block-start: none;
-  padding-block-start: 1rem;
-}
-[data-variant='playful-pastel'] [data-section=''] h2 {
-  background: var(--color-brand-subtle);
-  color: var(--color-brand-on-subtle);
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-}
-
-/* Traditional — zellige-style background band under the brand placeholder */
-[data-variant='traditional'] [data-section=''] > div:first-child > span:first-child {
+[data-variant='medina'] [data-section=''] > div:first-child > span:first-child {
   display: inline-grid;
   place-items: center;
   inline-size: 1.75rem;
@@ -798,15 +793,373 @@ html:has(dialog[open]) {
   font-size: 0.7rem;
 }
 
-/* Modern minimal — remove the index number and the border, use a thin hairline instead */
-[data-variant='modern-minimal'] [data-section=''] > div:first-child {
+/* Specialty — drop the index + border, separate sections with a calm hairline */
+[data-variant='specialty'] [data-section=''] > div:first-child {
   border-block-start: none;
   padding-block-start: 0;
 }
-[data-variant='modern-minimal'] [data-section=''] > div:first-child > span:first-child {
+[data-variant='specialty'] [data-section=''] > div:first-child > span:first-child {
   display: none;
 }
-[data-variant='modern-minimal'] [data-section=''] + [data-section=''] {
+[data-variant='specialty'] [data-section=''] + [data-section=''] {
   border-block-start: 1px solid var(--color-border);
   margin-block-start: 2rem;
+}
+
+/* Trattoria — serif italic category titles with a short rule leader */
+[data-variant='trattoria'] [data-section=''] h2 {
+  font-style: italic;
+}
+[data-variant='trattoria'] [data-section=''] h2::before {
+  content: '';
+  display: inline-block;
+  inline-size: 1.5rem;
+  block-size: 2px;
+  margin-inline-end: 0.5rem;
+  margin-block-end: 0.3em;
+  background: currentColor;
+  opacity: 0.55;
+  vertical-align: middle;
+}
+
+/* Atelier — centred, airy titles; hide the index; extra breathing room */
+[data-variant='atelier'] [data-section=''] {
+  text-align: center;
+}
+[data-variant='atelier'] [data-section=''] > div:first-child {
+  justify-content: center;
+  border-block-start: none;
+  padding-block-start: 1.75rem;
+}
+[data-variant='atelier'] [data-section=''] > div:first-child::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  margin-block-start: -0.9rem;
+  inline-size: 2.5rem;
+  block-size: 1px;
+  background: var(--color-brand-text);
+  opacity: 0.45;
+}
+[data-variant='atelier'] [data-section=''] > div:first-child {
+  position: relative;
+}
+[data-variant='atelier'] [data-section=''] > div:first-child > span:first-child {
+  display: none;
+}
+[data-variant='atelier'] [data-section=''] h2 {
+  letter-spacing: 0.02em;
+}
+
+/* Nocturne — gold/brand hairline divider above an upper-case, letter-spaced title */
+[data-variant='nocturne'] [data-section=''] > div:first-child {
+  justify-content: center;
+  text-align: center;
+  border-block-start: 1px solid color-mix(in oklab, var(--color-brand-text) 50%, transparent);
+  padding-block: 1.5rem 0.75rem;
+}
+[data-variant='nocturne'] [data-section=''] h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 1rem;
+}
+[data-variant='nocturne'] [data-section=''] > div:first-child > span:first-child {
+  display: none;
+}
+
+/* Street — chunky inked title with a mustard highlight bar */
+[data-variant='street'] [data-section=''] > div:first-child {
+  border-block-start: none;
+  padding-block-start: 0;
+  gap: 0.5rem;
+  align-items: center;
+}
+[data-variant='street'] [data-section=''] > div:first-child > span:first-child {
+  background: #f2b705;
+  color: #111111;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0;
+  font-size: 1rem;
+}
+[data-variant='street'] [data-section=''] h2 {
+  text-transform: uppercase;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  padding: 0.25rem 0.75rem;
+  display: inline-block;
+}
+
+/* Gelato — rounded pastel pill around the section title */
+[data-variant='gelato'] [data-section=''] > div:first-child {
+  border-block-start: none;
+  padding-block-start: 1rem;
+}
+[data-variant='gelato'] [data-section=''] h2 {
+  background: var(--color-brand-subtle);
+  color: var(--color-brand-on-subtle);
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ───────────────────────── Vesuvio template — printed carte (trattoria) ─────────────────────────
+ * The one structurally-distinct template so far (brief §6.2, MATRIX row 4). Scoped under
+ * `[data-template='vesuvio']` (the shell drops `data-variant` for named templates) so nothing leaks
+ * into the default layout. Palette: ivory / charcoal / oxblood / gold, light + a refined dark. */
+[data-template='vesuvio'] {
+  --font-title: 'Cormorant', 'Amiri', serif;
+  --font-heading: 'Cormorant', 'Amiri', serif;
+  --tracking-title: 0.01em;
+  --tracking-heading: 0.08em;
+  --font-weight-title: 600;
+  --radius: 0.25rem;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.375rem;
+  --radius-xl: 0.5rem;
+  --vesuvio-gold: #9c7b2e;
+  --vesuvio-oxblood: #6e1f22;
+}
+[data-template='vesuvio']:not([data-theme='dark']) {
+  --background: #f7f1e3;
+  --foreground: #241f1a;
+  --card: #fbf6ea;
+  --card-foreground: #241f1a;
+  --popover: #fbf6ea;
+  --popover-foreground: #241f1a;
+  --muted: #ece2ca;
+  --muted-foreground: #5a5042;
+  --secondary: #ece2ca;
+  --secondary-foreground: #241f1a;
+  --accent: #e4d8bd;
+  --accent-foreground: #3a2f1e;
+  --border: #d8c9a6;
+  --input: #8a7c5f;
+}
+/* Refined dark — applied both when forced (`data-theme='dark'`) and in auto mode under OS dark.
+ * The light block above also matches in auto+OS-dark (no attribute), so this media block must come
+ * after it to win the cascade (same pattern as the `[data-variant]` presets). */
+[data-template='vesuvio'][data-theme='dark'] {
+  --background: #1a1512;
+  --foreground: #efe7d6;
+  --card: #221b16;
+  --card-foreground: #efe7d6;
+  --popover: #221b16;
+  --popover-foreground: #efe7d6;
+  --muted: #2a2219;
+  --muted-foreground: #c3b79c;
+  --secondary: #2a2219;
+  --secondary-foreground: #efe7d6;
+  --accent: #33291d;
+  --accent-foreground: #efe7d6;
+  --border: #3c3326;
+  --input: #8a7c5f;
+  --vesuvio-gold: #cda44e;
+  --vesuvio-oxblood: #d98b8e;
+}
+@media (prefers-color-scheme: dark) {
+  [data-template='vesuvio']:not([data-theme='light']) {
+    --background: #1a1512;
+    --foreground: #efe7d6;
+    --card: #221b16;
+    --card-foreground: #efe7d6;
+    --popover: #221b16;
+    --popover-foreground: #efe7d6;
+    --muted: #2a2219;
+    --muted-foreground: #c3b79c;
+    --secondary: #2a2219;
+    --secondary-foreground: #efe7d6;
+    --accent: #33291d;
+    --accent-foreground: #efe7d6;
+    --border: #3c3326;
+    --input: #8a7c5f;
+    --vesuvio-gold: #cda44e;
+    --vesuvio-oxblood: #d98b8e;
+  }
+}
+
+/* Table of contents — small-caps chapter anchors under a gold hairline */
+[data-template='vesuvio'] .vesuvio-toc {
+  margin-block: 1.25rem 2rem;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--vesuvio-gold);
+}
+[data-template='vesuvio'] .vesuvio-toc ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.25rem;
+}
+[data-template='vesuvio'] .vesuvio-toc-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+  padding-inline: 0.25rem;
+  font-family: var(--font-heading);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  font-size: 1rem;
+  color: var(--color-muted-foreground);
+  text-decoration: none;
+}
+[data-template='vesuvio'] .vesuvio-toc-link:hover {
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-toc-link:focus-visible {
+  outline: 2px solid var(--vesuvio-oxblood);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Chapter header — illuminated initial + small-caps title + gold rule */
+[data-template='vesuvio'] .vesuvio-chapter {
+  margin-block-start: 2.5rem;
+}
+[data-template='vesuvio'] .vesuvio-chapter-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-block-end: 0.75rem;
+}
+[data-template='vesuvio'] .vesuvio-initial {
+  flex: 0 0 auto;
+  font-family: var(--font-heading);
+  font-size: 2.75rem;
+  line-height: 0.85;
+  font-weight: 600;
+  color: var(--vesuvio-oxblood);
+}
+[data-template='vesuvio'] .vesuvio-chapter-titles {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+[data-template='vesuvio'] .vesuvio-chapter-title {
+  font-family: var(--font-heading);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.08em;
+  font-size: 1.6rem;
+  font-weight: var(--font-weight-title);
+  line-height: 1.15;
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-chapter-hours {
+  margin-block-start: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--color-muted-foreground);
+}
+[data-template='vesuvio'] .vesuvio-rule {
+  flex: 0 0 auto;
+  align-self: center;
+  inline-size: 2.5rem;
+  block-size: 1px;
+  background: var(--vesuvio-gold);
+}
+
+/* Dish rows — typographic line, price end-aligned, quiet inline accordion */
+[data-template='vesuvio'] .vesuvio-list {
+  list-style: none;
+}
+[data-template='vesuvio'] .vesuvio-row + .vesuvio-row {
+  border-block-start: 1px solid color-mix(in oklab, var(--vesuvio-gold) 35%, transparent);
+}
+[data-template='vesuvio'] .vesuvio-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-block: 0.8rem;
+  cursor: pointer;
+  list-style: none;
+}
+[data-template='vesuvio'] .vesuvio-summary::-webkit-details-marker {
+  display: none;
+}
+[data-template='vesuvio'] .vesuvio-summary--static {
+  cursor: default;
+}
+[data-template='vesuvio'] .vesuvio-disclosure .vesuvio-summary:focus-visible {
+  outline: 2px solid var(--vesuvio-oxblood);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+[data-template='vesuvio'] .vesuvio-name {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  line-height: 1.25;
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-lead {
+  flex: 1 1 auto;
+  min-inline-size: 1rem;
+}
+[data-template='vesuvio'] .vesuvio-price {
+  flex: 0 0 auto;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--color-foreground);
+}
+[data-template='vesuvio'] .vesuvio-price--out {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  color: var(--color-muted-foreground);
+}
+[data-template='vesuvio'] .vesuvio-out {
+  font-variant-caps: small-caps;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  color: var(--vesuvio-oxblood);
+}
+/* Expand affordance — a small gold caret that flips when open */
+[data-template='vesuvio'] .vesuvio-disclosure .vesuvio-summary::after {
+  content: '';
+  flex: 0 0 auto;
+  align-self: center;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  margin-inline-start: 0.1rem;
+  border-inline-end: 1.5px solid var(--vesuvio-gold);
+  border-block-end: 1.5px solid var(--vesuvio-gold);
+  transform: rotate(45deg);
+  transition: transform 150ms ease;
+}
+[data-template='vesuvio'] .vesuvio-disclosure[open] .vesuvio-summary::after {
+  transform: rotate(-135deg);
+}
+[data-template='vesuvio'] .vesuvio-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-block: 0.1rem 0.9rem;
+  padding-inline-end: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--color-muted-foreground);
+}
+[data-template='vesuvio'] .vesuvio-desc {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+[data-template='vesuvio'] .vesuvio-options {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+[data-template='vesuvio'] .vesuvio-option-group,
+[data-template='vesuvio'] .vesuvio-meta-label {
+  font-family: var(--font-heading);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.04em;
+  font-size: 1rem;
+  color: var(--color-foreground);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-template='vesuvio'] .vesuvio-disclosure .vesuvio-summary::after {
+    transition: none;
+  }
 }

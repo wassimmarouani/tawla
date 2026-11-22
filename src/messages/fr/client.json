@@ -55,6 +55,9 @@
     "description": "Le menu de {name} : prix, photos et disponibilités à jour, en français, arabe et anglais."
   },
   "from": "À partir de {price}",
+  "carte": {
+    "contents": "Sommaire"
+  },
   "dietary": {
     "vegetarian": "Végétarien",
     "vegan": "Végan",

@@ -1,10 +1,14 @@
-import { ChevronLeft, ExternalLink, ShieldCheck, Store } from 'lucide-react';
+import { ChevronLeft, ExternalLink, ScrollText, ShieldCheck, Store } from 'lucide-react';
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { PageHeader } from '@/components/layout/page-header';
+import { EmptyState } from '@/components/states/empty-state';
 import { buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { StatCard } from '@/components/ui/stat-card';
+import { StatusDot, type StatusDotProps } from '@/components/ui/status-dot';
+import { cn } from '@/lib/utils';
 import { pickTranslation } from '@/features/menu';
 import { DEFAULT_LOCALE, isLocale } from '@/i18n/locales';
 import { getSessionClaims } from '@/lib/auth/session';
@@ -28,6 +32,13 @@ async function locale() {
   const value = await getLocale();
   return isLocale(value) ? value : DEFAULT_LOCALE;
 }
+
+/** Venue status → StatusDot tone (never colour alone: the label carries the meaning). */
+const STATUS_TONE: Record<string, StatusDotProps['variant']> = {
+  active: 'success',
+  read_only: 'warning',
+  suspended: 'danger',
+};
 
 /** `/admin/mfa`: enrol or verify TOTP; a session already at `aal2` goes on to the console. */
 export async function MfaScreen() {
@@ -81,27 +92,57 @@ export async function VenuesScreen({ query }: { query: string }) {
         </button>
       </form>
       {venues.length === 0 ? (
-        <p className="text-muted-foreground">{t('list.empty')}</p>
+        <EmptyState icon={<Store />} title={t('list.empty')} className="bg-card" />
       ) : (
-        <div className="overflow-x-auto rounded-md border border-border bg-card">
-          <table className="w-full min-w-xl text-sm">
-            <thead className="text-start text-muted-foreground">
+        <div
+          role="region"
+          aria-label={t('venues')}
+          tabIndex={0}
+          className="overflow-x-auto rounded-md border border-border bg-card shadow-sm contain-paint focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        >
+          <table className="w-full min-w-xl border-separate border-spacing-0 text-sm">
+            <thead>
               <tr>
-                <th className="p-3 text-start font-medium">{t('list.name')}</th>
-                <th className="p-3 text-start font-medium">{t('list.plan')}</th>
-                <th className="p-3 text-start font-medium">{t('list.status')}</th>
-                <th className="p-3 text-end font-medium">{t('list.members')}</th>
-                <th className="p-3 text-end font-medium">{t('list.ai')}</th>
-                <th className="p-3 text-start font-medium">{t('list.created')}</th>
+                {(['name', 'plan', 'status'] as const).map((col) => (
+                  <th
+                    key={col}
+                    scope="col"
+                    className="border-b border-border bg-card p-3 text-start text-xs font-semibold tracking-label text-muted-foreground uppercase"
+                  >
+                    {t(`list.${col}`)}
+                  </th>
+                ))}
+                {(['members', 'ai'] as const).map((col) => (
+                  <th
+                    key={col}
+                    scope="col"
+                    className="border-b border-border bg-card p-3 text-end text-xs font-semibold tracking-label text-muted-foreground uppercase"
+                  >
+                    {t(`list.${col}`)}
+                  </th>
+                ))}
+                <th
+                  scope="col"
+                  className="border-b border-border bg-card p-3 text-start text-xs font-semibold tracking-label text-muted-foreground uppercase"
+                >
+                  {t('list.created')}
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border">
-              {venues.map((venue) => (
-                <tr key={venue.id}>
-                  <td className="p-3">
+            <tbody>
+              {venues.map((venue, index) => (
+                <tr
+                  key={venue.id}
+                  className={cn(
+                    'transition-colors hover:bg-muted/50',
+                    index % 2 === 1 && 'bg-muted/30',
+                  )}
+                >
+                  <td className="border-b border-border p-3">
                     <Link
                       href={`/admin/restaurants/${venue.id}`}
-                      className="inline-flex min-h-target items-center font-semibold text-brand-text underline-offset-4 hover:underline"
+                      className="inline-flex min-h-target items-center rounded-xs font-semibold text-brand-text underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+                      dir="auto"
                     >
                       {venue.name}
                     </Link>
@@ -109,13 +150,20 @@ export async function VenuesScreen({ query }: { query: string }) {
                       /{venue.slug}
                     </span>
                   </td>
-                  <td className="p-3">{planName(venue.plan)}</td>
-                  <td className="p-3">{t(`statuses.${venue.status as 'active'}`)}</td>
-                  <td className="p-3 text-end tabular-nums">{venue.members}</td>
-                  <td className="p-3 text-end tabular-nums">
+                  <td className="border-b border-border p-3">{planName(venue.plan)}</td>
+                  <td className="border-b border-border p-3">
+                    <StatusDot
+                      variant={STATUS_TONE[venue.status] ?? 'neutral'}
+                      label={t(`statuses.${venue.status as 'active'}`)}
+                    />
+                  </td>
+                  <td className="border-b border-border p-3 text-end tabular-nums">
+                    {venue.members}
+                  </td>
+                  <td className="border-b border-border p-3 text-end tabular-nums">
                     {formatMoney(venue.aiCostMillimes, current)}
                   </td>
-                  <td className="p-3">
+                  <td className="border-b border-border p-3 whitespace-nowrap text-muted-foreground">
                     {format.dateTime(new Date(venue.createdAt), { dateStyle: 'medium' })}
                   </td>
                 </tr>
@@ -162,24 +210,16 @@ async function KpiCards({ claims }: { claims: Awaited<ReturnType<typeof getSessi
       <h2 id="kpis" className="sr-only">
         {t('title')}
       </h2>
-      <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((item) => (
-          <div
+          <StatCard
             key={item.key}
-            className="flex flex-col gap-1 rounded-md border border-border bg-card p-4"
-          >
-            <dt className="text-xs font-semibold tracking-label text-muted-foreground uppercase">
-              {t(item.key as 'venues')}
-            </dt>
-            <dd className="flex flex-col gap-1">
-              <span className="text-2xl font-semibold text-foreground tabular-nums">
-                {item.value}
-              </span>
-              <span className="text-xs text-muted-foreground">{item.hint}</span>
-            </dd>
-          </div>
+            label={t(item.key as 'venues')}
+            value={item.value}
+            footnote={item.hint}
+          />
         ))}
-      </dl>
+      </div>
     </section>
   );
 }
@@ -210,38 +250,55 @@ async function DemoVenueCard() {
 async function AuditTable({ rows }: { rows: AuditRow[] }) {
   const t = await getTranslations('admin.auditPage');
   const format = await getFormatter();
-  if (rows.length === 0) return <p className="text-muted-foreground">{t('empty')}</p>;
+  if (rows.length === 0) {
+    return <EmptyState icon={<ScrollText />} title={t('empty')} className="bg-card" />;
+  }
   return (
-    <div className="overflow-x-auto rounded-md border border-border bg-card">
-      <table className="w-full min-w-xl text-sm">
-        <thead className="text-muted-foreground">
+    <div
+      role="region"
+      aria-label={t('when')}
+      tabIndex={0}
+      className="overflow-x-auto rounded-md border border-border bg-card shadow-sm contain-paint focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+    >
+      <table className="w-full min-w-xl border-separate border-spacing-0 text-sm">
+        <thead>
           <tr>
-            <th className="p-3 text-start font-medium">{t('when')}</th>
-            <th className="p-3 text-start font-medium">{t('action')}</th>
-            <th className="p-3 text-start font-medium">{t('actor')}</th>
-            <th className="p-3 text-start font-medium">{t('venue')}</th>
-            <th className="p-3 text-start font-medium">{t('entity')}</th>
+            {(['when', 'action', 'actor', 'venue', 'entity'] as const).map((col) => (
+              <th
+                key={col}
+                scope="col"
+                className="border-b border-border bg-card p-3 text-start text-xs font-semibold tracking-label text-muted-foreground uppercase"
+              >
+                {t(col)}
+              </th>
+            ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-border">
-          {rows.map((row) => (
-            <tr key={row.id}>
-              <td className="p-3 whitespace-nowrap">
+        <tbody>
+          {rows.map((row, index) => (
+            <tr
+              key={row.id}
+              className={cn(
+                'transition-colors hover:bg-muted/50',
+                index % 2 === 1 && 'bg-muted/30',
+              )}
+            >
+              <td className="border-b border-border p-3 whitespace-nowrap text-muted-foreground">
                 {format.dateTime(new Date(row.createdAt), {
                   dateStyle: 'short',
                   timeStyle: 'short',
                 })}
               </td>
-              <td className="p-3 font-mono" dir="ltr">
+              <td className="border-b border-border p-3 font-mono" dir="ltr">
                 {row.action}
               </td>
-              <td className="p-3 break-all" dir="ltr">
+              <td className="border-b border-border p-3 break-all" dir="ltr">
                 {row.actor ?? '—'}
               </td>
-              <td className="p-3" dir="auto">
+              <td className="border-b border-border p-3" dir="auto">
                 {row.restaurant ?? '—'}
               </td>
-              <td className="p-3 font-mono break-all" dir="ltr">
+              <td className="border-b border-border p-3 font-mono break-all" dir="ltr">
                 {row.entity}
                 {row.entityId ? ` · ${row.entityId}` : ''}
               </td>

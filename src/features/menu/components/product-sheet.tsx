@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { MenuImage } from '@/components/media/menu-image';
 import type { Locale } from '@/i18n/locales';
 import { classes as cn } from '@/lib/classes';
-import { formatMoney } from '@/lib/money';
+import { formatTND } from '@/lib/money';
 import type { PublicProduct } from '../schemas/public-menu';
 import { effectiveOptionGroup, type EffectiveOptionGroup } from '../services/options';
 import { displayPrice } from '../services/pricing';
@@ -32,7 +32,7 @@ export async function ProductSheet({
 }) {
   const t = await getTranslations('client');
   const price = displayPrice(product);
-  const formatted = formatMoney(price.amount, locale);
+  const formatted = formatTND(price.amount, { context: 'menu', locale });
   const groups = product.option_groups.map(effectiveOptionGroup);
   const labels = [
     ...product.badges.map((badge) => t(`badges.${badge}`)),
@@ -55,7 +55,7 @@ export async function ProductSheet({
         <header className="flex flex-col gap-2 pe-12">
           <h2
             id={productTitleId(product.slug)}
-            className="text-2xl font-title tracking-heading text-balance text-foreground"
+            className="font-heading text-2xl font-title tracking-heading text-balance text-foreground"
           >
             <Localized value={product.name} locale={locale} />
           </h2>
@@ -121,7 +121,9 @@ export async function ProductSheet({
                       <span className="shrink-0 text-muted-foreground tabular-nums">
                         {option.isAvailable
                           ? option.price > 0
-                            ? t('sheet.delta', { price: formatMoney(option.price, locale) })
+                            ? t('sheet.delta', {
+                                price: formatTND(option.price, { context: 'menu', locale }),
+                              })
                             : t('sheet.included')
                           : t('unavailable')}
                       </span>

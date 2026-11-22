@@ -10,6 +10,7 @@ const badgeVariants = cva(
       variant: {
         default: 'bg-brand text-on-brand',
         soft: 'bg-brand-subtle text-brand-on-subtle',
+        jasmin: 'bg-highlight-jasmin text-on-highlight-jasmin',
         secondary: 'bg-secondary text-secondary-foreground',
         outline: 'border-border text-foreground',
         success: 'bg-success-subtle text-success',

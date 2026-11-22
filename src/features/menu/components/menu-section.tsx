@@ -1,8 +1,9 @@
+import { Flame, Leaf, Sparkles, Star, UtensilsCrossed } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { MenuImage } from '@/components/media/menu-image';
 import type { Locale } from '@/i18n/locales';
-import { formatMoney } from '@/lib/money';
+import { formatTND } from '@/lib/money';
 import { formatWeekdays, servingWindow } from '@/lib/schedule';
 import { classes as cn } from '@/lib/classes';
 import type { PublicCategory, PublicProduct } from '../schemas/public-menu';
@@ -23,9 +24,18 @@ export function sectionLayout(category: Pick<PublicCategory, 'products'>): 'card
 
 function Price({ product, locale, t }: { product: PublicProduct; locale: Locale; t: Translator }) {
   const { amount, from } = displayPrice(product);
-  const formatted = formatMoney(amount, locale);
+  const formatted = formatTND(amount, { context: 'menu', locale });
   return <>{from ? t('from', { price: formatted }) : formatted}</>;
 }
+
+/** Small lucide glyph per badge kind, so chips read as icon + label (never colour alone). */
+const TAG_ICON: Record<string, typeof Star> = {
+  new: Sparkles,
+  popular: Star,
+  house: UtensilsCrossed,
+  seasonal: Leaf,
+  spicy: Flame,
+};
 
 function Tags({ product, t }: { product: PublicProduct; t: Translator }) {
   const tags = [
@@ -39,20 +49,24 @@ function Tags({ product, t }: { product: PublicProduct; t: Translator }) {
   if (tags.length === 0) return null;
   return (
     <ul className="flex flex-wrap gap-1.5">
-      {tags.map((tag) => (
-        <li
-          key={tag.key}
-          className={cn(
-            'rounded-full px-2 py-1 text-xs leading-none font-semibold',
-            tag.kind === 'new' && 'bg-brand-solid text-brand-on-solid',
-            tag.kind === 'popular' && 'bg-brand-subtle text-brand-on-subtle',
-            (tag.kind === 'house' || tag.kind === 'seasonal') && 'bg-muted text-foreground',
-            tag.kind === 'spicy' && 'bg-destructive-subtle text-destructive-text',
-          )}
-        >
-          {tag.label}
-        </li>
-      ))}
+      {tags.map((tag) => {
+        const Icon = TAG_ICON[tag.kind];
+        return (
+          <li
+            key={tag.key}
+            className={cn(
+              'inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs leading-none font-semibold',
+              tag.kind === 'new' && 'bg-brand-solid text-brand-on-solid',
+              tag.kind === 'popular' && 'bg-highlight-jasmin text-on-highlight-jasmin',
+              (tag.kind === 'house' || tag.kind === 'seasonal') && 'bg-muted text-foreground',
+              tag.kind === 'spicy' && 'bg-destructive-subtle text-destructive-text',
+            )}
+          >
+            {Icon ? <Icon aria-hidden="true" className="size-3 shrink-0" /> : null}
+            {tag.label}
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -183,7 +197,7 @@ function ProductCard({
             value={product.description}
             locale={locale}
             as="p"
-            className="line-clamp-1 text-sm text-muted-foreground"
+            className="line-clamp-2 text-sm text-muted-foreground"
           />
         ) : null}
         <div className="mt-auto flex flex-wrap items-center gap-x-2 gap-y-1.5 pt-1.5">
@@ -238,7 +252,7 @@ function ProductRow({
           value={product.description}
           locale={locale}
           as="p"
-          className="mt-1 pe-16 text-sm text-muted-foreground"
+          className="mt-1 line-clamp-2 pe-16 text-sm text-muted-foreground"
         />
       ) : null}
       <div className="mt-1.5 empty:hidden">
@@ -280,7 +294,7 @@ export async function MenuSection({ category, index, locale, priority }: MenuSec
           value={category.name}
           locale={locale}
           as="h2"
-          className="text-xl font-title tracking-heading text-foreground"
+          className="font-heading text-xl font-title tracking-heading text-foreground"
         />
         <ServingHours category={category} locale={locale} t={t} />
       </div>

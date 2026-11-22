@@ -90,7 +90,7 @@ export async function MenuHeader({
             ) : null}
           </p>
         ) : null}
-        <h1 className="text-2xl font-title tracking-title text-balance break-words text-foreground">
+        <h1 className="font-heading text-2xl font-title tracking-title text-balance break-words text-foreground">
           {restaurant.name}
         </h1>
         <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t border-border pt-3 text-sm text-muted-foreground">

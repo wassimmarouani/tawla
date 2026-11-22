@@ -1,25 +1,27 @@
 /**
- * Visual variants for the public menu (spec 02, ADR-0029 amended). Each venue picks one via
- * `restaurants.theme.variant`. A variant overrides CSS custom properties through the
- * `[data-variant="<id>"]` scope in `globals.css`: display font, body font, radius scale, shadow
- * tier, accent pattern. Components stay structurally identical — only tokens change.
+ * Visual presets for the public menu (spec 02 §6.4 / 7, ADR-0029 amended). The redesign
+ * consolidates the earlier ten ad-hoc variants into the spec's seven named "Méditerranée moderne"
+ * presets; the ten demo venues still exist, several sharing a preset (see `demo-variants.ts`).
+ *
+ * Each preset picks one identity via `restaurants.theme.variant` and overrides CSS custom
+ * properties through the `[data-variant="<id>"]` scope in `globals.css`: palette (surface + text
+ * tokens), display font, body font, radius scale and section decoration. Components stay
+ * structurally identical — only tokens change.
  *
  * Fonts come from Google Fonts, loaded on the public menu route (ADR-0002); the "default"
- * variant uses only Inter and skips the font-link so Basic / Pro menus keep the ~150 KB
- * initial budget intact.
+ * preset uses only the already-loaded Geist / IBM Plex Sans Arabic faces and skips the font-link
+ * so Basic / Pro menus keep the ~150 KB initial budget intact. Fraunces is shared by every serif
+ * preset (one request), so adding presets does not add font downloads.
  */
 export const MENU_VARIANTS = [
   'default',
-  'traditional',
-  'modern-minimal',
-  'bistro',
-  'elegant-dark',
-  'romantic-pastel',
-  'scandinavian',
-  'dark-luxe',
-  'mediterranean-airy',
-  'street-bold',
-  'playful-pastel',
+  'medina',
+  'specialty',
+  'trattoria',
+  'atelier',
+  'nocturne',
+  'street',
+  'gelato',
 ] as const;
 
 export type MenuVariant = (typeof MENU_VARIANTS)[number];
@@ -32,79 +34,42 @@ export function isMenuVariant(value: unknown): value is MenuVariant {
 export interface VariantFontLoad {
   /** Display/heading face. */
   display: { family: string; url: string } | null;
-  /** Body face, when the variant needs one different from Inter (already loaded). */
+  /** Body face, when the preset needs one different from the already-loaded sans. */
   body: { family: string; url: string } | null;
 }
 
-/** Each variant's font package. Only families actually used are declared; others return null. */
+/**
+ * Fraunces — the shared editorial serif used for display titles in Médina, Trattoria, Atelier and
+ * Nocturne. One request with the italic + optical-size axes covers all four presets.
+ */
+const FRAUNCES = {
+  family: 'Fraunces',
+  url: 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap',
+} as const;
+
+/** Each preset's font package. Only families actually used are declared; others return null. */
 export function variantFonts(variant: MenuVariant): VariantFontLoad {
   switch (variant) {
-    case 'traditional':
+    case 'trattoria':
+      // Trattoria resolves to the Vesuvio template (printed-carte editorial). Classic serif:
+      // Cormorant for Latin display, Amiri for Arabic — the `--font-title` stack lists both so the
+      // browser picks Amiri for Arabic glyphs. Both faces are loaded here (display + body slots).
       return {
         display: {
-          family: 'Fraunces',
-          url: 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700&display=swap',
+          family: 'Cormorant',
+          url: 'https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap',
         },
         body: {
-          family: 'Lora',
-          url: 'https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap',
+          family: 'Amiri',
+          url: 'https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap',
         },
       };
-    case 'bistro':
-      return {
-        display: {
-          family: 'Playfair Display',
-          url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap',
-        },
-        body: null,
-      };
-    case 'elegant-dark':
-      return {
-        display: {
-          family: 'Cormorant Garamond',
-          url: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&display=swap',
-        },
-        body: {
-          family: 'Lora',
-          url: 'https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&display=swap',
-        },
-      };
-    case 'romantic-pastel':
-      return {
-        display: {
-          family: 'Dancing Script',
-          url: 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap',
-        },
-        body: {
-          family: 'Cormorant Garamond',
-          url: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&display=swap',
-        },
-      };
-    case 'scandinavian':
-      return {
-        display: {
-          family: 'Space Grotesk',
-          url: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap',
-        },
-        body: null,
-      };
-    case 'dark-luxe':
-      return {
-        display: {
-          family: 'Playfair Display',
-          url: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap',
-        },
-        body: null,
-      };
-    case 'mediterranean-airy':
-      return {
-        display: {
-          family: 'Libre Caslon Text',
-          url: 'https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700&display=swap',
-        },
-        body: null,
-      };
-    case 'street-bold':
+    case 'medina':
+    case 'atelier':
+    case 'nocturne':
+      // Shared serif display face; body stays on the already-loaded sans / Arabic stack.
+      return { display: FRAUNCES, body: null };
+    case 'street':
       return {
         display: {
           family: 'Archivo Black',
@@ -112,7 +77,7 @@ export function variantFonts(variant: MenuVariant): VariantFontLoad {
         },
         body: null,
       };
-    case 'playful-pastel':
+    case 'gelato':
       return {
         display: {
           family: 'Fredoka',
@@ -120,8 +85,8 @@ export function variantFonts(variant: MenuVariant): VariantFontLoad {
         },
         body: null,
       };
-    case 'modern-minimal':
-      // Inter already loaded by the app; "minimal" relies on scale + spacing.
+    case 'specialty':
+      // Clean specialty-coffee identity relies on the already-loaded Geist and on scale + spacing.
       return { display: null, body: null };
     case 'default':
     default:
@@ -129,7 +94,7 @@ export function variantFonts(variant: MenuVariant): VariantFontLoad {
   }
 }
 
-/** The subset of variants that call for the color_mode = dark hint by default. */
+/** The subset of presets that default to the dark (Night) surface palette. */
 export function variantPrefersDark(variant: MenuVariant): boolean {
-  return variant === 'dark-luxe';
+  return variant === 'nocturne';
 }

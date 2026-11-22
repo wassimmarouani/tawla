@@ -2,6 +2,7 @@ import 'server-only';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { and, eq, isNull, or, sql } from 'drizzle-orm';
+import type { MenuTemplateId } from '@/features/menu';
 import { findTemplate, templateI18n, type MenuTemplate } from '@/lib/menu/templates';
 import { variantPrefersDark, type MenuVariant } from '@/lib/menu/variants';
 import { slugify } from '@/lib/text/slugify';
@@ -47,6 +48,11 @@ export interface DemoVenueDefinition {
   brandColor: `#${string}`;
   /** Public menu visual variant (fonts, radius, accents). See `src/lib/menu/variants.ts`. */
   variant: MenuVariant;
+  /**
+   * Presentation template (distinct layout), when the demo opts into one. Orthogonal to `variant`;
+   * absent means the default layout. See `src/features/menu/templates/ids.ts`.
+   */
+  template?: MenuTemplateId;
   tables: number;
   /** Menu source: the El Bahja SQL seed file (photographed), or a template id. */
   menu: { kind: 'sql'; file: string } | { kind: 'template'; id: string };
@@ -71,7 +77,7 @@ const CAFE_EL_BAHJA: DemoVenueDefinition = {
   taglineAr: 'مقهى تونسي تقليدي، شاي بالنعناع وحلويات',
   taglineEn: 'Traditional Tunisian café, mint tea and pastries',
   brandColor: '#b4532a',
-  variant: 'traditional',
+  variant: 'medina',
   tables: 12,
   menu: { kind: 'sql', file: 'supabase/seeds/10_menu_el_bahja.sql' },
   photos: {
@@ -95,8 +101,8 @@ const CAFE_MARINA: DemoVenueDefinition = {
   taglineFr: 'Coffee shop moderne : specialty, smoothies et bowls',
   taglineAr: 'كوفي شوب عصري: قهوة مختصة، سموذي وبولز',
   taglineEn: 'Modern coffee shop: specialty coffee, smoothies and bowls',
-  brandColor: '#0f766e',
-  variant: 'modern-minimal',
+  brandColor: '#3b2a20',
+  variant: 'specialty',
   tables: 10,
   menu: { kind: 'template', id: 'cafe-modern' },
   coverImageUrl:
@@ -113,8 +119,8 @@ const PIZZERIA_MEDITERRANEA: DemoVenueDefinition = {
   taglineFr: 'Pizzas au feu de bois, pâtes fraîches et salades',
   taglineAr: 'بيتزا بالحطب، معكرونة طازجة وسلطات',
   taglineEn: 'Wood-fired pizzas, fresh pasta and salads',
-  brandColor: '#1f7a4d',
-  variant: 'bistro',
+  brandColor: '#c2361f',
+  variant: 'trattoria',
   tables: 8,
   menu: { kind: 'template', id: 'pizzeria' },
   coverImageUrl:
@@ -131,8 +137,9 @@ const TRATTORIA_VESUVIO: DemoVenueDefinition = {
   taglineFr: 'Trattoria italienne haut de gamme, carte des vins',
   taglineAr: 'تراتوريا إيطالية راقية، قائمة نبيذ',
   taglineEn: 'Upscale Italian trattoria with wine list',
-  brandColor: '#7c2d12',
-  variant: 'elegant-dark',
+  brandColor: '#6e1f22',
+  variant: 'trattoria',
+  template: 'vesuvio',
   tables: 14,
   menu: { kind: 'template', id: 'trattoria' },
   coverImageUrl:
@@ -149,8 +156,8 @@ const PATISSERIE_LA_ROSE: DemoVenueDefinition = {
   taglineFr: 'Pâtisserie tunisienne, viennoiseries et salon de thé',
   taglineAr: 'حلويات تونسية، معجنات وصالون شاي',
   taglineEn: 'Tunisian pastry, viennoiseries and tea room',
-  brandColor: '#c2185b',
-  variant: 'romantic-pastel',
+  brandColor: '#1f4d3a',
+  variant: 'medina',
   tables: 6,
   menu: { kind: 'template', id: 'patisserie' },
   coverImageUrl:
@@ -167,8 +174,8 @@ const PATISSERIE_NORDIQUE: DemoVenueDefinition = {
   taglineFr: 'Entremets signature, croissants au beurre AOP',
   taglineAr: 'كيك مميّز، كرواسون بزبدة AOP',
   taglineEn: 'Signature layered cakes, AOP butter croissants',
-  brandColor: '#1e40af',
-  variant: 'scandinavian',
+  brandColor: '#222222',
+  variant: 'atelier',
   tables: 5,
   menu: { kind: 'template', id: 'patisserie-modern' },
   coverImageUrl:
@@ -185,8 +192,8 @@ const BAR_CITADELLE: DemoVenueDefinition = {
   taglineFr: 'Bar à cocktails signature, planches à partager',
   taglineAr: 'بار كوكتيل مميّز وطاولات للمشاركة',
   taglineEn: 'Signature cocktail bar and sharing boards',
-  brandColor: '#111827',
-  variant: 'dark-luxe',
+  brandColor: '#d9b26a',
+  variant: 'nocturne',
   tables: 14,
   menu: { kind: 'template', id: 'bar-cocktail' },
   coverImageUrl:
@@ -203,8 +210,8 @@ const ROOFTOP_SIDI_BOU: DemoVenueDefinition = {
   taglineFr: 'Terrasse panoramique, cocktails et mezze méditerranéens',
   taglineAr: 'تراس بانورامي، كوكتيل ومزّة متوسطية',
   taglineEn: 'Panoramic rooftop, cocktails and Mediterranean mezze',
-  brandColor: '#1d4ed8',
-  variant: 'mediterranean-airy',
+  brandColor: '#3d5bff',
+  variant: 'nocturne',
   tables: 20,
   menu: { kind: 'template', id: 'bar-cocktail' },
   coverImageUrl:
@@ -221,8 +228,8 @@ const TUNIS_GRILL: DemoVenueDefinition = {
   taglineFr: 'Street food & grill : sandwichs, brochettes, frites',
   taglineAr: 'ستريت فود وغريل: سندويتشات، شياش، بطاطا',
   taglineEn: 'Street food & grill: sandwiches, skewers, fries',
-  brandColor: '#ea580c',
-  variant: 'street-bold',
+  brandColor: '#d7261e',
+  variant: 'street',
   tables: 10,
   menu: { kind: 'template', id: 'street-food' },
   coverImageUrl:
@@ -239,8 +246,8 @@ const GLACIER_SORBETTO: DemoVenueDefinition = {
   taglineFr: 'Glaces artisanales, gaufres et sundaes',
   taglineAr: 'مثلجات حرفية، غوفر وسَنداي',
   taglineEn: 'Artisan ice cream, waffles and sundaes',
-  brandColor: '#db2777',
-  variant: 'playful-pastel',
+  brandColor: '#e05a86',
+  variant: 'gelato',
   tables: 8,
   menu: { kind: 'template', id: 'glacier' },
   coverImageUrl:
@@ -364,6 +371,7 @@ async function syncDemoTheme(definition: DemoVenueDefinition): Promise<void> {
         brand_color: definition.brandColor,
         variant: definition.variant,
         color_mode: variantPrefersDark(definition.variant) ? 'dark' : 'auto',
+        ...(definition.template ? { template: definition.template } : {}),
       },
     })
     .where(eq(restaurants.id, definition.restaurantId));

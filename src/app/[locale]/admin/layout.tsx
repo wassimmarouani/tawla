@@ -8,6 +8,7 @@ import { Logo } from '@/components/brand/logo';
 import { EmptyState } from '@/components/states/empty-state';
 import { Toaster } from '@/components/ui/sonner';
 import { logOut } from '@/features/auth';
+import { ConsoleNav } from '@/features/platform';
 import { clientMessages } from '@/i18n/client-messages';
 import { requireSessionClaims } from '@/lib/auth/session';
 import { env } from '@/lib/env';
@@ -22,22 +23,22 @@ export default async function AdminLayout({ children }: LayoutProps<'/[locale]/a
   return (
     <NextIntlClientProvider messages={messages}>
       <div className="flex min-h-dvh flex-col bg-background">
-        <header className="border-b border-border pt-safe">
+        <header className="sticky top-0 z-30 border-b border-border bg-background/85 pt-safe backdrop-blur-md">
           <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-2 px-gutter">
-            <Link href="/admin" className="flex items-center gap-3 font-semibold text-foreground">
+            <Link
+              href="/admin"
+              className="flex items-center gap-3 rounded-sm font-semibold text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
               <Logo name={env.NEXT_PUBLIC_APP_NAME} />
-              <span className="text-sm text-muted-foreground">{t('title')}</span>
+              <span className="rounded-full bg-brand-subtle px-2 py-0.5 text-xs font-semibold tracking-label text-brand-on-subtle uppercase max-sm:hidden">
+                {t('title')}
+              </span>
             </Link>
             <nav
               aria-label={t('title')}
               className="flex flex-wrap items-center gap-1 text-sm font-medium"
             >
-              <Link href="/admin" className={link}>
-                {t('venues')}
-              </Link>
-              <Link href="/admin/audit" className={link}>
-                {t('audit')}
-              </Link>
+              <ConsoleNav />
               <form action={logOut}>
                 <button type="submit" className={link}>
                   {t('logout')}

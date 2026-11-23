@@ -47,6 +47,16 @@ const FRAUNCES = {
   url: 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap',
 } as const;
 
+/**
+ * Reem Kufi — the Arabic-led display face for the Café El Bahja template. Loaded on the Médina font
+ * package (El Bahja shares the `medina` recolor); only the `[data-template='el-bahja']` scope
+ * references it, so the Médina default layout (Pâtisserie La Rose) keeps Fraunces untouched.
+ */
+const REEM_KUFI = {
+  family: 'Reem Kufi',
+  url: 'https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&display=swap',
+} as const;
+
 /** Each preset's font package. Only families actually used are declared; others return null. */
 export function variantFonts(variant: MenuVariant): VariantFontLoad {
   switch (variant) {
@@ -65,6 +75,10 @@ export function variantFonts(variant: MenuVariant): VariantFontLoad {
         },
       };
     case 'medina':
+      // Médina recolor keeps Fraunces for the default layout (Pâtisserie La Rose). The Café El Bahja
+      // template shares this variant and adds Reem Kufi for its Arabic-led display; the extra face is
+      // loaded here but referenced only by the `[data-template='el-bahja']` scope.
+      return { display: FRAUNCES, body: REEM_KUFI };
     case 'atelier':
     case 'nocturne':
       // Shared serif display face; body stays on the already-loaded sans / Arabic stack.

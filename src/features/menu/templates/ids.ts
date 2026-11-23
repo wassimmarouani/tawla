@@ -7,7 +7,7 @@
  *
  * (Not to be confused with `@/lib/menu/templates`, which are menu *content* seeds for the editor.)
  */
-export const MENU_TEMPLATE_IDS = ['default', 'vesuvio'] as const;
+export const MENU_TEMPLATE_IDS = ['default', 'vesuvio', 'el-bahja'] as const;
 
 export type MenuTemplateId = (typeof MENU_TEMPLATE_IDS)[number];
 
@@ -22,6 +22,7 @@ export function isMenuTemplateId(value: unknown): value is MenuTemplateId {
  */
 const DEMO_TEMPLATES: Readonly<Record<string, MenuTemplateId>> = {
   'trattoria-vesuvio': 'vesuvio',
+  'cafe-el-bahja': 'el-bahja',
 };
 
 export function demoTemplateForSlug(slug: string): MenuTemplateId | null {

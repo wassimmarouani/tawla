@@ -1,6 +1,7 @@
 import { DefaultMenuBody } from './default/default-menu';
 import { ElBahjaMenuBody } from './el-bahja/el-bahja-menu';
 import type { MenuTemplateId } from './ids';
+import { MarinaMenuBody } from './marina/marina-menu';
 import { MediterraneaMenuBody } from './mediterranea/mediterranea-menu';
 import type { MenuTemplate } from './types';
 import { VesuvioMenuBody } from './vesuvio/vesuvio-menu';
@@ -15,6 +16,7 @@ const TEMPLATES: Readonly<Record<MenuTemplateId, MenuTemplate>> = {
   vesuvio: { id: 'vesuvio', Body: VesuvioMenuBody },
   'el-bahja': { id: 'el-bahja', Body: ElBahjaMenuBody },
   mediterranea: { id: 'mediterranea', Body: MediterraneaMenuBody },
+  marina: { id: 'marina', Body: MarinaMenuBody },
 };
 
 export function templateById(id: MenuTemplateId): MenuTemplate {

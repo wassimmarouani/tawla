@@ -30,6 +30,10 @@ export function templateFonts(templateId: MenuTemplateId): readonly TemplateFont
     case 'default':
     case 'vesuvio':
     case 'el-bahja':
+    case 'marina':
+      // Café Marina (MATRIX row 2): Geist + IBM Plex Sans Arabic — both already loaded as the app's
+      // base sans, so no extra font request (keeps the clean, type-only specialty identity).
+      return [];
     default:
       return [];
   }

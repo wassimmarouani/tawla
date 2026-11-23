@@ -74,7 +74,7 @@ export async function PublicMenuView({
       )}
     >
       <BrandStyle theme={menu.restaurant.theme} scope={scope} forceMode={colorMode} />
-      <VariantFonts variant={variant} />
+      <VariantFonts variant={variant} templateId={templateId} />
       <AvailabilityLive
         slug={menu.restaurant.slug}
         menuPublicId={scope}

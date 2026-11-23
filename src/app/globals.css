@@ -1402,3 +1402,216 @@ html:has(dialog[open]) {
   font-size: 0.85rem;
   color: var(--muted-foreground);
 }
+
+/* ─────────────────────────── Pizzeria Mediterranea template — photo feed ─────────────────────────
+ * Loud wood-fired pizzeria (brief §6.2, MATRIX row 3), the opposite of the Vesuvio carte. Keeps the
+ * default browse (search, filters, sticky category bar) but recasts the menu as a single-column,
+ * full-bleed photo feed with a scrim-set name and a prominent price. Scoped under
+ * `[data-template='mediterranea']`. Palette: tomato / basil / flour cream, light + a warm dark.
+ * Archivo (condensed via its `wdth` axis) display, Cairo for Arabic. */
+[data-template='mediterranea'] {
+  --font-title: 'Archivo', 'Cairo', sans-serif;
+  --font-heading: 'Archivo', 'Cairo', sans-serif;
+  --tracking-title: -0.01em;
+  --tracking-heading: -0.01em;
+  --font-weight-title: 800;
+  --radius: 0.875rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.125rem;
+  --mediterranea-tomato: #c62f26;
+  --mediterranea-basil: #3f7d3a;
+  --mediterranea-on-tomato: #fff8f0;
+}
+[data-template='mediterranea']:not([data-theme='dark']) {
+  --background: #fdf6e8;
+  --foreground: #241310;
+  --card: #fffaf0;
+  --card-foreground: #241310;
+  --popover: #fffaf0;
+  --popover-foreground: #241310;
+  --muted: #f4e8d2;
+  --muted-foreground: #705441;
+  --secondary: #f4e8d2;
+  --secondary-foreground: #241310;
+  --accent: #efe0c6;
+  --accent-foreground: #241310;
+  --border: #e8d7ba;
+  --input: #8a6f52;
+}
+[data-template='mediterranea'][data-theme='dark'] {
+  --background: #1a1310;
+  --foreground: #f3e7d4;
+  --card: #241a14;
+  --card-foreground: #f3e7d4;
+  --popover: #241a14;
+  --popover-foreground: #f3e7d4;
+  --muted: #2d2017;
+  --muted-foreground: #c9b49a;
+  --secondary: #2d2017;
+  --secondary-foreground: #f3e7d4;
+  --accent: #352618;
+  --accent-foreground: #f3e7d4;
+  --border: #3a2b1e;
+  --input: #8c7254;
+  --mediterranea-tomato: #e8695f;
+  --mediterranea-basil: #85bd7c;
+}
+@media (prefers-color-scheme: dark) {
+  [data-template='mediterranea']:not([data-theme='light']) {
+    --background: #1a1310;
+    --foreground: #f3e7d4;
+    --card: #241a14;
+    --card-foreground: #f3e7d4;
+    --popover: #241a14;
+    --popover-foreground: #f3e7d4;
+    --muted: #2d2017;
+    --muted-foreground: #c9b49a;
+    --secondary: #2d2017;
+    --secondary-foreground: #f3e7d4;
+    --accent: #352618;
+    --accent-foreground: #f3e7d4;
+    --border: #3a2b1e;
+    --input: #8c7254;
+    --mediterranea-tomato: #e8695f;
+    --mediterranea-basil: #85bd7c;
+  }
+}
+
+[data-template='mediterranea'] .mediterranea {
+  padding-block-end: 3rem;
+}
+
+/* Category header — full-width band with a checkered-tablecloth edge */
+[data-template='mediterranea'] .mediterranea-category {
+  padding-block: 2rem 1rem;
+}
+[data-template='mediterranea'] .mediterranea-category:first-child {
+  padding-block-start: 1rem;
+}
+[data-template='mediterranea'] .mediterranea-category-head {
+  margin-block-end: 1.25rem;
+  text-align: center;
+}
+[data-template='mediterranea'] .mediterranea-category-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--mediterranea-tomato);
+  text-wrap: balance;
+}
+[data-template='mediterranea'] .mediterranea-category-hours {
+  margin-block-start: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted-foreground);
+}
+[data-template='mediterranea'] .mediterranea-checker {
+  display: block;
+  block-size: 0.625rem;
+  margin-block-start: 0.75rem;
+  border-radius: 999px;
+  background: repeating-conic-gradient(
+      var(--mediterranea-tomato) 0% 25%,
+      color-mix(in srgb, var(--mediterranea-tomato) 12%, var(--card)) 0% 50%
+    )
+    0 0 / 0.625rem 0.625rem;
+  opacity: 0.85;
+}
+
+/* Full-bleed photo feed */
+[data-template='mediterranea'] .mediterranea-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+[data-template='mediterranea'] .mediterranea-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+[data-template='mediterranea'] .mediterranea-card:has(.mediterranea-link:focus-visible) {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+}
+[data-template='mediterranea'] .mediterranea-media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--muted);
+}
+[data-template='mediterranea'] .mediterranea-media img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+[data-template='mediterranea'] .mediterranea-media[data-out='true'] {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+[data-template='mediterranea'] .mediterranea-ribbon {
+  position: absolute;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0;
+  padding: 0.3rem 0.85rem;
+  border-start-end-radius: 999px;
+  border-end-end-radius: 999px;
+  background: var(--mediterranea-tomato);
+  color: var(--mediterranea-on-tomato);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+[data-template='mediterranea'] .mediterranea-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.875rem 1rem 1.05rem;
+}
+[data-template='mediterranea'] .mediterranea-name {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-stretch: 85%;
+  line-height: 1.05;
+  color: var(--foreground);
+  text-wrap: balance;
+}
+[data-template='mediterranea'] .mediterranea-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+}
+[data-template='mediterranea'] .mediterranea-price {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-stretch: 85%;
+  color: var(--mediterranea-tomato);
+}
+[data-template='mediterranea'] .mediterranea-price--out {
+  color: var(--muted-foreground);
+  font-weight: 700;
+}
+
+/* No-photo fallback: cream block, oversized name, basil top rule */
+[data-template='mediterranea'] .mediterranea-card[data-photo='false'] .mediterranea-caption {
+  border-block-start: 3px solid var(--mediterranea-basil);
+  padding-block: 1.25rem;
+  gap: 0.5rem;
+}
+[data-template='mediterranea'] .mediterranea-card[data-photo='false'] .mediterranea-name {
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  font-stretch: 80%;
+  text-transform: uppercase;
+}
